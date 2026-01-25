@@ -1,20 +1,36 @@
+/* =====================================================
+  index.css
+  Estilos globais e fundação visual da aplicação
+  - Variáveis de tema (cores, fontes, espaçamentos)
+  - Reset mínimo e box-sizing
+  - Estilos base de HTML e body
+===================================================== */
+
+
+
 :root {
   --background: #121212;
   --primary: #1DB954;
   --text: #FFFFFF;
   --muted: #B3B3B3;
   --font: "Roboto", "Segoe UI", Tahoma, sans-serif;
+
   --gutter: 1rem;
   --header-height: 60px;
   --footer-height: 60px;
 }
 
-/* Reset mínimo */
+/* Reset mínimo e consistente */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -22,37 +38,15 @@ body {
   background: var(--background);
   color: var(--text);
   min-height: 100vh;
-  padding-bottom: var(--footer-height);
-  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Estrutura básica */
-header {
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 var(--gutter);
-  background: transparent;
-  color: var(--text);
-  width: 100%;
+/* Base de links */
+a {
+  color: var(--primary);
+  text-decoration: none;
 }
 
-main {
-  padding: var(--gutter);
-  min-height: calc(100vh - var(--header-height) - var(--footer-height));
-}
-
-footer {
-  height: var(--footer-height);
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 var(--gutter);
-  background: transparent;
-  color: var(--muted);
+a:hover {
+  text-decoration: underline;
 }
