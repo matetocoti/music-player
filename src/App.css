@@ -15,9 +15,18 @@ header {
   background: transparent;
   color: var(--text);
   width: 100%;
+
+  border: solid 0px var(--muted);
+  border-bottom-width: 1px;
 }
 
 main {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-start;
+  align-items: center;
+
   padding: var(--gutter);
   min-height: calc(
     100vh - var(--header-height) - var(--footer-height)
@@ -38,4 +47,7 @@ footer {
   padding: 0 var(--gutter);
   background: transparent;
   color: var(--muted);
+
+  border: solid 0px var(--muted);
+  border-top-width: 1px;
 }
