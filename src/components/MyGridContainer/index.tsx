@@ -1,8 +1,11 @@
-import { memo, type JSX, type ReactNode } from 'react';
+import { memo, type JSX, type ReactElement } from 'react';
+import SongBox from '../SongBox';
 import './MyGridContainer.css';
 
+type SongBoxElement = ReactElement<React.ComponentProps<typeof SongBox>, typeof SongBox>;
+
 interface MyGridContainerProps {
-    children?: ReactNode;
+    children?: SongBoxElement | SongBoxElement[];
     className?: string;
 }
 
