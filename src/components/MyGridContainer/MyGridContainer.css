@@ -6,8 +6,13 @@
     /* opcional: ajusta a altura automática das linhas */
     grid-auto-rows: auto;
 }
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .my-grid {
         grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+    }
+}
+@media (min-width: 481px) and (max-width: 768px) {
+    .my-grid {
+        grid-template-columns: repeat(2, 1fr); /* Duas colunas em telas médias */
     }
 }

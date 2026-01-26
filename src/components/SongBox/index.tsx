@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react';
+import { memo, useMemo, type ReactNode } from 'react';
 import Song from '../../domain/models/Song';
 import './SongBox.css';
 
@@ -8,33 +8,41 @@ interface SongBoxProps {
     children?: ReactNode;
 }
 
-// Helper function to format duration from seconds to "MM:SS"
-const formatDuration = (seconds?: number) => {
+const formatDuration = (seconds?: number | null): string | null => {
     if (!seconds || seconds <= 0) return null;
     const minutes = Math.floor(seconds / 60);
-    const secs = (seconds % 60).toString().padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
     return `${minutes}:${secs}`;
 };
 
+const joinClasses = (...parts: Array<string | undefined>) => parts.filter(Boolean).join(' ').trim();
 
-const SongBox = ({ song, className = '', children }: SongBoxProps) => {
-    const containerClass = ['song-box', className].filter(Boolean).join(' ').trim();
-    const duration = formatDuration(song.duration);
+
+
+const SongBox = ({ song, className, children }: SongBoxProps) => {
+    const containerClass = useMemo(() => joinClasses('song-box', className), [className]);
+
+    const { title, artist, album = 'Unknown Album' } = song;
+    const duration = useMemo(() => formatDuration(song.duration), [song.duration]);
 
     return (
         <article className={containerClass}>
-            <header>
-                <h3 className="song-title">{song.title}</h3>
-                <p className="song-artist">{song.artist}</p>
+            <header className="song-header">
+                <h3 className="song-title">{title}</h3>
+                <p className="song-artist">{artist}</p>
             </header>
 
-            {song.album && <p className="song-album"><em>{song.album}</em></p>}
-            {duration && <p className="song-duration">Duration: {duration}</p>}
+            <p className="song-album">
+                <em>{album}</em>
+            </p>
+
+            <p className="song-duration">
+                Duration: {duration ?? 'Unknown Duration'}
+            </p>
 
             {children}
         </article>
     );
 };
-
 SongBox.displayName = 'SongBox';
 export default memo(SongBox);
