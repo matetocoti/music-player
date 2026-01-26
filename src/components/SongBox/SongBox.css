@@ -25,6 +25,18 @@
     overflow: hidden;
     cursor: pointer;
 }
+/* Title variants - sempre nowrap, com truncamento */
+.song-title,
+.song-box h3 {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+    margin: 0;
+    font-size: var(--title-size);
+    line-height: 1.1;
+}
 
 
 .song-box:hover {
@@ -48,15 +60,7 @@
     margin-bottom: 12px;
 }
 
-/* Title variants */
-.song-title,
-.song-box h3 {
-    color: var(--text);
-    margin: 0;
-    font-size: var(--title-size);
-    line-height: 1.1;
-    word-break: break-word;
-}
+
 
 /* Subtitle / artist / description */
 .song-box p,
@@ -90,7 +94,17 @@
         --subtitle-size: 1em;
         --muted-size: 0.8em;
     }
-
+    .song-box {
+        padding: var(--padding);
+    }
+    .song-title,
+    .song-box h3 {
+        font-size: var(--title-size);
+    }
+    .song-box p,
+    .song-artist {
+        font-size: var(--muted-size);
+    }
     .song-header {
         margin-bottom: 8px;
     }
@@ -123,6 +137,7 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-size: var(--title-size);
     }
 
     .song-box p,
