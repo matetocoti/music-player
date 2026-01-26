@@ -4,6 +4,7 @@
     padding: 16px;
     text-align: center;
     transition: box-shadow 0.3s ease;
+    background-color: #f9f9f9;
 }
 .song-box:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -13,6 +14,7 @@
     border-radius: 4px;
 }
 .song-box h3 {
+    color: #333;
     margin: 12px 0 8px 0;
     font-size: 1.2em;
 }
@@ -20,3 +22,7 @@
     color: #666;
     font-size: 0.9em;
 }
+
+
+
+/* File: src/components/SongBox/SongBox.css */

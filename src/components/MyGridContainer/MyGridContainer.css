@@ -1,9 +1,13 @@
 .my-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 16px;
+    padding: 16px;
+    /* opcional: ajusta a altura automática das linhas */
+    grid-auto-rows: auto;
 }
-
-.my-grid:hover {
-    background-color: #f0f0f0;
+@media (max-width: 768px) {
+    .my-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+    }
 }

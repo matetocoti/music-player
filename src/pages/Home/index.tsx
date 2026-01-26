@@ -1,6 +1,10 @@
 import {type ReactNode ,memo} from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import MyGridContainer from "../../components/MyGridContainer";
+import SongBox from "../../components/SongBox";
+
+import songsDB from "../../data/songs.mock";
 
 interface HomeProps {
   headerTitle?: string;
@@ -13,7 +17,11 @@ const Home = ({ headerTitle, footerText, className }: HomeProps) => {
     <div className={className}>
       <Header title={headerTitle} />
       <main>
-        <p>Welcome to the Home Page!</p>
+        <MyGridContainer>
+          {songsDB.map((song) => (
+            <SongBox key={song.id} song={song} />
+          ))}
+        </MyGridContainer>
       </main>
       <Footer textContent={footerText} />
     </div>
