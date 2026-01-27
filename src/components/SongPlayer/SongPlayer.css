@@ -1,0 +1,105 @@
+:root {
+  --player-height: 80px;
+  --player-bg: #181818;
+  --player-border: #282828;
+  --player-text: #ffffff;
+  --player-muted: #b3b3b3;
+  --player-accent: #1db954;
+}
+
+/* Container principal do player */
+.song-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: var(--player-height);
+  background-color: var(--player-bg);
+  color: var(--player-text);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 1.25rem;
+  border-top: 1px solid var(--player-border);
+  z-index: 100;
+}
+
+/* Esconde o audio nativo */
+.song-player audio {
+  display: none;
+}
+
+/* Bloco esquerdo: info da música */
+.song-player .song-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.song-player .song-info strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-player .song-info span {
+  font-size: 0.8rem;
+  color: var(--player-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Controles centrais */
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Botões */
+.player-controls button {
+  background: none;
+  border: none;
+  color: var(--player-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.player-controls button:hover {
+  transform: scale(1.1);
+  color: var(--player-accent);
+}
+
+/* Área direita (futuro: volume, tempo) */
+.player-extra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--player-muted);
+  font-size: 0.8rem;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .song-player {
+    height: 72px;
+    padding: 0 0.75rem;
+  }
+
+  .song-player .song-info strong {
+    font-size: 0.85rem;
+  }
+
+  .song-player .song-info span {
+    font-size: 0.75rem;
+  }
+}
