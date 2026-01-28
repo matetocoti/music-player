@@ -111,7 +111,7 @@
 }
 
 /* Additional responsive: <= 480px (novo) */
-@media (max-width: 480px) {
+@media (max-width: 550px) {
     :root {
         --padding: 10px;
         --radius: 6px;
