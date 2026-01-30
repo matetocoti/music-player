@@ -4,6 +4,7 @@ import songsDB from "../data/songs.mock";
 
 class InMemorySongRepository implements SongRepository {
   private songs: Song[];
+
   constructor() {
     this.songs = [...songsDB];
   }

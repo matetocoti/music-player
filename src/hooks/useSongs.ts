@@ -5,7 +5,7 @@ import Song from '../domain/models/Song';
 // ejection point for SongRepository implementation
 const songRepository = new InMemorySongRepository();
 
-export function useSongs() {
+function useSongs() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,3 +27,5 @@ export function useSongs() {
 
   return { songs, loading, error };
 }
+
+export default useSongs;

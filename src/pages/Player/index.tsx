@@ -1,15 +1,22 @@
 import { memo } from "react";
 import { useParams } from "react-router-dom";
-import songsDB from "../../data/songs.mock";
+import useSong from "../../hooks/useSong";
 import SongPlayer from "../../components/SongPlayer";
 
 const PlayerPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>();
+  const { song, loading, error } = useSong(`${id}`);
 
-  const song = songsDB.find(s => s.id === id);
+  if (loading) {
+    return <div>Loading song...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading song: {error}</div>;
+  }
 
   if (!song) {
-    return <p>Song not found</p>;
+    return <div>Song not found</div>;
   }
 
   return (
