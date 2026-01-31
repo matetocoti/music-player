@@ -5,8 +5,17 @@ const Home = lazy(() => import("../pages/Home"));
 const Player = lazy(() => import("../pages/Player"));
 
 
+const videoId = "rAn-AWXtHv0"
+
 const NotFound = () => <h2>404 - Not Found</h2>;
 const Loading = () => <h2>Loading...</h2>;
+
+const Test = () => (
+  <iframe
+    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+    allow="autoplay"
+  />
+);
 
 
 
@@ -20,6 +29,7 @@ const AppRoutes = () => {
             <Route path="/" element={<Home />} />
             <Route path="/player/:id" element={<Player />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/test" element={<Test />} />
           </Route>
         </Routes>
       </Suspense>

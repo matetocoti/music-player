@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.services.ytmusic_service import YTMusicService
 
+
 router = APIRouter()
 service = YTMusicService()
 
@@ -10,3 +11,6 @@ def resolve(title: str, artist: str):
     if not result:
         raise HTTPException(status_code=404, detail="Song not found")
     return result
+
+
+
