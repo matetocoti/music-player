@@ -5,10 +5,19 @@
   background: #000;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .yt-player iframe {
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* Estado vazio */
+.yt-player--empty {
+  color: #aaa;
+  font-size: 0.875rem;
 }

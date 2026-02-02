@@ -7,20 +7,25 @@ interface YTPlayerProps {
 
 const YTPlayer = ({ videoId }: YTPlayerProps) => {
   if (!videoId) {
-    return <div>No video selected</div>;
+    return (
+      <div className="yt-player yt-player--empty">
+        <span>No video selected</span>
+      </div>
+    );
   }
+
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
 
   return (
     <div className="yt-player">
       <iframe
-        src={`https://www.youtube.com/embed/${videoId}`}
-        width="100%"
-        height="300"
-        className="yt-player"
+        src={embedUrl}
+        title="YouTube video player"
         allow="autoplay; encrypted-media"
         allowFullScreen
-        title="YouTube video player"
-      />  
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
     </div>
   );
 };

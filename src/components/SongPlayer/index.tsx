@@ -1,44 +1,31 @@
-import { memo, useRef, useState } from "react";
+import { memo } from "react";
 import Song from "../../domain/models/Song";
 import "./SongPlayer.css";
 
 interface SongPlayerProps {
   song: Song;
+  playing?: boolean;
+  onPlayToggle?: () => void;
 }
 
-const SongPlayer = ({ song }: SongPlayerProps) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
+const SongPlayer = ( { song ,playing = false ,onPlayToggle }: SongPlayerProps) => {
+    return (
+      <section className="song-player">
+        <div className="player-controls">
+          <button
+            onClick={onPlayToggle}
+            aria-label={playing ? "Pause song" : "Play song"}
+          >
+            {playing ? "⏸️" : "▶️"}
+          </button>
 
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (audio.paused) {
-      audio.play();
-      setPlaying(true);
-    } else {
-      audio.pause();
-      setPlaying(false);
-    }
-  };
-
-  return (
-    <section className="song-player">
-      <audio ref={audioRef} src={song.url} preload="metadata" />
-
-      <div className="player-controls">
-        <button onClick={togglePlay}>
-          {playing ? "⏸️" : "▶️"}
-        </button>
-
-        <div className="song-info">
-          <strong>{song.title}</strong>
-          <span>{song.artist}</span>
+          <div className="song-info">
+            <strong>{song.title}</strong>
+            <span>{song.artist}</span>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
+    );
+  };
 
 export default memo(SongPlayer);
