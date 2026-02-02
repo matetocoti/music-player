@@ -6,16 +6,28 @@ export type ResolveResponse = {
   duration?: number;
 };
 
-export async function resolveSong(title: string, artist: string): Promise<ResolveResponse> {
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+
+export async function resolveSong(
+  title: string,
+  artist: string,
+  signal?: AbortSignal
+): Promise<ResolveResponse> {
   const params = new URLSearchParams({ title, artist });
 
-  // Aqui eu chamo a minha rota python
-  const res = await fetch(`http://localhost:8000/ytmusic/resolve?${params}`);
+  const res = await fetch(
+    `${API_URL}/ytmusic/resolve?${params.toString()}`,
+    { signal }
+  );
 
   if (!res.ok) {
-    throw new Error("Failed to resolve song");
+    const message = await res.text();
+    throw new Error(
+      `Failed to resolve song (${res.status}): ${message}`
+    );
   }
 
-  // Retorno os dados em json
-  return res.json();
+  const data: ResolveResponse = await res.json();
+
+  return data;
 }
