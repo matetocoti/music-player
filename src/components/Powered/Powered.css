@@ -1,0 +1,10 @@
+.powered {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-top: 0.25rem;
+}
+
+.powered a {
+  color: inherit;
+  text-decoration: underline;
+}

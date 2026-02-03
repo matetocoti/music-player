@@ -1,0 +1,35 @@
+.play-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 4.5rem;
+  padding: 0.5rem 0.75rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 6px;
+
+  background-color: #1e1e1e;
+  color: #ffffff;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.play-toggle:hover {
+  background-color: #2a2a2a;
+}
+
+.play-toggle:active {
+  transform: scale(0.97);
+}
+
+.play-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
