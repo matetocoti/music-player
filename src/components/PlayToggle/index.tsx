@@ -15,7 +15,7 @@ const PlayToggle = ({ playing, onToggle, disabled }: PlayToggleProps) => {
       disabled={disabled}
       aria-label={playing ? "Pause" : "Play"}
     >
-      {playing ? "Pause" : "Play"}
+      {playing ? "\u23F8" : "\u25B6"}
     </button>
   );
 };

@@ -83,12 +83,16 @@ const PlayerPage = () => {
       {videoError && <div>{videoError}</div>}
 
       {videoId && <YTPlayer ref={ytRef} videoId={videoId} />}
+      {/* TODO(v1): extrair controller para PlayerControls */}
       <br /><br /><br /><br /><br /><br />
-      <PlayToggle
-        playing={playing}
-        onToggle={togglePlay}
-        disabled={videoLoading}
-      />
+      <div className="controler">
+        <PlayToggle
+          playing={playing}
+          onToggle={togglePlay}
+          disabled={videoLoading || !videoId}
+        />
+      </div>
+
 
       <Powered provider="YouTube" url="https://www.youtube.com/" />
     </main>
