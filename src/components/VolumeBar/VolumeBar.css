@@ -1,0 +1,88 @@
+:root {
+    --color-track: #3a3a3a;
+    --color-track-hover: #4a4a4a;
+    --color-thumb: #ffffff;
+    --color-text: #ffffff;
+}
+
+/* Base reset apenas para o componente */
+.volume-bar {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 130px;
+    height: 4px;
+
+    background: var(--color-track);
+    border-radius: 2px;
+
+    cursor: pointer;
+    outline: none;
+}
+
+/* Hover feedback */
+.volume-bar:hover {
+    background: var(--color-track-hover);
+}
+
+/* ========================= */
+/* Webkit (Chrome, Edge) */
+/* ========================= */
+.volume-bar::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+
+    background: var(--color-thumb);
+    border: none;
+
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.volume-bar:hover::-webkit-slider-thumb {
+    transform: scale(1.1);
+}
+
+/* ========================= */
+/* Firefox */
+/* ========================= */
+.volume-bar::-moz-range-track {
+    height: 4px;
+    background: var(--color-track);
+    border-radius: 2px;
+}
+
+.volume-bar::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+
+    background: var(--color-thumb);
+    border: none;
+
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.volume-bar:hover::-moz-range-thumb {
+    transform: scale(1.1);
+}
+
+/* ========================= */
+
+/* VOLUME DISPLAY */
+.volume-display {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-text);
+}
+
+@media (max-width: 600px) {
+  .volume-display {
+    display: none;
+  }
+}

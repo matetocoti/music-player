@@ -7,10 +7,12 @@ import { resolveSong } from "../../services/musicProvider";
 import YTPlayer from "../../components/yt-components/YTPlayer";
 import Powered from "../../components/Powered";
 import PlayToggle from "../../components/PlayToggle";
+import VolumeBar from "../../components/VolumeBar";
 
 type YTControls = {
   play: () => void;
   pause: () => void;
+  setVolume: (volume: number) => void;
 };
 
 const PlayerPage = () => {
@@ -23,6 +25,10 @@ const PlayerPage = () => {
 
   const ytRef = useRef<YTControls | null>(null);
   const [playing, setPlaying] = useState(false);
+
+  // TODO(v1): implementar controle de volume
+  const [volume, setVolume] = useState(100);
+
 
 
   useEffect(() => {
@@ -73,6 +79,12 @@ const PlayerPage = () => {
     setPlaying(!playing);
   };
 
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    ytRef.current?.setVolume?.(newVolume);
+  };
+
+
   if (loading) return <div>Loading song...</div>;
   if (error) return <div>Error loading song: {error}</div>;
   if (!song) return <div>Song not found</div>;
@@ -84,15 +96,21 @@ const PlayerPage = () => {
 
       {videoId && <YTPlayer ref={ytRef} videoId={videoId} />}
       {/* TODO(v1): extrair controller para PlayerControls */}
-      <br /><br /><br /><br /><br /><br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <div className="controler">
         <PlayToggle
           playing={playing}
           onToggle={togglePlay}
           disabled={videoLoading || !videoId}
         />
-      </div>
 
+        <VolumeBar volume={volume} onVolumeChange={handleVolumeChange} />
+      </div>
 
       <Powered provider="YouTube" url="https://www.youtube.com/" />
     </main>

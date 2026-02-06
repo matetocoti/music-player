@@ -1,9 +1,14 @@
+:root {
+  --yt-player-bg: #000;
+  --yt-player-border-radius: 8px;
+}
+
 .yt-player {
   width: 100%;
   max-width: 50rem;
   aspect-ratio: 16 / 9;
-  background: #000;
-  border-radius: 8px;
+  background: var(--yt-player-bg);
+  border-radius: var(--yt-player-border-radius);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -16,8 +21,45 @@
   border: 0;
 }
 
-/* Estado vazio */
+/* Empty State */
 .yt-player--empty {
   color: #aaa;
   font-size: 0.875rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Loading State */
+.yt-player--loading {
+  position: relative;
+  background: var(--yt-player-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.yt-player--loading::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .yt-player {
+    max-width: 100%;
+  }
 }
