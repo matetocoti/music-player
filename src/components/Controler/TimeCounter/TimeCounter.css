@@ -1,0 +1,13 @@
+.time-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  font-size: 0.75rem;
+  color: #aaa;
+  user-select: none;
+}
+
+.separator {
+  opacity: 0.6;
+}
