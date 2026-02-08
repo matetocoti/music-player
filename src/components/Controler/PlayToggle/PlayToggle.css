@@ -41,3 +41,18 @@
   cursor: not-allowed;
 }
 
+@media (max-width: 600px) {
+  .play-toggle {
+    min-width: 3.75rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .play-toggle {
+    min-width: 3.25rem;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.6875rem;
+  }
+}

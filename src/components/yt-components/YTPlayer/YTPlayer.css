@@ -21,6 +21,8 @@
   border: none;
   border-radius: var(--yt-player-border-radius);
   vertical-align: top;
+  clip-path: inset(0);
+  
 }
 
 /* Empty State */
@@ -71,6 +73,17 @@
   }
   .yt-player--loading {
     font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .yt-player {
+    aspect-ratio: 4 / 3;
+    max-height: fit-content;
+    max-width: fit-content;
+  }
+  .yt-player--loading {
+    font-size: 0.75rem;
   }
 }
 

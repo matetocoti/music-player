@@ -15,7 +15,7 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
   };
 
   return (
-    <div>
+    <div className="volume-bar-container">
       <input
         type="range"
         className="volume-bar"

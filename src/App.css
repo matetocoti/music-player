@@ -53,3 +53,21 @@ footer {
 }
 
 
+@media (max-width: 600px) {
+  header,
+  footer {
+    padding: 0 var(--gutter-mobile);
+  }
+  main {
+    padding: var(--gutter-mobile);
+  }
+}
+@media (max-width: 400px) {
+  header,
+  footer {
+    padding: 0 var(--gutter-mobile);
+  }
+  main {
+    padding: var(--gutter-mobile);
+  }
+}
