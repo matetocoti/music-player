@@ -57,6 +57,7 @@ footer {
   header,
   footer {
     padding: 0 var(--gutter-mobile);
+    position: static;
   }
   main {
     padding: var(--gutter-mobile);
@@ -66,6 +67,7 @@ footer {
   header,
   footer {
     padding: 0 var(--gutter-mobile);
+    position: static;
   }
   main {
     padding: var(--gutter-mobile);
