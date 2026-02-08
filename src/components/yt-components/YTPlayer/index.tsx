@@ -13,6 +13,8 @@ import "./YTPlayer.css";
 export interface YTPlayerHandle {
   play: () => void;
   pause: () => void;
+  getCurrentTime: () => number;
+  getDuration: () => number;
   setVolume: (volume: number) => void;
 }
 
@@ -26,6 +28,8 @@ type YTPlayerInstance = {
   playVideo: () => void;
   pauseVideo: () => void;
   setVolume: (volume: number) => void;
+  getCurrentTime: () => number;
+  getDuration: () => number;
   destroy?: () => void;
 };
 
@@ -54,14 +58,17 @@ const PLAYER_VARS = {
 
 
 
+
 const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayerInstance | null>(null);
-
+  
   useImperativeHandle(ref, () => ({
     play: () => playerRef.current?.playVideo(),
     pause: () => playerRef.current?.pauseVideo(),
     setVolume: (volume: number) => playerRef.current?.setVolume(volume),
+    getCurrentTime: () => playerRef.current?.getCurrentTime() ?? 0,
+    getDuration: () => playerRef.current?.getDuration() ?? 0,
   }));
 
   const createPlayer = useCallback(() => {

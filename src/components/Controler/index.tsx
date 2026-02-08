@@ -10,15 +10,16 @@ interface ControlerProps {
   playing: boolean;
   disabled?: boolean;
   volume: number;
+  currentTime: number;
+  duration: number;
   onTogglePlay: () => void;
   onVolumeChange: (volume: number) => void;
 }
 
-const Controler = ( { playing, disabled, volume, onTogglePlay, onVolumeChange}: ControlerProps) => {
+const Controler = ( { playing, disabled, volume, currentTime, duration, onTogglePlay, onVolumeChange}: ControlerProps) => {
   return (
     <div className="controler">
-      {/* TODO(v1): implementar TimeCounter real*/}
-      <TimeCounter currentTime={0} duration={999} />
+      <TimeCounter currentTime={currentTime} duration={duration} />
       <PlayToggle
         playing={playing}
         onToggle={onTogglePlay}
