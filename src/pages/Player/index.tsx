@@ -10,6 +10,7 @@ import Controler from "../../components/Controler";
 
 import "./Player.css";
 
+// Define the interface for the YouTube player controls
 type YTControls = {
   play: () => void;
   pause: () => void;
@@ -39,6 +40,9 @@ const PlayerPage = () => {
   //#endregion
 
   //#region Effects 
+
+
+  // Resolve video ID when song changes
   useEffect(() => {
     if (!song) return;
 
@@ -74,6 +78,7 @@ const PlayerPage = () => {
       cancelled = true;
     };
   }, [song]);
+  // Update duration when video ID changes
   useEffect(() => {
   if (!videoId || !ytRef.current) return;
     const timeout = setTimeout(() => {
@@ -85,18 +90,20 @@ const PlayerPage = () => {
 
     return () => clearTimeout(timeout);
   }, [videoId]);
+  // Update current time every 500ms when playing
   useEffect(() => {
-  if (!playing || !ytRef.current) return;
+    if (!playing || !ytRef.current) return;
 
-  const interval = setInterval(() => {
-    const time = ytRef.current?.getCurrentTime();
-    if (typeof time === "number") {
-      setCurrentTime(time);
-    }
-  }, 500);
+    const interval = setInterval(() => {
+      const time = ytRef.current?.getCurrentTime();
+      if (typeof time === "number") {
+        setCurrentTime(time);
+      }
+    }, 500);
 
-  return () => clearInterval(interval);
-}, [playing]);
+    return () => clearInterval(interval);
+  }, [playing]);
+
   //#endregion
 
   //#region Handlers
@@ -116,6 +123,19 @@ const PlayerPage = () => {
     setVolume(newVolume);
     ytRef.current?.setVolume?.(newVolume);
   };
+
+  const handleMuteToggle = () => {
+    if (volume > 0) {
+      setVolume(0);
+      ytRef.current?.setVolume?.(0);
+    } else {
+      setVolume(100);
+      ytRef.current?.setVolume?.(100);
+    }
+  };
+
+  
+
   //#endregion
 
   //#region Render
@@ -137,6 +157,7 @@ const PlayerPage = () => {
         onVolumeChange={handleVolumeChange}
         currentTime={currentTime}
         duration={duration}
+        onMuteToggle={handleMuteToggle}
       />
       <Powered provider="YouTube" url="https://www.youtube.com/" />
     </main>

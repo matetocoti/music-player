@@ -14,9 +14,10 @@ interface ControlerProps {
   duration: number;
   onTogglePlay: () => void;
   onVolumeChange: (volume: number) => void;
+  onMuteToggle: () => void;
 }
 
-const Controler = ( { playing, disabled, volume, currentTime, duration, onTogglePlay, onVolumeChange}: ControlerProps) => {
+const Controler = ( { playing, disabled, volume, currentTime, duration, onTogglePlay, onVolumeChange, onMuteToggle}: ControlerProps) => {
   return (
     <div className="controler">
       <TimeCounter currentTime={currentTime} duration={duration} />
@@ -29,6 +30,7 @@ const Controler = ( { playing, disabled, volume, currentTime, duration, onToggle
       <VolumeBar
         volume={volume}
         onVolumeChange={onVolumeChange}
+        onMuteToggle={onMuteToggle}
       />
     </div>
   );

@@ -4,9 +4,11 @@ import "./VolumeBar.css";
 interface VolumeBarProps {
   volume: number;
   onVolumeChange: (newVolume: number) => void;
+  onMuteToggle?: () => void;
 }
 
-const VolumeBar = ({ volume, onVolumeChange }: VolumeBarProps) => {
+const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => {
+  const muteUnicode = volume > 0 ? "\u{1F508}" : "\u{1F507}";
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(event.target.value));
@@ -24,7 +26,12 @@ const VolumeBar = ({ volume, onVolumeChange }: VolumeBarProps) => {
         onChange={handleChange}
         aria-label="Volume Control"
       />
-      <p className="volume-display">Volume: {volume}%</p>
+      <div className="volume-info">
+        <p className="volume-display">Volume: {volume}%</p>
+        <button className="volume-mute-btn" onClick={onMuteToggle}>
+          {muteUnicode}
+        </button>
+      </div>
     </div>
   );
 };
