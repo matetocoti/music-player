@@ -150,7 +150,21 @@ const PlayerPage = () => {
     }
   };
 
-  
+  // NOTE:
+  // This is not fully working yet due to how the YouTube Iframe API handles playback state.
+  // After a video ends, calling play() does not reset the current time to 0.
+  // To properly restart the video, we need to explicitly seek to the beginning
+  // before calling play() (seekTo(0)).
+  // OBS : ON END STATE IT SUPRISEPLY SETS THE CURRENT TIME TO 0 SO THE RESTART BUTTON WORKS WITHOUT SEEKING, BUT IF YOU WANT TO RESTART BEFORE THE VIDEO ENDS IT WON'T WORK WITHOUT SEEKING, THIS IS A BUG IN THE YOUTUBE IFRAME API
+  const handleRestart = () => {
+    if (!ytRef.current) return;
+    ytRef.current.setVolume(volume); // Ensure volume is set correctly on restart
+    // TO-DO 
+    // ytRef.current.seekTo(0); // Reset the current time to 0
+    ytRef.current.play();
+    setPlaying(true);
+    setCurrentTime(0);
+  }  
 
   //#endregion
 
@@ -175,6 +189,7 @@ const PlayerPage = () => {
         currentTime={currentTime}
         duration={duration}
         onMuteToggle={handleMuteToggle}
+        onRestart={handleRestart}
       />
       <Powered provider="YouTube" url="https://www.youtube.com/" />
     </main>
@@ -182,3 +197,4 @@ const PlayerPage = () => {
 };
 
 export default memo(PlayerPage);
+
