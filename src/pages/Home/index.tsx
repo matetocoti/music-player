@@ -7,6 +7,8 @@ import useSongs from "../../hooks/useSongs";
 import SearchBar from "../../components/pagination-components/SearchBar";
 import PaginationBar from "../../components/pagination-components/PaginationBar";
 
+import "./Home.css";
+
 const Home = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);

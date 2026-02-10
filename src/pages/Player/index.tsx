@@ -80,16 +80,32 @@ const PlayerPage = () => {
   }, [song]);
   // Update duration when video ID changes
   useEffect(() => {
-  if (!videoId || !ytRef.current) return;
-    const timeout = setTimeout(() => {
-      const dur = ytRef.current?.getDuration();
+    if (!videoId || !ytRef.current) return;
+
+    let cancelled = false;
+    
+    // Check duration every 800ms until we get a valid value
+    // This is needed because the YouTube player may not have the duration available immediately after loading
+    // for some reason ,it only works with async check and not with onReady callback, maybe a bug in the library or YouTube API
+    const checkDuration  = async () => {
+      if (!ytRef.current || cancelled) return;
+
+      const dur = ytRef.current.getDuration();
+
       if (dur && dur > 0) {
         setDuration(dur);
+      } else {
+        setTimeout(checkDuration, 800);
       }
-    }, 800);
+    };
 
-    return () => clearTimeout(timeout);
+    checkDuration();
+
+    return () => {
+      cancelled = true;
+    };
   }, [videoId]);
+
   // Update current time every 500ms when playing
   useEffect(() => {
     if (!playing || !ytRef.current) return;
@@ -142,6 +158,7 @@ const PlayerPage = () => {
   if (loading) return <div>Loading song...</div>;
   if (error) return <div>Error loading song: {error}</div>;
   if (!song) return <div>Song not found</div>;
+  if (videoError) return <div>{videoError}</div>;
   //#endregion
  
   return (
