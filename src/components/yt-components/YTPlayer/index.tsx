@@ -16,6 +16,8 @@ export interface YTPlayerHandle {
   getCurrentTime: () => number;
   getDuration: () => number;
   setVolume: (volume: number) => void;
+  seekTo: (seconds: number) => void;
+  restart: () => void;
 }
 
 // Define the props for the YTPlayer component
@@ -30,6 +32,8 @@ type YTPlayerInstance = {
   setVolume: (volume: number) => void;
   getCurrentTime: () => number;
   getDuration: () => number;
+  seekTo: (seconds: number) => void;
+  restart: () => void;
   destroy?: () => void;
 };
 
@@ -39,8 +43,12 @@ declare global {
     YT?: {
       Player: new (
         element: HTMLElement,
-        options: { videoId: string; playerVars?: Record<string, unknown> }
+        options: { videoId: string; playerVars?: Record<string, unknown> },
       ) => YTPlayerInstance;
+      event: {
+        onReady: (event: { target: YTPlayerInstance }) => void;
+        onStateChange: (event: { target: YTPlayerInstance; data: number }) => void;
+      };
     };
     onYouTubeIframeAPIReady?: () => void;
   }
@@ -56,9 +64,6 @@ const PLAYER_VARS = {
 
 
 
-
-
-
 const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayerInstance | null>(null);
@@ -69,6 +74,13 @@ const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) =>
     setVolume: (volume: number) => playerRef.current?.setVolume(volume),
     getCurrentTime: () => playerRef.current?.getCurrentTime() ?? 0,
     getDuration: () => playerRef.current?.getDuration() ?? 0,
+    seekTo: (seconds: number) => playerRef.current?.seekTo(seconds),
+    restart: () => {
+      if (playerRef.current) {
+        playerRef.current.seekTo(0);
+        playerRef.current.playVideo();
+      }
+    },
   }));
 
   const createPlayer = useCallback(() => {
@@ -88,8 +100,13 @@ const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) =>
       const script = document.createElement("script");
       script.src = YOUTUBE_API_URL;
       script.async = true;
+      const onReady = () => {
+        if (window.YT?.Player) {
+          createPlayer();
+        }
+      };
+      window.onYouTubeIframeAPIReady = onReady;
       document.body.appendChild(script);
-      window.onYouTubeIframeAPIReady = createPlayer;
     }
 
     return () => {

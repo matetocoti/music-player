@@ -1,5 +1,5 @@
 import { memo } from "react";
-import "../PlayToggle/PlayToggle.css";
+import "./RestartButton.css";
 
 interface RestartButtonProps {
   onRestart: () => void;
@@ -9,14 +9,15 @@ interface RestartButtonProps {
 const RestartButton = ({ onRestart, disabled }: RestartButtonProps) => {
   return (
     <button
-        className="play-toggle restart-button"
-        onClick={onRestart}
-        disabled={disabled}
-        aria-label='restart'
-    > 
-        &#x21BB;
-    </button> 
-    );
+      className="restart-button"
+      onClick={onRestart}
+      disabled={disabled}
+      aria-label="Reiniciar música"
+      title="Reiniciar (Ctrl+R)"
+    >
+      &#x21BB;
+    </button>
+  );
 };
 
 export default memo(RestartButton);
