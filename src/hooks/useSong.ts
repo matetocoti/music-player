@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import InMemorySongRepository from "../repositories/InMemorySongRepository";
+//import InMemorySongRepository from "../repositories/InMemorySongRepository";
 import Song from "../domain/models/Song";
+import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
 
 // ejection point for SongRepository implementation
-const songRepository = new InMemorySongRepository();
+const songRepository = new SupabaseSongRepository();
 
 function useSong(id: string) {
   const [song, setSong] = useState<Song | null>(null);
