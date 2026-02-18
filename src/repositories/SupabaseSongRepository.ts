@@ -2,7 +2,9 @@ import { supabase } from "../lib/supabase";
 import Song from "../domain/models/Song";
 
 export default class SupabaseSongRepository {
-  async getAllSongs(page = 1, limit = 9): Promise<Song[]> {
+  private DEFAULT_LIMIT = 10;
+
+  async getAllSongs(page: number = 1, limit: number = this.DEFAULT_LIMIT): Promise<Song[]> {
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -13,7 +15,7 @@ export default class SupabaseSongRepository {
 
     if (error) throw new Error(error.message);
 
-    return data.map((s) => new Song(s));
+    return data.map((song) => new Song(song));
   }
 
   async getSongById(id: string): Promise<Song | null> {
@@ -23,7 +25,8 @@ export default class SupabaseSongRepository {
       .eq("id", id)
       .single();
 
-    if (error) return null;
+    if (error || !data) return null;
+    
     return new Song(data);
   }
 }

@@ -9,14 +9,14 @@ app = FastAPI(title="YTMusic Provider")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # Vite / React
+        "http://localhost:5173",  
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Rotas api
+
 app.include_router(resolve_router, prefix="/ytmusic", tags=["YTMusic"])
 app.include_router(stream_router, prefix="/ytmusic", tags=["YTMusic"])
 

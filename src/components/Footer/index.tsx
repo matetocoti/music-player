@@ -7,7 +7,6 @@ interface FooterProps {
 }
 
 const Footer = ({ textContent='2026', children, className}: FooterProps) => {
-  // Prioritize children over textContent  
   const content = children ?? textContent ?? null;
 
   return (

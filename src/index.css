@@ -7,7 +7,6 @@
 ===================================================== */
 
 
-
 :root {
   --background: #121212;
   --primary: #1DB954;
@@ -20,7 +19,7 @@
   --footer-height: 60px;
 }
 
-/* Reset mínimo e consistente */
+
 *,
 *::before,
 *::after {
@@ -41,7 +40,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Base de links */
+
 a {
   color: var(--primary);
   text-decoration: none;

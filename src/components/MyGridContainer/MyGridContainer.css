@@ -3,16 +3,15 @@
     grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 16px;
     padding: 16px;
-    /* opcional: ajusta a altura automática das linhas */
     grid-auto-rows: auto;
 }
 @media (max-width: 550px) {
     .my-grid {
-        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+        grid-template-columns: 1fr; 
     }
 }
 @media (min-width: 551px) and (max-width: 768px) {
     .my-grid {
-        grid-template-columns: repeat(2, 1fr); /* Duas colunas em telas médias */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }

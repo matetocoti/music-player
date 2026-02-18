@@ -17,9 +17,8 @@ function useSongs(search: string, page: number) {
       try {
         setLoading(true);
 
-        const allSongs = await songRepository.getAllSongs();
+        const allSongs = await songRepository.getAllSongs( 1, 1000);
 
-        // search
         const q = search.toLowerCase();
         const filtered = allSongs.filter(
           (song) =>
@@ -27,7 +26,7 @@ function useSongs(search: string, page: number) {
             song.artist.toLowerCase().includes(q)
         );
 
-        // paginação
+    
         const start = (page - 1) * PAGE_SIZE;
         const end = start + PAGE_SIZE;
 

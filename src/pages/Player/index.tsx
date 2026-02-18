@@ -108,7 +108,7 @@ const PlayerPage = () => {
     };
   }, [videoId]);
 
-  // Update current time every 500ms when playing
+  
   useEffect(() => {
     if (!playing || !ytRef.current) return;
 

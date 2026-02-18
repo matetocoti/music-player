@@ -16,7 +16,7 @@ def get_stream_url(
 ):
     target_video_id = video_id
 
-    # fallback se não vier video_id
+
     if not target_video_id and title and artist:
         result = service.search_song(title, artist)
         if not result or "videoId" not in result:

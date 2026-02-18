@@ -14,7 +14,6 @@
     --muted-size: 0.9em;
 }
 
-/* Song box */
 .song-box {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -25,7 +24,7 @@
     overflow: hidden;
     cursor: pointer;
 }
-/* Title variants - sempre nowrap, com truncamento */
+
 .song-title,
 .song-box h3 {
     display: block;
@@ -52,7 +51,7 @@
     object-fit: cover;
 }
 
-/* Header / title / artist */
+
 .song-header {
     display: flex;
     flex-direction: column;
@@ -62,7 +61,6 @@
 
 
 
-/* Subtitle / artist / description */
 .song-box p,
 .song-artist {
     color: var(--muted);
@@ -75,7 +73,7 @@
     color: var(--muted-strong);
 }
 
-/* Small tweaks for secondary heading inside box */
+
 .song-box h3 {
     margin: 12px 0 8px;
     font-size: var(--subtitle-size);
@@ -86,7 +84,7 @@
 
 
 
-/* Responsive: <= 600px */
+
 @media (max-width: 600px) {
     :root {
         --padding: 12px;
@@ -110,7 +108,7 @@
     }
 }
 
-/* Additional responsive: <= 480px (novo) */
+
 @media (max-width: 550px) {
     :root {
         --padding: 10px;
@@ -125,12 +123,12 @@
         padding: var(--padding);
     }
 
-    /* Limita altura da imagem para economizar espaço vertical */
+    
     .song-box img {
         max-height: 160px;
     }
 
-    /* Tornar títulos mais compactos e truncar quando necessário */
+   
     .song-title,
     .song-box h3 {
         display: -webkit-box;
@@ -146,7 +144,7 @@
     }
 }
 
-/* Color scheme overrides */
+
 @media screen and (prefers-color-scheme: light) {
     :root {
         --border: #ccc;
@@ -169,4 +167,3 @@
     }
 }
 
-/* File: src/components/SongBox/SongBox.css */

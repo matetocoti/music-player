@@ -31,7 +31,7 @@ class Song {
         this.url = url;
     }
     
-    // serializes the Song to a plain object
+  
     toJSON(): SongProps {
         return {
             id: this.id,
@@ -43,7 +43,7 @@ class Song {
         };
     }
 
-    // returns a new Song with applied changes (immutable update)
+    
     with(changes: Partial<SongProps>): Song {
         return new Song({ ...this.toJSON(), ...changes });
     }

@@ -24,12 +24,10 @@ const Home = () => {
   
   return (
     <main>
-      {/* Search simples */}
       <SearchBar search={search} onSearchChange={(newSearch) => {
         setSearch(newSearch);
         setPage(1); 
       }} />
-
       <MyGridContainer>
         {songs.map((song) => (
           <Link key={song.id} to={`/player/${song.id}`}>
@@ -37,8 +35,6 @@ const Home = () => {
           </Link>
         ))}
       </MyGridContainer>
-
-      {/* Paginação básica */}
       <PaginationBar page={page} totalPages={totalPages} setPage={setPage} />
     </main>
   );

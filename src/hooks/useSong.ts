@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Song from "../domain/models/Song";
 import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
 
-// ejection point for SongRepository implementation
 const songRepository = new SupabaseSongRepository();
 
 function useSong(id: string) {
