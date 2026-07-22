@@ -1,16 +1,18 @@
-import {  memo, type ReactNode } from "react";
+import { memo, type ReactNode, type HTMLAttributes } from "react";
 
 
-export interface HeaderProps {
+export interface HeaderProps extends HTMLAttributes<HTMLElement> {
   title?: string;
-  className?: string;
   children?: ReactNode;
 }
 
-const Header = ({ title = "Music-Player", className = "", children }: HeaderProps) => {
+const Header = ({ title = "Music-Player", className = "", children, ...props }: HeaderProps) => {
   return (
-    <header className={className}>
-      <h1>{title}</h1>
+    <header 
+      className={`flex flex-col items-center justify-center gap-4 p-4 ${className}`.trim()}
+      {...props}
+    >
+      <h1 className="text-2xl font-bold quill">{title}</h1>
       {children}
     </header>
   );

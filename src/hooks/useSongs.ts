@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-//import InMemorySongRepository from "../repositories/InMemorySongRepository";
+import InMemorySongRepository from "../repositories/InMemorySongRepository";
 import Song from "../domain/models/Song";
-import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
+//import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
 
-const songRepository = new SupabaseSongRepository();
+const songRepository = new InMemorySongRepository();
 const PAGE_SIZE = 9;
 
 function useSongs(search: string, page: number) {
@@ -17,7 +17,7 @@ function useSongs(search: string, page: number) {
       try {
         setLoading(true);
 
-        const allSongs = await songRepository.getAllSongs( 1, 1000);
+        const allSongs = await songRepository.getAllSongs();
 
         const q = search.toLowerCase();
         const filtered = allSongs.filter(
