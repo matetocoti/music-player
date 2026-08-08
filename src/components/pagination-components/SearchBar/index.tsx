@@ -1,5 +1,5 @@
 import { memo, useRef } from "react";
-import { Search, X } from "lucide-react"; 
+import { Search, X } from "lucide-react";
 
 interface SearchBarProps {
   search: string;
@@ -8,9 +8,9 @@ interface SearchBarProps {
   className?: string;
 }
 
-const SearchBar = ({ 
-  search, 
-  onSearchChange, 
+const SearchBar = ({
+  search,
+  onSearchChange,
   placeholder = "Search by title or artist...",
   className = ""
 }: SearchBarProps) => {
@@ -20,11 +20,12 @@ const SearchBar = ({
     onSearchChange("");
     inputRef.current?.focus();
   };
+
   return (
-    <div className={`relative flex w-full max-w-md items-center ${className}`}>
-      <Search 
-        className="absolute left-3.5 h-5 w-5 text-neutral-400 dark:text-neutral-500" 
-        aria-hidden="true" 
+    <div className={`relative flex w-full max-w-xl items-center ${className}`.trim()}>
+      <Search
+        className="pointer-events-none absolute left-3.5 h-5 w-5 text-slate-400 dark:text-slate-500"
+        aria-hidden="true"
       />
       <input
         ref={inputRef}
@@ -33,13 +34,13 @@ const SearchBar = ({
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         aria-label={placeholder}
-        className="h-12 w-full color-neutral-500 rounded-full border border-neutral-200 bg-neutral-50 pl-11 pr-11 text-sm outline-none transition-all placeholder:text-neutral-400 focus:border-blue-500  focus:ring-4 focus:ring-blue-500/20 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 text-neutral-500"
+        className="h-12 w-full rounded-2xl border border-slate-200 bg-white/90 pl-11 pr-11 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
       />
       {search.length > 0 && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-3 rounded-full p-1.5 text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+          className="absolute right-2.5 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
           aria-label="Clear search"
         >
           <X className="h-4 w-4" />
@@ -47,6 +48,6 @@ const SearchBar = ({
       )}
     </div>
   );
-}
+};
 
 export default memo(SearchBar);

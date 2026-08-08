@@ -2,9 +2,13 @@ import { supabase } from "../lib/supabase";
 import Song from "../domain/models/Song";
 
 export default class SupabaseSongRepository {
-  private DEFAULT_LIMIT = 10;
+  readonly DEFAULT_LIMIT  = 10;
 
   async getAllSongs(page: number = 1, limit: number = this.DEFAULT_LIMIT): Promise<Song[]> {
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
+
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -19,6 +23,10 @@ export default class SupabaseSongRepository {
   }
 
   async getSongById(id: string): Promise<Song | null> {
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
+
     const { data, error } = await supabase
       .from("songs")
       .select("*")
@@ -26,7 +34,7 @@ export default class SupabaseSongRepository {
       .single();
 
     if (error || !data) return null;
-    
+
     return new Song(data);
   }
 }

@@ -4,7 +4,7 @@ import Song from "../domain/models/Song";
 //import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
 
 const songRepository = new InMemorySongRepository();
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 15;
 
 function useSongs(search: string, page: number) {
   const [songs, setSongs] = useState<Song[]>([]);

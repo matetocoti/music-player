@@ -7,8 +7,7 @@ import { resolveSong } from "../../services/musicProvider";
 import YTPlayer from "../../components/yt-components/YTPlayer";
 import Powered from "../../components/Powered";
 import Controler from "../../components/Controler";
-
-import "./Player.css";
+import BackButton from "../../components/UI/BackButton";
 
 // Define the interface for the YouTube player controls
 type YTControls = {
@@ -22,7 +21,6 @@ type YTControls = {
 };
 
 const PlayerPage = () => {
-  //#region State and Refs
   const { id } = useParams<{ id?: string }>();
   const { song, loading, error } = useSong(id ?? "");
 
@@ -33,17 +31,12 @@ const PlayerPage = () => {
   const ytRef = useRef<YTControls | null>(null);
   const [playing, setPlaying] = useState(false);
 
-  
   const [volume, setVolume] = useState(100);
-
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+ 
 
-  //#endregion
-
-  //#region Effects 
-
-
+  
   // Resolve video ID when song changes
   useEffect(() => {
     if (!song) return;
@@ -64,7 +57,7 @@ const PlayerPage = () => {
       } catch (err) {
         if (!cancelled) {
           console.error("Erro ao resolver vídeo:", err);
-          setVideoError("Unable to load video source");
+          setVideoError("Unable to load video source.");
           setVideoId(null);
         }
       } finally {
@@ -80,6 +73,7 @@ const PlayerPage = () => {
       cancelled = true;
     };
   }, [song]);
+
   // Update duration when video ID changes
   useEffect(() => {
     if (!videoId || !ytRef.current) return;
@@ -87,9 +81,7 @@ const PlayerPage = () => {
     let cancelled = false;
     
     // Check duration every 800ms until we get a valid value
-    // This is needed because the YouTube player may not have the duration available immediately after loading
-    // for some reason ,it only works with async check and not with onReady callback, maybe a bug in the library or YouTube API
-    const checkDuration  = async () => {
+    const checkDuration = async () => {
       if (!ytRef.current || cancelled) return;
 
       const dur = ytRef.current.getDuration();
@@ -108,7 +100,6 @@ const PlayerPage = () => {
     };
   }, [videoId]);
 
-  
   useEffect(() => {
     if (!playing || !ytRef.current) return;
 
@@ -122,9 +113,6 @@ const PlayerPage = () => {
     return () => clearInterval(interval);
   }, [playing]);
 
-  //#endregion
-
-  //#region Handlers
   const togglePlay = () => {
     if (!ytRef.current) return;
 
@@ -159,35 +147,80 @@ const PlayerPage = () => {
     setCurrentTime(0);
   }  
 
-  //#endregion
+  const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-white/70 p-4 shadow-sm sm:p-5 lg:p-6 dark:border-zinc-800 dark:bg-zinc-900/60";
 
-  //#region Render
-  if (loading) return <div>Loading song...</div>;
-  if (error) return <div>Error loading song: {error}</div>;
-  if (!song) return <div>Song not found</div>;
-  if (videoError) return <div>{videoError}</div>;
-  //#endregion
- 
+  if (loading) {
+    return (
+      <main className={containerStyle}>
+        <div className="flex flex-1 items-center justify-center text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          Loading song details...
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !song) {
+    return (
+      <main className={containerStyle}>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <p className="text-sm font-medium text-rose-600 dark:text-rose-400">
+            {error || "Song not found."}
+          </p>
+          <BackButton />
+        </div>
+      </main>
+    );
+  }
+  
+
   return (
-    <main className="player-page">
-      {videoLoading && <div>Loading video...</div>}
-      {videoError && <div>{videoError}</div>}
-      {videoId && <YTPlayer ref={ytRef} videoId={videoId} />}
-      <Controler
-        playing={playing}
-        disabled={videoLoading || !videoId}
-        volume={volume}
-        onTogglePlay={togglePlay}
-        onVolumeChange={handleVolumeChange}
-        currentTime={currentTime}
-        duration={duration}
-        onMuteToggle={handleMuteToggle}
-        onRestart={handleRestart}
-      />
-      <Powered provider="YouTube" url="https://www.youtube.com/" />
+    <main className={containerStyle}>
+      <header className="flex shrink-0 items-center justify-between mb-4 width-full">
+        <BackButton className="flex-1 px-4 py-2 "/>
+      </header>
+      <div className="flex flex-1 flex-col items-center justify-center w-full max-w-2xl mx-auto gap-8">
+        <div className="text-center px-4 w-full  border-b   border-zinc-200/50 dark:border-zinc-600 pb-4 sm:pb-6 lg:pb-8 font-sans">
+          <h1 className="truncate text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
+            {song.title}
+          </h1>
+          <p className="truncate mt-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-400 sm:text-base">
+            {song.artist}
+          </p>
+        </div>
+        <div className="w-full relative flex flex-col items-center justify-center">
+          {videoLoading && (
+            <p className="absolute -top-6 text-xs animate-pulse text-zinc-400 dark:text-zinc-500">
+              Connecting to audio source...
+            </p>
+          )}
+          {videoError && (
+            <p className="absolute -top-6 text-xs text-rose-500">
+              {videoError}
+            </p>
+          )}
+          <div className={videoId ? "opacity-100 transition-opacity duration-500" : "opacity-0"}>
+            {videoId && <YTPlayer ref={ytRef} videoId={videoId} />}
+          </div>
+        </div>
+        <div className="w-full">
+          <Controler
+            playing={playing}
+            disabled={videoLoading || !videoId}
+            volume={volume}
+            onTogglePlay={togglePlay}
+            onVolumeChange={handleVolumeChange}
+            currentTime={currentTime}
+            duration={duration}
+            onMuteToggle={handleMuteToggle}
+            onRestart={handleRestart}
+          />
+        </div>
+      </div>
+      <footer className="mt-4 flex shrink-0 items-center justify-center pt-2">
+        <Powered provider="YouTube" url="https://www.youtube.com/" />
+      </footer>
     </main>
   );
 };
 
 export default memo(PlayerPage);
-

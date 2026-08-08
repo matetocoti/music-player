@@ -1,25 +1,23 @@
 import { type FC, memo } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/UI/Header";
+import Footer from "../components/UI/Footer";
 
 const DefaultLayout: FC = () => {
   return (
-    <div 
-      className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300 dark:bg-neutral-950 dark:text-neutral-50"
-    >
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20"
+    <div className="flex min-h-screen w-full flex-col bg-gradient-to-b from-zinc-100 to-zinc-200 text-zinc-900 transition-colors duration-300 dark:from-zinc-900 dark:to-zinc-950 dark:text-zinc-50 selection:bg-emerald-500 selection:text-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-4 focus:ring-emerald-600/20"
       >
         Skip to main content
       </a>
 
       <Header title="My Music App" />
 
-      <main 
+      <main
         id="main-content"
-        className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8 lg:py-10"
+        className="mx-auto flex w-full max-w-7xl flex-1 flex-col p-4 sm:p-6 lg:p-8"
       >
         <Outlet />
       </main>

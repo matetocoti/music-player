@@ -1,9 +1,10 @@
 .my-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(200px, 1fr));
-    gap: 16px;
-    padding: 16px;
-    grid-auto-rows: auto;
+    padding: 1rem;
+    gap: 1rem;
+    grid-auto-rows: minmax(120px, auto);
+
 }
 @media (max-width: 550px) {
     .my-grid {

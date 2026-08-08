@@ -1,16 +1,19 @@
 import { memo, type JSX, type ReactElement } from 'react';
 import SongBox from '../SongBox';
-import './MyGridContainer.css';
 
 type SongBoxElement = ReactElement<React.ComponentProps<typeof SongBox>, typeof SongBox>;
 
 interface MyGridContainerProps {
-    children?: SongBoxElement | SongBoxElement[];
-    className?: string;
+  children?: SongBoxElement | SongBoxElement[];
+  className?: string;
 }
 
-const MyGridContainer = ({ children, className = 'my-grid' }: MyGridContainerProps): JSX.Element => {
-    return <div className={className}>{children}</div>;
+const MyGridContainer = ({ children, className }: MyGridContainerProps): JSX.Element => {
+  return (
+    <div className={`grid gap-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 ${className ?? ''}`.trim()}>
+      {children}
+    </div>
+  );
 };
 
 MyGridContainer.displayName = 'MyGridContainer';

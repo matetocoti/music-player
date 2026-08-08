@@ -32,6 +32,9 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
@@ -40,6 +43,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 
@@ -49,5 +53,9 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  box-shadow: 0 0 10px var(--primary);
+  border-radius: 16px;
 }
+
+
