@@ -175,7 +175,7 @@ const PlayerPage = () => {
 
   return (
     <main className={containerStyle}>
-      <header className="flex shrink-0 items-center justify-between mb-4 width-full">
+      <header className="flex shrink-0 mb-4 width-full">
         <BackButton className="flex-1 px-4 py-2 "/>
       </header>
       <div className="flex flex-1 flex-col items-center justify-center w-full max-w-2xl mx-auto gap-8">

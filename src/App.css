@@ -1,13 +1,10 @@
 header{
   height: var(--header-height);
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0 var(--gutter);
   background: transparent;
   color: var(--text);
   width: 100%;
-  
   border: solid 0px var(--muted);
   border-bottom-width: 1px;
 }
@@ -25,4 +22,19 @@ footer{
   
   border: solid 0px var(--muted);
   border-top-width: 1px;
+}
+
+
+@media (max-width: 768px) {
+  header, footer {
+    padding: 0 var(--gutter-mobile);
+  }
+  header {
+    height: var(--header-height-mobile);
+    justify-content: center;
+    align-items: center;
+  }
+  footer {
+    height: var(--footer-height-mobile);
+  }
 }
