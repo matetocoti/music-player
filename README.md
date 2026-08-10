@@ -1,6 +1,6 @@
 # 🎵 My Music App
 
-[![Status](https://img.shields.io/badge/Status-0.9-green.svg)](https://github.com/your-username/music-player)
+[![Status](https://img.shields.io/badge/Status-1.0-green.svg)](https://github.com/your-username/music-player)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Aplicação web de player musical desenvolvida com **React + TypeScript (Frontend)** e **Backend simples em Python**.
