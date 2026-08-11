@@ -98,7 +98,7 @@ const PlayerPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [videoId]);
+  }, [videoId , playing]);
 
   useEffect(() => {
     if (!playing || !ytRef.current) return;

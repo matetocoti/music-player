@@ -22,6 +22,7 @@ dist-ssr
 .env.test.local
 .env.production.local
 
+
 # Optional: keep example env
 !.env.example
 
@@ -38,3 +39,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Databases
+*.sqlite
+**.sqlite3
+**.db
+
+# Data directory
+/data
