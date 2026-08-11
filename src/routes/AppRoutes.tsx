@@ -6,10 +6,10 @@ import DefaultLayout from "../layouts/DefaultLayout";
 const Home = lazy(() => import("../pages/Home"));
 const Player = lazy(() => import("../pages/Player"));
 
+const classNameContent = "text-center text-2xl font-bold mt-10";
 
-
-const NotFound = () => <h2>404 - Not Found</h2>;
-const Loading = () => <h2>Loading...</h2>;
+const NotFound = () => <h2 className={classNameContent}>404 - Not Found</h2>;
+const Loading = () => <h2 className={classNameContent}>Loading...</h2>;
 
 
 const AppRoutes = () => {
