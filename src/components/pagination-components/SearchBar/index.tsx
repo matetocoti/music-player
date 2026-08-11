@@ -24,7 +24,7 @@ const SearchBar = ({
   return (
     <div className={`relative flex w-full max-w-xl items-center ${className}`.trim()}>
       <Search
-        className="pointer-events-none absolute left-3.5 h-5 w-5 text-slate-400 dark:text-slate-500"
+        className="pointer-events-none absolute left-3 h-4 w-4 text-zinc-400 sm:left-3.5 sm:h-5 sm:w-5 dark:text-zinc-500"
         aria-hidden="true"
       />
       <input
@@ -34,16 +34,16 @@ const SearchBar = ({
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         aria-label={placeholder}
-        className="h-12 w-full rounded-2xl border border-slate-200 bg-white/90 pl-11 pr-11 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
+        className="h-10 w-full rounded-2xl border border-zinc-200/80 bg-white/90 pl-9 pr-10 text-xs text-zinc-700 outline-none transition-all placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 sm:h-12 sm:pl-11 sm:pr-11 sm:text-sm dark:border-zinc-800/80 dark:bg-zinc-600/80 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-emerald-500/50 dark:focus:ring-emerald-500/20"
       />
       {search.length > 0 && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          className="absolute right-1.5 flex h-7 w-7 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:right-2 sm:h-8 sm:w-8 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
           aria-label="Clear search"
         >
-          <X className="h-4 w-4" />
+          <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
         </button>
       )}
     </div>

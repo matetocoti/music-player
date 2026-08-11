@@ -38,7 +38,6 @@ const SongBox = ({ song, className = '', children }: SongBoxProps) => {
           </div>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-zinc-600 sm:gap-2 sm:text-sm dark:text-zinc-400">
-          {/* Replaced hover:animate-spin with group-hover and a custom slower spin duration */}
           <Disc3 className="h-3.5 w-3.5 shrink-0 text-zinc-400 sm:h-4 sm:w-4 dark:text-zinc-500 group-hover:animate-[spin_3s_linear_infinite]" aria-hidden="true" />
           <p className="truncate">
             <span className="sr-only">Album: </span>
