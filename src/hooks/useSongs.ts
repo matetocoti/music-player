@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import InMemorySongRepository from "../repositories/InMemorySongRepository";
 import Song from "../domain/models/Song";
-//import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
+import { songRepository } from "../repositories/songRepositoryFallback";
 
-const songRepository = new InMemorySongRepository();
 const PAGE_SIZE = 15;
 
 function useSongs(search: string, page: number) {

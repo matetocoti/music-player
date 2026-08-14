@@ -9,7 +9,7 @@ class InMemorySongRepository implements SongRepository {
     this.songs = [...songsDB];
   }
 
-  async getAllSongs(_page: number = 1, _limit: number = 10): Promise<Song[]> {
+  async getAllSongs(): Promise<Song[]> {
     return this.songs;
   }
 

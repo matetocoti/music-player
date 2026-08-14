@@ -58,10 +58,10 @@ A aplicação permite aos usuários explorar e reproduzir músicas através de u
 
 ### Backend
 - **Python** 3.8+
-- **Flask** (para API REST)
+- **FastAPI** (para API REST)
 
 ### Banco de Dados
-- **Supabase** (PostgreSQL)
+- **SQLite local**
 
 ### Outros
 - **ESLint** para linting
@@ -107,7 +107,7 @@ Antes de começar, certifique-se de ter instalado:
 - **npm** ou **yarn**
 - **Python** 3.8 ou superior
 - **pip** para gerenciar pacotes Python
-- Conta no **Supabase** para banco de dados
+- Python vai criar o banco **SQLite** localmente na primeira execução
 
 ---
 
@@ -151,7 +151,7 @@ python app/main.py
 
 A aplicação estará disponível em:
 - Frontend: `http://localhost:5173`
-- Backend: `http://localhost:5000` (ou conforme configurado)
+- Backend: `http://localhost:8000`
 
 ---
 
@@ -191,13 +191,12 @@ music-player/
 Crie um arquivo `.env` na raiz do projeto frontend:
 
 ```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_API_URL=http://localhost:8000
 ```
 
 ### Backend
 
-Configure as variáveis necessárias no arquivo de configuração do Flask.
+O backend cria e mantém o banco SQLite em `src/providers/ytmusic/app/data/music.sqlite`.
 
 ---
 

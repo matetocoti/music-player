@@ -1,38 +1,27 @@
 import Song from "../domain/models/Song";
-import { isSupabaseConfigured } from "../lib/supabase";
 import InMemorySongRepository from "./InMemorySongRepository";
-import SupabaseSongRepository from "./SupabaseSongRepository";
+import LocalSqliteSongRepository from "./LocalSqliteSongRepository";
 
 class SongRepositoryWithFallback {
   private readonly fallbackRepository = new InMemorySongRepository();
-  private readonly supabaseRepository = isSupabaseConfigured
-    ? new SupabaseSongRepository()
-    : null;
+  private readonly localRepository = new LocalSqliteSongRepository();
 
-  async getAllSongs(page: number = 1, limit: number = 10): Promise<Song[]> {
-    if (!this.supabaseRepository) {
-      return this.fallbackRepository.getAllSongs(page, limit);
-    }
-
+  async getAllSongs(): Promise<Song[]> {
     try {
-      return await this.supabaseRepository.getAllSongs(page, limit);
+      return await this.localRepository.getAllSongs();
     } catch {
-      return this.fallbackRepository.getAllSongs(page, limit);
+      return this.fallbackRepository.getAllSongs();
     }
   }
 
   async getSongById(id: string): Promise<Song | null> {
-    if (!this.supabaseRepository) {
-      return this.fallbackRepository.getSongById(id);
-    }
-
     try {
-      const song = await this.supabaseRepository.getSongById(id);
+      const song = await this.localRepository.getSongById(id);
       if (song) {
         return song;
       }
     } catch {
-      // Fall back to the local mock data below.
+      // Ignore the error and fall back to the local mock data.
     }
 
     return this.fallbackRepository.getSongById(id);

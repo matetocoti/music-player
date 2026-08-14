@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.ytmusic_routes import router as resolve_router
 from app.routes.ytmusic_stream import router as stream_router
+from app.routes.songs_routes import router as songs_router
 
 app = FastAPI(title="YTMusic Provider")
 
@@ -19,6 +20,7 @@ app.add_middleware(
 
 app.include_router(resolve_router, prefix="/ytmusic", tags=["YTMusic"])
 app.include_router(stream_router, prefix="/ytmusic", tags=["YTMusic"])
+app.include_router(songs_router, prefix="/songs", tags=["Songs"])
 
 
 @app.get("/")

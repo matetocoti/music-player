@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import InMemorySongRepository from "../repositories/InMemorySongRepository";
 import Song from "../domain/models/Song";
-//import SupabaseSongRepository from "../repositories/SupabaseSongRepository";
-
-const songRepository = new InMemorySongRepository();
+import { songRepository } from "../repositories/songRepositoryFallback";
 
 function useSong(id: string) {
   const [song, setSong] = useState<Song | null>(null);

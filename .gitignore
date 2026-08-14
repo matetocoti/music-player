@@ -46,4 +46,4 @@ dist-ssr
 **.db
 
 # Data directory
-/src/data/
+/data/

@@ -9,7 +9,6 @@ class YTMusicService:
     def search_song(self ,title: str ,artist: str) -> dict | None:
         query = f"{title} {artist}" # Texto da Busca 
         results = self.ytmusic_client.search(query, filter="songs", limit=1) # Busca
-        # Se não há resultados
         if not results: 
             return None
         song = results[0]
