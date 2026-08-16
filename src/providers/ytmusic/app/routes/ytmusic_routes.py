@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException ,FastAPI
 from app.services.ytmusic_service import YTMusicService
+from app.schemas.responses_model import SongResponse
 
 
 router = APIRouter()

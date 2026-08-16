@@ -4,3 +4,4 @@ ytmusicapi
 python-dotenv
 requests
 yt-dlp
+pydantic
