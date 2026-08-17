@@ -1,30 +1,48 @@
-from fastapi import APIRouter, HTTPException, Query
-from typing import Optional
+from fastapi import APIRouter, Depends, Query, status
+from typing import Annotated
 import yt_dlp
 
 from app.services.ytmusic_service import YTMusicService
+from app.schemas.http_responses import create_http_exception, ErrorMessages
 
 router = APIRouter()
 service = YTMusicService()
 
 
-@router.get("/stream-url")
-def get_stream_url(
-    video_id: Optional[str] = Query(None, description="YouTube videoId obtido via /resolve"),
-    title: Optional[str] = Query(None),
-    artist: Optional[str] = Query(None),
-):
-    target_video_id = video_id
+class StreamUrlParams:
+    def __init__(
+        self,
+        video_id: Annotated[str | None, Query(description="YouTube videoId obtained via /resolve")] = None,
+        title: Annotated[str | None, Query(description="Title of the song")] = None,
+        artist: Annotated[str | None, Query(description="Artist of the song")] = None,
+    ):
+        self.video_id = video_id
+        self.title = title
+        self.artist = artist
 
+
+
+# Doc: This endpoint resolves a song based on title and artist, returning the videoId if found
+@router.get("/stream-url", response_model=dict, status_code=status.HTTP_200_OK)
+def get_stream_url(params: Annotated[StreamUrlParams, Depends()]):
+    target_video_id = params.video_id
+    title = params.title
+    artist = params.artist
 
     if not target_video_id and title and artist:
         result = service.search_song(title, artist)
         if not result or "videoId" not in result:
-            raise HTTPException(404, "Não foi possível resolver o videoId")
+            raise create_http_exception(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=ErrorMessages.SONG_NOT_FOUND,
+            )
         target_video_id = result["videoId"]
 
     if not target_video_id:
-        raise HTTPException(400, "Forneça video_id ou title + artist")
+        raise create_http_exception(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorMessages.INVALID_URL,
+        )
 
     ydl_opts: dict[str, object] = {
         "format": "bestaudio/best",
@@ -33,17 +51,20 @@ def get_stream_url(
     }
 
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl: # type: ignore
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore
             url = f"https://www.youtube.com/watch?v={target_video_id}"
             info = ydl.extract_info(url, download=False)
 
             audio_formats = [
-                f for f in info.get("formats", []) # type: ignore
+                f for f in info.get("formats", [])  # type: ignore
                 if f.get("vcodec") == "none" and f.get("acodec") != "none"
             ]
 
             if not audio_formats:
-                raise Exception("Nenhum áudio encontrado")
+                raise create_http_exception(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=ErrorMessages.SONG_NOT_FOUND,
+                )
 
             best_audio = audio_formats[0]
 
@@ -57,4 +78,7 @@ def get_stream_url(
             }
 
     except Exception as e:
-        raise HTTPException(500, f"Erro ao extrair stream: {str(e)}")
+        raise create_http_exception(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error to extract stream: {str(e)}",
+        )

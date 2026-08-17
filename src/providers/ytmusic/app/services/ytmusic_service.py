@@ -3,11 +3,11 @@ from ytmusicapi import YTMusic
 
 class YTMusicService:
     def __init__(self) -> None:
-        # Sem authentication for public data access
+        # No authentication for public data access
         self.ytmusic_client = YTMusic()
 
     def search_song(self ,title: str ,artist: str) -> dict | None:
-        query = f"{title} {artist}" # Texto da Busca 
+        query = f"{title} {artist}" 
         results = self.ytmusic_client.search(query, filter="songs", limit=1) # Busca
         if not results: 
             return None

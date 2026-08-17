@@ -14,12 +14,14 @@ export async function resolveSong(title: string,artist: string ,signal?: AbortSi
     `${API_URL}/ytmusic/resolve?${params.toString()}`,
     { signal }
   );
+
   if (!res.ok) {
     const message = await res.text();
     throw new Error(
       `Failed to resolve song (${res.status}): ${message}`
     );
   }
+  
   const data: ResolveResponse = await res.json();
   return data;
 }

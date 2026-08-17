@@ -41,7 +41,14 @@ BAD_REQUEST_RESPONSE = build_error_response(
     ErrorMessages.INVALID_PAYLOAD,
 )
 
+INVALID_URL_RESPONSE = build_error_response(
+    400,
+    "Invalid URL",
+    ErrorMessages.INVALID_URL,
+)
+
 STANDARD_ERRORS = {
     **NOT_FOUND_RESPONSE,
     **BAD_REQUEST_RESPONSE,
+    **INVALID_URL_RESPONSE,
 }
