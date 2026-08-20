@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Song from "../domain/models/Song";
-import { songRepository } from "../repositories/songRepositoryFallback";
+import { listSongs } from "../api/songs";
+import type { Song } from "../api/types";
 
 const PAGE_SIZE = 15;
 
@@ -15,21 +15,10 @@ function useSongs(search: string, page: number) {
       try {
         setLoading(true);
 
-        const allSongs = await songRepository.getAllSongs();
+        const result = await listSongs(search, page, PAGE_SIZE);
 
-        const q = search.toLowerCase();
-        const filtered = allSongs.filter(
-          (song) =>
-            song.title.toLowerCase().includes(q) ||
-            song.artist.toLowerCase().includes(q)
-        );
-
-    
-        const start = (page - 1) * PAGE_SIZE;
-        const end = start + PAGE_SIZE;
-
-        setSongs(filtered.slice(start, end));
-        setTotal(filtered.length);
+        setSongs(result.data);
+        setTotal(result.total);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {

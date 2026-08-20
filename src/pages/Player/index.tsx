@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import useSong from "../../hooks/useSong";
-import { resolveSong } from "../../services/musicProvider";
+import { resolveSong } from "../../api/ytmusic";
 
 import YTPlayer from "../../components/yt-components/YTPlayer";
 import Powered from "../../components/Powered";

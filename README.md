@@ -140,7 +140,7 @@ npm run preview
 
 ```bash
 # Navegue para o diretório do backend
-cd src/providers/ytmusic
+cd src/providers/backend
 
 # Instale as dependências
 pip install -r requirements.txt
@@ -196,7 +196,7 @@ VITE_API_URL=http://localhost:8000
 
 ### Backend
 
-O backend cria e mantém o banco SQLite em `src/providers/ytmusic/app/data/music.sqlite`.
+O backend cria e mantém o banco SQLite em `src/providers/backend/app/data/music.sqlite`.
 
 ---
 

@@ -24,7 +24,7 @@ const SearchBar = ({
   return (
     <div className={`relative flex w-full max-w-xl items-center ${className}`.trim()}>
       <Search
-        className="pointer-events-none absolute left-3 h-4 w-4 text-zinc-400 sm:left-3.5 sm:h-5 sm:w-5 dark:text-zinc-500"
+        className="absolute left-3 h-4 w-4 text-zinc-400 sm:left-3.5 sm:h-5 sm:w-5 dark:text-zinc-500"
         aria-hidden="true"
       />
       <input

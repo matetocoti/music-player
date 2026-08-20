@@ -1,6 +1,6 @@
 ﻿import { memo, useMemo, type ReactNode } from 'react';
 import { Disc3, PlayCircle } from 'lucide-react';
-import Song from '../../domain/models/Song';
+import type { Song } from '../../api/types';
 
 interface SongBoxProps {
   song: Song;

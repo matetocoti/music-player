@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Song from "../domain/models/Song";
-import { songRepository } from "../repositories/songRepositoryFallback";
+import { getSong } from "../api/songs";
+import type { Song } from "../api/types";
 
 function useSong(id: string) {
   const [song, setSong] = useState<Song | null>(null);
@@ -15,7 +15,7 @@ function useSong(id: string) {
 
     async function fetchSong() {
       try {
-        const oneSong = await songRepository.getSongById(id);
+        const oneSong = await getSong(id);
 
         if (!oneSong) {
           setError("Song not found");
