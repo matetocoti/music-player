@@ -5,9 +5,11 @@ import sqlite3
 from pathlib import Path
 from typing import Any, TypedDict
 
+from app.core.entities.song import SongEntity
+
 
 class PaginatedSongs(TypedDict):
-    data: list[dict[str, Any]]
+    data: list[SongEntity]
     total: int
     page: int
     per_page: int
@@ -55,12 +57,12 @@ class SongsService:
             INSERT OR REPLACE INTO songs (id, title, artist, album, duration, url)
             VALUES (:id, :title, :artist, :album, :duration, :url)
             """,
-            self._load_seed_songs(),
+            [song.to_storage_payload() for song in self._load_seed_songs()],
         )
 
-    def _load_seed_songs(self) -> list[dict[str, Any]]:
+    def _load_seed_songs(self) -> list[SongEntity]:
         source = self.seed_path.read_text(encoding="utf-8")
-        songs: list[dict[str, Any]] = []
+        songs: list[SongEntity] = []
         for block in re.findall(r"new Song\(\{(.*?)\}\)", source, flags=re.S):
             values: dict[str, Any] = {}
             for field in block.split(","):
@@ -74,14 +76,7 @@ class SongsService:
                 elif raw_value.isdigit():
                     values[key] = int(raw_value)
             if {"id", "title", "artist"}.issubset(values):
-                songs.append({
-                    "id": str(values["id"]),
-                    "title": str(values["title"]),
-                    "artist": str(values["artist"]),
-                    "album": str(values.get("album", "")),
-                    "duration": int(values.get("duration", 0)),
-                    "url": str(values.get("url", "")),
-                })
+                songs.append(SongEntity.from_mapping(values))
         return songs
 
     def list_songs(self, query: str, page: int, per_page: int) -> PaginatedSongs:
@@ -106,13 +101,13 @@ class SongsService:
                 (search, search, per_page, (page - 1) * per_page),
             ).fetchall()
         return {
-            "data": [dict(row) for row in rows],
+            "data": [SongEntity.from_mapping(dict(row)) for row in rows],
             "total": total,
             "page": page,
             "per_page": per_page,
         }
 
-    def get_song_by_id(self, song_id: str) -> dict[str, Any] | None:
+    def get_song_by_id(self, song_id: str) -> SongEntity | None:
         with self._connect() as connection:
             row = connection.execute(
                 """
@@ -120,17 +115,10 @@ class SongsService:
                 FROM songs WHERE id = ? LIMIT 1
                 """, (song_id,)
             ).fetchone()
-        return dict(row) if row else None
+        return SongEntity.from_mapping(dict(row)) if row else None
 
-    def save_song(self, song: dict[str, Any]) -> dict[str, Any]:
-        payload = {
-            "id": str(song["id"]),
-            "title": str(song["title"]),
-            "artist": str(song["artist"]),
-            "album": str(song.get("album", "")),
-            "duration": int(song.get("duration", 0)),
-            "url": str(song.get("url", "")),
-        }
+    def save_song(self, song: SongEntity) -> SongEntity:
+        payload = song.to_storage_payload()
         with self._connect() as connection:
             connection.execute(
                 """
@@ -138,7 +126,7 @@ class SongsService:
                 VALUES (:id, :title, :artist, :album, :duration, :url)
                 """, payload
             )
-        return payload
+        return song
 
 
 songs_service = SongsService()
