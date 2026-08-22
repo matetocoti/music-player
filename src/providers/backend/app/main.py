@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from app.api.routes.songs import router as songs_router
 from app.api.routes.stream import router as stream_router
@@ -7,6 +8,7 @@ from app.api.routes.ytmusic import router as resolve_router
 
 app = FastAPI(title="Music Player Backend")
 
+app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
