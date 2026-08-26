@@ -75,6 +75,7 @@ const PlayerPage = () => {
   }, [song]);
 
   // Update duration when video ID changes
+  // OBS: tHE PLAYING STATE IS ALSO INCLUDED IN THE DEPENDENCY ARRAY TO ENSURE THAT THE DURATION IS CHECKED WHEN PLAYING STARTS, AS THE DURATION MIGHT NOT BE IMMEDIATELY AVAILABLE.
   useEffect(() => {
     if (!videoId || !ytRef.current) return;
 

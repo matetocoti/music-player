@@ -1,19 +1,13 @@
 ﻿import { memo, useMemo, type ReactNode } from 'react';
 import { Disc3, PlayCircle } from 'lucide-react';
 import type { Song } from '../../api/types';
+import { formatDuration } from '../../utils/formatTime';
 
 interface SongBoxProps {
   song: Song;
   className?: string;
   children?: ReactNode;
 }
-
-const formatDuration = (seconds?: number | null): string | null => {
-  if (!seconds || seconds <= 0) return null;
-  const minutes = Math.floor(seconds / 60);
-  const secs = String(seconds % 60).padStart(2, '0');
-  return `${minutes}:${secs}`;
-};
 
 const SongBox = ({ song, className = '', children }: SongBoxProps) => {
   const { title, artist, album = 'Unknown Album', duration: songDuration } = song;
