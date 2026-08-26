@@ -14,7 +14,7 @@ from app.services.songs_service import songs_service
 router = APIRouter()
 
 
-@router.get("", tags=["songs"])
+@router.get("")
 def list_songs(params: Annotated[SongListParams, Query()],) -> PaginatedSongsResponseDTO:
     result = songs_service.list_songs(params.query, params.page, params.per_page)
     return PaginatedSongsResponseDTO(
@@ -25,7 +25,7 @@ def list_songs(params: Annotated[SongListParams, Query()],) -> PaginatedSongsRes
     )
 
 
-@router.get("/{song_id}", responses=NOT_FOUND_RESPONSE, tags=["songs"])
+@router.get("/{song_id}", responses=NOT_FOUND_RESPONSE)
 def get_song(song_id: str) -> SongResponseDTO:
     song = songs_service.get_song_by_id(song_id)
     if not song:
@@ -36,7 +36,7 @@ def get_song(song_id: str) -> SongResponseDTO:
     return SongResponseDTO.from_entity(song)
 
 
-@router.post("", status_code=status.HTTP_204_NO_CONTENT, responses=BAD_REQUEST_RESPONSE, tags=["songs"],)
+@router.post("", status_code=status.HTTP_204_NO_CONTENT, responses=BAD_REQUEST_RESPONSE)
 def save_song(payload: SaveSongRequest) -> None:
     entity = SongEntity.from_mapping(payload.model_dump())
     saved_song = songs_service.save_song(entity)
@@ -44,4 +44,13 @@ def save_song(payload: SaveSongRequest) -> None:
         raise create_http_exception(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorMessages.INVALID_PAYLOAD,
+        )
+
+@router.delete("/{song_id}", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_FOUND_RESPONSE)
+def delete_song(song_id: str) -> None:
+    deleted = songs_service.delete_song(song_id)
+    if not deleted:
+        raise create_http_exception(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorMessages.SONG_NOT_FOUND,
         )

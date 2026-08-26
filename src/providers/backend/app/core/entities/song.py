@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Mapping
+from uuid import uuid4
 
 
 @dataclass(frozen=True)
@@ -16,12 +17,12 @@ class SongEntity:
     @classmethod
     def from_mapping(cls, payload: Mapping[str, Any]) -> "SongEntity":
         return cls(
-            id=str(payload["id"]),
+            id=str(payload.get("id") or uuid4()),
             title=str(payload["title"]),
             artist=str(payload["artist"]),
-            album=str(payload.get("album", "")),
-            duration=int(payload.get("duration", 0)),
-            url=str(payload.get("url", "")),
+            album=str(payload.get("album") or ""),
+            duration=int(payload.get("duration") or 0),
+            url=str(payload.get("url") or ""),
         )
 
     def to_storage_payload(self) -> dict[str, Any]:

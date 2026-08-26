@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic import field_validator, model_validator
 
 from app.Common.Security.validation import (
@@ -30,19 +30,20 @@ class ResolveSongParams(BaseModel):
 
 
 class SaveSongRequest(BaseModel):
-	id: str
+	model_config = ConfigDict(extra="forbid")
+
 	title: str
 	artist: str
 	album: str | None = None
 	duration: int | None = Field(default=None, ge=0)
-	url: str | None = None
+	
 
-	@field_validator("id", "title", "artist")
+	@field_validator("title", "artist")
 	@classmethod
 	def validate_required_fields(cls, value: str, info) -> str:
 		return validate_required_text(value, info.field_name)
 
-	@field_validator("album", "url")
+	@field_validator("album")
 	@classmethod
 	def normalize_optional_fields(cls, value: str | None) -> str | None:
 		return validate_optional_text(value)

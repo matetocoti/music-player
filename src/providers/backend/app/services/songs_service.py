@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from app.core.entities.song import SongEntity
+from app.data.songs_queries import SongsQueries
 
 
 class PaginatedSongs(TypedDict):
@@ -36,27 +37,13 @@ class SongsService:
 
     def _ensure_database(self) -> None:
         with self._connect() as connection:
-            connection.execute(
-                """
-                CREATE TABLE IF NOT EXISTS songs (
-                    id TEXT PRIMARY KEY,
-                    title TEXT NOT NULL,
-                    artist TEXT NOT NULL,
-                    album TEXT NOT NULL DEFAULT '',
-                    duration INTEGER NOT NULL DEFAULT 0,
-                    url TEXT NOT NULL DEFAULT ''
-                )
-                """
-            )
-            if connection.execute("SELECT COUNT(*) FROM songs").fetchone()[0] == 0:
+            connection.execute(SongsQueries.CREATE_TABLE)
+            if connection.execute(SongsQueries.COUNT_ALL).fetchone()[0] == 0:
                 self._seed_database(connection)
 
     def _seed_database(self, connection: sqlite3.Connection) -> None:
         connection.executemany(
-            """
-            INSERT OR REPLACE INTO songs (id, title, artist, album, duration, url)
-            VALUES (:id, :title, :artist, :album, :duration, :url)
-            """,
+            SongsQueries.INSERT,
             [song.to_storage_payload() for song in self._load_seed_songs()],
         )
 
@@ -83,21 +70,12 @@ class SongsService:
         page = max(page, 1)
         per_page = max(per_page, 1)
         search = f"%{query}%"
-        where_clause = """
-            WHERE CASEFOLD(title) LIKE CASEFOLD(?)
-               OR CASEFOLD(artist) LIKE CASEFOLD(?)
-        """
         with self._connect() as connection:
             total = connection.execute(
-                f"SELECT COUNT(*) FROM songs {where_clause}", (search, search)
+                SongsQueries.COUNT_BY_SEARCH, (search, search)
             ).fetchone()[0]
             rows = connection.execute(
-                f"""
-                SELECT id, title, artist, album, duration, url
-                FROM songs {where_clause}
-                ORDER BY CAST(id AS INTEGER), id
-                LIMIT ? OFFSET ?
-                """,
+                SongsQueries.LIST,
                 (search, search, per_page, (page - 1) * per_page),
             ).fetchall()
         return {
@@ -109,24 +87,20 @@ class SongsService:
 
     def get_song_by_id(self, song_id: str) -> SongEntity | None:
         with self._connect() as connection:
-            row = connection.execute(
-                """
-                SELECT id, title, artist, album, duration, url
-                FROM songs WHERE id = ? LIMIT 1
-                """, (song_id,)
-            ).fetchone()
+            row = connection.execute(SongsQueries.GET_BY_ID, (song_id,)).fetchone()
         return SongEntity.from_mapping(dict(row)) if row else None
 
     def save_song(self, song: SongEntity) -> SongEntity:
         payload = song.to_storage_payload()
         with self._connect() as connection:
-            connection.execute(
-                """
-                INSERT OR REPLACE INTO songs (id, title, artist, album, duration, url)
-                VALUES (:id, :title, :artist, :album, :duration, :url)
-                """, payload
-            )
+            connection.execute(SongsQueries.INSERT, payload)
         return song
 
+    def delete_song(self, song_id: str) -> bool:
+        with self._connect() as connection:
+            cursor = connection.execute(
+                "DELETE FROM songs WHERE id = ?", (song_id,)
+            )
+        return cursor.rowcount > 0
 
 songs_service = SongsService()

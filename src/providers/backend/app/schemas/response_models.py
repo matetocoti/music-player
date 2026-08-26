@@ -14,7 +14,6 @@ class SongResponseDTO(BaseModel):
     artist: str
     album: Optional[str] = "Unknown Album"
     duration: Optional[int] = None
-    url: Optional[str] = None
 
     @property
     def duration_in_minutes(self) -> Optional[float]:
@@ -30,7 +29,6 @@ class SongResponseDTO(BaseModel):
             artist=song.artist,
             album=song.album or "Unknown Album",
             duration=song.duration,
-            url=song.url or None,
         )
 
 
