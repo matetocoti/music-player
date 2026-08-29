@@ -29,8 +29,6 @@ class ResolveSongParams(BaseModel):
 		return validate_required_text(value, info.field_name)
 
 
-
-
 class SaveSongRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -63,7 +61,6 @@ class SaveSongRequest(BaseModel):
             
         except (TypeError, ValueError):
             raise ValueError("Duration must be a valid number.")
-
 
 		
 class StreamUrlParams(BaseModel):

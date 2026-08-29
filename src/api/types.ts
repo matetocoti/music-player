@@ -7,6 +7,13 @@ export type Song = {
   url?: string;
 };
 
+export type CreateSongRequest = {
+  title: string;
+  artist: string;
+  album?: string;
+  duration?: number;
+};
+
 export type PaginatedSongs = {
   data: Song[];
   total: number;

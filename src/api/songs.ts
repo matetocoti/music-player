@@ -1,4 +1,4 @@
-import type { PaginatedSongs, Song } from "./types";
+import type { PaginatedSongs, Song ,CreateSongRequest} from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 const SONGS_API_URL = `${API_URL}/songs`;
@@ -41,4 +41,25 @@ export async function getSong(id: string, signal?: AbortSignal): Promise<Song | 
   }
   await ensureOk(response, "Failed to load song");
   return response.json();
+}
+
+export async function createSong(song: CreateSongRequest, signal?: AbortSignal): Promise<Song> {
+  const response = await fetch(SONGS_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(song),
+    signal,
+  });
+  await ensureOk(response, "Failed to create song");
+  return response.json();
+}
+
+export async function deleteSong(id: string, signal?: AbortSignal): Promise<void> {
+  const response = await fetch(`${SONGS_API_URL}/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    signal,
+  });
+  await ensureOk(response, "Failed to delete song");
 }
