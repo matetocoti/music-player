@@ -36,8 +36,8 @@ def get_song(song_id: str) -> SongResponseDTO:
     return SongResponseDTO.from_entity(song)
 
 
-@router.post("", status_code=status.HTTP_204_NO_CONTENT, responses=BAD_REQUEST_RESPONSE)
-def save_song(payload: SaveSongRequest) -> None:
+@router.post("", status_code=status.HTTP_201_CREATED, responses=BAD_REQUEST_RESPONSE)
+def save_song(payload: SaveSongRequest) -> SongResponseDTO:
     entity = SongEntity.from_mapping(payload.model_dump())
     saved_song = songs_service.save_song(entity)
     if not saved_song:
@@ -45,6 +45,7 @@ def save_song(payload: SaveSongRequest) -> None:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorMessages.INVALID_PAYLOAD,
         )
+    return SongResponseDTO.from_entity(saved_song)
 
 @router.delete("/{song_id}", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_FOUND_RESPONSE)
 def delete_song(song_id: str) -> None:

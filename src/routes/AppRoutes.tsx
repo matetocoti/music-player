@@ -5,6 +5,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 
 const Home = lazy(() => import("../pages/Home"));
 const Player = lazy(() => import("../pages/Player"));
+const SaveSong = lazy(() => import("../pages/SaveSong"));
 
 const classNameContent = "text-center text-2xl font-bold mt-10";
 
@@ -20,6 +21,7 @@ const AppRoutes = () => {
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/player/:id" element={<Player />} />
+            <Route path="/save-song" element={<SaveSong />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

@@ -1,5 +1,6 @@
 import { memo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 import MyGridContainer from "../../components/MyGridContainer";
 import SongBox from "../../components/SongBox";
@@ -11,13 +12,14 @@ import PaginationBar from "../../components/pagination-components/PaginationBar"
 const Home = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
   const { songs, total, pageSize, loading, error } = useSongs(search, page);
   const totalPages = Math.ceil(total / pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
   return (
     <section className={`home-page ${containerStyle}`}>
-      <div className="flex flex-col gap-1 rounded-3xl border border-zinc-200/70 bg-white/70 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900/60">
+      <div className="flex flex-col gap-3 rounded-3xl border border-zinc-200/70 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-500">
             Discover
@@ -26,13 +28,28 @@ const Home = () => {
             Find your next favorite song
           </h2>
         </div>
-        <SearchBar
-          search={search}
-          onSearchChange={(newSearch) => {
-            setSearch(newSearch);
-            setPage(1);
-          }}
-        />
+
+        <div className="flex items-center gap-3 sm:w-[480px]">
+          <div className="flex-1">
+            <SearchBar
+              search={search}
+              onSearchChange={(newSearch) => {
+                setSearch(newSearch);
+                setPage(1);
+              }}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/save-song")}
+            title="Add song(metadata only)"
+            aria-label="Add song(metadata only)"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-400/40 bg-emerald-500/15 text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-500/25"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
+        </div>
       </div>
       <div className="flex min-h-0 flex-1 flex-col">
         {loading ? (
@@ -66,7 +83,7 @@ const Home = () => {
         )}
       </div>
       <div className="fixed left-0 right-0 bottom-20 sm:bottom-20 z-50 flex justify-center pointer-events-none px-5">
-        <div className="pointer-events-auto max-w-sm w-full mx-auto bg-white/50  from-emerald-500 to-teal-500 animate-fade-in backdrop-blur-md rounded-2xl px-3 py-3 shadow-2xl border border-zinc-200/60 dark:border-zinc-800 transform -translate-y-2 transition-transform">
+        <div className="pointer-events-auto w-full max-w-sm rounded-2xl border border-zinc-200/60 bg-white/50 px-3 py-3 shadow-2xl backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
           <PaginationBar page={page} totalPages={totalPages} setPage={setPage} />
         </div>
       </div>
