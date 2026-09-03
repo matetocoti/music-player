@@ -2,9 +2,10 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useSongActions } from "../../hooks/useSongActions";
-import { Button } from "../../components/UI/Button";
+
 import BackButton from "../../components/UI/BackButton";
-import { CheckCircle2, AlertCircle, Loader2, Save } from "lucide-react";
+import { CheckCircle2, AlertCircle,Save } from "lucide-react";
+import SongForm from "../../components/SongForm";
 
 const SaveSongPage = () => {
   const { loading, error, success, data, create } = useSongActions();
@@ -18,40 +19,46 @@ const SaveSongPage = () => {
 
     const albumValue = formData.get("album") as string;
     const durationValue = formData.get("duration") as string;
+    const duration = durationValue ? +durationValue : undefined;
+
+    
+    if (duration !== undefined && (duration < 0 || duration > 1440)) {
+      toast.error("Invalid duration", {
+        description: "Duration must be between 0 and 1440 minutes.",
+      });
+      return;
+    }
 
     const songData = {
       title: formData.get("title") as string,
       artist: formData.get("artist") as string,
       album: albumValue?.trim() ? albumValue : undefined,
-      duration: durationValue ? +durationValue : undefined,
+      duration,
     };
 
-    try {
-      const createdSong = await create(songData);
+    const createdSong = await create(songData);
 
-      if (!createdSong) {
-        return;
-      }
-
+    if (createdSong) {
       formRef.current?.reset();
       toast.success(`"${createdSong.title}" added successfully`, {
         description: 'You can keep browsing your music library.',
       });
-      navigate("/", { replace: true });
-    } catch (err) {
-      console.error("Failed to save song" + (err instanceof Error ? `: ${err.message}` : ""));
+      
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 1500);
     }
   };
 
   return (
     <main className="flex h-full flex-1 min-h-0 w-full flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-zinc-50/50 p-4 shadow-sm backdrop-blur-xl dark:border-white/5 dark:bg-zinc-950/40 sm:p-6 lg:p-8">
       
-      {/* Header Fixo no Topo */}
+      
       <header className="mb-2 flex w-full shrink-0">
         <BackButton className="px-2 py-2 text-sm font-semibold tracking-wider text-zinc-500 transition-colors hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 uppercase" />
       </header>
 
-      {/* Container Centralizado Expandido */}
+      
       <div className="flex flex-1 items-center justify-center overflow-y-auto pb-8">
         <div className="w-full max-w-md rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-zinc-900/60 sm:p-8">
           
@@ -65,7 +72,7 @@ const SaveSongPage = () => {
             </div>
           </div>
           
-          {/* Feedback Messages */}
+          
           {success && data && (
             <div className="mb-6 flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-50/50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 animate-in fade-in slide-in-from-top-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
@@ -86,90 +93,7 @@ const SaveSongPage = () => {
               <p>{error}</p>
             </div>
           )}
-
-          {/* Form */}
-          <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
-            
-            <div className="flex flex-col gap-2">
-              <label htmlFor="title" className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                Title <span className="text-emerald-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                required
-                disabled={loading}
-                className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
-                placeholder="e.g. Song title"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="artist" className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                Artist <span className="text-emerald-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="artist"
-                name="artist"
-                required
-                disabled={loading}
-                className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
-                placeholder="e.g. Artist name"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="album" className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                <span>Album</span>
-                <span className="tracking-normal text-zinc-400 dark:text-zinc-500">Optional</span>
-              </label>
-              <input
-                type="text"
-                id="album"
-                name="album"
-                disabled={loading}
-                className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
-                placeholder="e.g. Album name"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="duration" className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                <span>Duration</span>
-                <span className="tracking-normal text-zinc-400 dark:text-zinc-500">Optional</span>
-              </label>
-              <input
-                type="number"
-                id="duration"
-                name="duration"
-                step="0.01"
-                min="0"
-                placeholder="e.g. 3.45"
-                disabled={loading}
-                className="h-12 w-full rounded-xl border  border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="mt-2 h-12 w-full rounded-xl bg-emerald-500 text-sm font-bold text-zinc-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 hover:shadow-emerald-500/30 active:scale-[0.98]"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>Saving...</span>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <Save className="h-5 w-5" />
-                  <span>Save Song</span>
-                </div>
-              )}
-            </Button>
-          </form>
+          <SongForm onSubmit={handleSubmit} loading={loading} />
           <footer className="mt-6 border-t border-zinc-200/80 pt-4 dark:border-zinc-800">
             <div className="flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.7)]" />

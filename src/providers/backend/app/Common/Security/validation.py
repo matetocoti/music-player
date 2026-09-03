@@ -29,3 +29,13 @@ def validate_stream_params(values: dict[str, Any]) -> None:
 		return
 
 	raise ValueError("Provide video_id or both title and artist")
+
+
+def validate_duration(value: int | None) -> int | None:
+	if value is None:
+		return None
+	if value < 0:
+		raise ValueError("Duration cannot be less than 0 seconds.")
+	if value > 86400:
+		raise ValueError("Duration cannot exceed 24 hours.")
+	return value
