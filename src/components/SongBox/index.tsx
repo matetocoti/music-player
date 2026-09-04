@@ -1,7 +1,9 @@
 ﻿import { memo, useMemo, type ReactNode } from 'react';
-import { Disc3, PlayCircle } from 'lucide-react';
+import { Disc3, PlayCircle} from 'lucide-react';
 import type { Song } from '../../api/types';
 import { formatDuration } from '../../utils/formatTime';
+
+
 
 interface SongBoxProps {
   song: Song;
@@ -39,9 +41,11 @@ const SongBox = ({ song, className = '', children }: SongBoxProps) => {
           </p>
         </div>
       </div>
+      <div>
       <div className="mt-4 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 transition-colors duration-300 group-hover:text-emerald-500 sm:mt-6 sm:gap-2 sm:text-[11px] dark:text-zinc-600 dark:group-hover:text-emerald-400">
         <PlayCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
         <span>Tap to play</span>
+      </div>
       </div>
       {children}
     </article>

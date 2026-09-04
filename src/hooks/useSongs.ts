@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { listSongs } from "../api/songs";
 import type { Song } from "../api/types";
 
@@ -9,6 +9,7 @@ function useSongs(search: string, page: number) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     async function fetchSongs() {
@@ -27,7 +28,11 @@ function useSongs(search: string, page: number) {
     }
 
     fetchSongs();
-  }, [search, page]);
+  }, [search, page, reloadKey]);
+
+  const reload = useCallback(() => {
+    setReloadKey((currentKey) => currentKey + 1);
+  }, []);
 
   return {
     songs,
@@ -35,6 +40,7 @@ function useSongs(search: string, page: number) {
     pageSize: PAGE_SIZE,
     loading,
     error,
+    reload,
   };
 }
 
