@@ -96,6 +96,29 @@ class SongsService:
             connection.execute(SongsQueries.INSERT, payload)
         return song
 
+    def update_song(self, song_id: str, updates: dict[str, Any]) -> SongEntity | None:
+        with self._connect() as connection:
+            row = connection.execute(SongsQueries.GET_BY_ID, (song_id,)).fetchone()
+            if row is None:
+                return None
+
+            current = dict(row)
+            current.update(updates)
+            payload = SongEntity.from_mapping(current).to_storage_payload()
+            connection.execute(
+                SongsQueries.UPDATE,
+                (
+                    payload["title"],
+                    payload["artist"],
+                    payload["album"],
+                    payload["duration"],
+                    payload["url"],
+                    song_id,
+                ),
+            )
+
+        return SongEntity.from_mapping(payload)
+
     def delete_song(self, song_id: str) -> bool:
         with self._connect() as connection:
             cursor = connection.execute(

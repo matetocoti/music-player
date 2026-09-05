@@ -62,6 +62,37 @@ class SaveSongRequest(BaseModel):
 
 		return validate_duration((minutes * 60) + seconds)
 
+class UpdateSongRequest(BaseModel):
+	model_config = ConfigDict(extra="forbid")
+
+	title: str | None = None
+	artist: str | None = None
+	album: str | None = None
+	duration: int | None = None
+
+	@field_validator("title", "artist")
+	@classmethod
+	def normalize_text(cls, value: str | None) -> str | None:
+		return validate_optional_text(value)
+
+	@field_validator("album")
+	@classmethod
+	def normalize_album(cls, value: str | None) -> str | None:
+		return validate_optional_text(value)
+
+	@field_validator("duration", mode="before")
+	@classmethod
+	def convert_minutes_to_seconds(cls, value) -> int | None:
+		if value is None:
+			return None
+		try:
+			float_val = float(value)
+			minutes = int(float_val)
+			seconds = round((float_val - minutes) * 100)
+		except (TypeError, ValueError, OverflowError):
+			raise ValueError("Duration must be a valid number.")
+
+		return validate_duration((minutes * 60) + seconds)
 		
 class StreamUrlParams(BaseModel):
 	video_id: str | None = None

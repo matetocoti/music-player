@@ -38,3 +38,13 @@ class SongsQueries:
         WHERE id = ?
         LIMIT 1
     """
+
+    UPDATE = """
+        UPDATE songs
+        SET title = :title,
+            artist = :artist,
+            album = :album,
+            duration = :duration,
+            url = :url
+        WHERE id = ?
+    """

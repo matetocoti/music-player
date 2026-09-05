@@ -7,9 +7,10 @@ from app.schemas.error_responses import (
     NOT_FOUND_RESPONSE,
     create_http_exception,
 )
-from app.schemas.request_models import SaveSongRequest, SongListParams
+from app.schemas.request_models import SaveSongRequest, UpdateSongRequest, SongListParams
 from app.schemas.response_models import PaginatedSongsResponseDTO, SongResponseDTO
 from app.services.songs_service import songs_service
+
 
 router = APIRouter()
 
@@ -46,6 +47,19 @@ def save_song(payload: SaveSongRequest) -> SongResponseDTO:
             detail=ErrorMessages.INVALID_PAYLOAD,
         )
     return SongResponseDTO.from_entity(saved_song)
+
+
+@router.put("/{song_id}", responses=NOT_FOUND_RESPONSE)
+def update_song(song_id: str, payload: UpdateSongRequest) -> SongResponseDTO:
+    updates = payload.model_dump(exclude_unset=True)
+    updated_song = songs_service.update_song(song_id, updates)
+    if not updated_song:
+        raise create_http_exception(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorMessages.SONG_NOT_FOUND,
+        )
+    return SongResponseDTO.from_entity(updated_song)
+
 
 @router.delete("/{song_id}", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_FOUND_RESPONSE)
 def delete_song(song_id: str) -> None:
