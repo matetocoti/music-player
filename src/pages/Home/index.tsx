@@ -9,11 +9,13 @@ import useSongs from "../../hooks/useSongs";
 import SearchBar from "../../components/pagination-components/SearchBar";
 import PaginationBar from "../../components/pagination-components/PaginationBar";
 import { useSongActions } from "../../hooks/useSongActions";
+import Modal from "../../components/UI/Modal";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
+  const [songToDelete, setSongToDelete] = useState<{ id: string; title: string } | null>(null);
   const navigate = useNavigate();
   const { songs, total, pageSize, loading, error, reload } = useSongs(search, page);
   const { deleteSong } = useSongActions();
@@ -21,10 +23,6 @@ const Home = () => {
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
   const handleDelete = async (songId: string, title: string) => {
-    if (!window.confirm(`Delete "${title}" from your library?`)) {
-      return;
-    }
-
     setDeletingSongId(songId);
     const deleted = await deleteSong(songId);
     if (deleted) {
@@ -98,7 +96,7 @@ const Home = () => {
                       onClick={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        void handleDelete(song.id, song.title);
+                        setSongToDelete({ id: song.id, title: song.title });
                       }}
                       disabled={deletingSongId === song.id}
                       title={`Delete ${song.title}`}
@@ -123,6 +121,36 @@ const Home = () => {
           <PaginationBar page={page} totalPages={totalPages} setPage={setPage} />
         </div>
       </div>
+      <Modal
+        isOpen={songToDelete !== null}
+        onClose={() => setSongToDelete(null)}
+        title="Delete song(Metadata only)"
+      >
+        <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+          Are you sure you want to delete "{songToDelete?.title}" from your library?
+        </p>
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => setSongToDelete(null)}
+            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!songToDelete) return;
+              const song = songToDelete;
+              setSongToDelete(null);
+              void handleDelete(song.id, song.title);
+            }}
+            className="rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait disabled:opacity-60"
+          >
+            Delete
+          </button>
+        </div>
+      </Modal>
     </section>
   );
 };
