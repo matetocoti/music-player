@@ -14,8 +14,8 @@ const Header = ({ title = "My Music App", className = "", children, ...props }: 
     >
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 sm:h-12 sm:w-12 dark:bg-emerald-600 dark:shadow-emerald-900/30">
-            <Music2 className="h-4 w-4 stroke-2 sm:h-6 sm:w-6" aria-hidden="true" />
+          <div className="flex h-10 w-10 shrink-0 animate-pulse items-center justify-center rounded-full border border-blue-200 bg-green-700 shadow-lg shadow-green-700/25 sm:h-12 sm:w-12">
+            <Music2 className="h-4 w-4 stroke-4 text-white sm:h-6 sm:w-6" aria-hidden="true" />
           </div>
           <div className="flex flex-col justify-center">
             <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 sm:text-xs dark:text-emerald-500">
