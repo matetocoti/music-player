@@ -7,6 +7,11 @@ import BackButton from "../../components/UI/BackButton";
 import { CheckCircle2, AlertCircle,Save } from "lucide-react";
 import SongForm from "../../components/SongForm";
 
+const getFormString = (formData: FormData, fieldName: string): string => {
+  const value = formData.get(fieldName);
+  return typeof value === "string" ? value : "";
+};
+
 const SaveSongPage = () => {
   const { loading, error, success, data, create } = useSongActions();
   const navigate = useNavigate();
@@ -17,8 +22,8 @@ const SaveSongPage = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const albumValue = formData.get("album") as string;
-    const durationValue = formData.get("duration") as string;
+    const albumValue = getFormString(formData, "album");
+    const durationValue = getFormString(formData, "duration");
     const duration = durationValue ? +durationValue : undefined;
 
     
@@ -30,8 +35,8 @@ const SaveSongPage = () => {
     }
 
     const songData = {
-      title: formData.get("title") as string,
-      artist: formData.get("artist") as string,
+      title: getFormString(formData, "title"),
+      artist: getFormString(formData, "artist"),
       album: albumValue?.trim() ? albumValue : undefined,
       duration,
     };

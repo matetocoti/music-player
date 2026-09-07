@@ -2,13 +2,22 @@ import { forwardRef } from "react";
 import { Button } from "../UI/Button";
 import { Loader2, Save } from "lucide-react";
 
+interface SongFormValues {
+  title?: string;
+  artist?: string;
+  album?: string;
+  duration?: string | number;
+}
+
 interface SongFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   loading?: boolean;
+  initialValues?: SongFormValues;
+  submitLabel?: string;
 }
 
 
-const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loading = false }, ref) => {
+const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loading = false, initialValues, submitLabel = "Save Song" }, ref) => {
     return (
       <form ref={ref} onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
@@ -19,6 +28,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
             type="text"
             id="title"
             name="title"
+            defaultValue={initialValues?.title}
             required
             disabled={loading}
             minLength={1}
@@ -38,6 +48,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
             type="text"
             id="artist"
             name="artist"
+            defaultValue={initialValues?.artist}
             required
             disabled={loading}
             minLength={1}
@@ -58,6 +69,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
             type="text"
             id="album"
             name="album"
+            defaultValue={initialValues?.album}
             disabled={loading}
             maxLength={255}
             aria-label="Album name"
@@ -75,6 +87,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
             type="number"
             id="duration"
             name="duration"
+            defaultValue={initialValues?.duration}
             step="0.01"
             min="0"
             max="1440"
@@ -100,7 +113,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
           ) : (
             <div className="flex items-center justify-center gap-2">
               <Save className="h-5 w-5" />
-              <span>Save Song</span>
+              <span>{submitLabel}</span>
             </div>
           )}
         </Button>

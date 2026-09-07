@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { createSong, deleteSong as deleteSongApi } from "../api/songs";
-import type { CreateSongRequest, Song } from "../api/types";
+import { createSong, deleteSong as deleteSongApi, updateSong as updateSongApi } from "../api/songs";
+import type { CreateSongRequest, Song, UpdateSongRequest } from "../api/types";
 
 export function useSongActions() {
   const [loading, setLoading] = useState(false);
@@ -46,12 +46,37 @@ export function useSongActions() {
     }
   }, []);
 
+  const update = useCallback(async (id: string, updates: UpdateSongRequest): Promise<Song | null> => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+    setData(null);
+
+    try {
+      const updatedSong = await updateSongApi(id, updates);
+      if (!updatedSong) {
+        setError("Song not found");
+        return null;
+      }
+      setSuccess(true);
+      setData(updatedSong);
+      return updatedSong;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     loading,
     error,
     success,
     data,
     create,
+    update,
     deleteSong: removeSong,
   };
 }

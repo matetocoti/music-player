@@ -8,6 +8,19 @@ from app.Common.Security.validation import (
 	validate_stream_params,
 )
 
+# Auxiliary function to convert minutes to seconds and validate the duration - to avoid code duplication in SaveSongRequest and UpdateSongRequest
+def _convert_minutes_to_seconds(value) -> int | None:
+	if value is None:
+		return None
+	try:
+		float_val = float(value)
+		minutes = int(float_val)
+		seconds = round((float_val - minutes) * 100)
+	except (TypeError, ValueError, OverflowError):
+		raise ValueError("Duration must be a valid number.")
+
+	return validate_duration((minutes * 60) + seconds)
+
 
 class SongListParams(BaseModel):
 	page: int = Field(default=1, ge=1)
@@ -19,7 +32,6 @@ class SongListParams(BaseModel):
 	def normalize_query(cls, value: str) -> str:
 		return validate_optional_text(value) or ""
 
-
 class ResolveSongParams(BaseModel):
 	title: str
 	artist: str
@@ -28,7 +40,6 @@ class ResolveSongParams(BaseModel):
 	@classmethod
 	def validate_text(cls, value: str, info) -> str:
 		return validate_required_text(value, info.field_name)
-
 
 class SaveSongRequest(BaseModel):
 	model_config = ConfigDict(extra="forbid")
@@ -50,17 +61,8 @@ class SaveSongRequest(BaseModel):
 
 	@field_validator("duration", mode="before")
 	@classmethod
-	def convert_minutes_to_seconds(cls, value) -> int | None:
-		if value is None:
-			return None
-		try:
-			float_val = float(value)
-			minutes = int(float_val)
-			seconds = round((float_val - minutes) * 100)
-		except (TypeError, ValueError, OverflowError):
-			raise ValueError("Duration must be a valid number.")
-
-		return validate_duration((minutes * 60) + seconds)
+	def normalize_duration(cls, value) -> int | None:
+		return _convert_minutes_to_seconds(value)
 
 class UpdateSongRequest(BaseModel):
 	model_config = ConfigDict(extra="forbid")
@@ -82,17 +84,8 @@ class UpdateSongRequest(BaseModel):
 
 	@field_validator("duration", mode="before")
 	@classmethod
-	def convert_minutes_to_seconds(cls, value) -> int | None:
-		if value is None:
-			return None
-		try:
-			float_val = float(value)
-			minutes = int(float_val)
-			seconds = round((float_val - minutes) * 100)
-		except (TypeError, ValueError, OverflowError):
-			raise ValueError("Duration must be a valid number.")
-
-		return validate_duration((minutes * 60) + seconds)
+	def normalize_duration(cls, value) -> int | None:
+		return _convert_minutes_to_seconds(value)
 		
 class StreamUrlParams(BaseModel):
 	video_id: str | None = None

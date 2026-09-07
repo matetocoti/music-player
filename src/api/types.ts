@@ -14,6 +14,14 @@ export type CreateSongRequest = {
   duration?: number;
 };
 
+export type UpdateSongRequest = {
+  title?: string;
+  artist?: string;
+  album?: string;
+  duration?: number;
+};
+
+
 export type PaginatedSongs = {
   data: Song[];
   total: number;

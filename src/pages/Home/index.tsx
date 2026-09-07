@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoaderCircle, Plus, Trash2 } from "lucide-react";
+import { LoaderCircle, Plus, Settings, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import MyGridContainer from "../../components/MyGridContainer";
@@ -10,15 +10,19 @@ import SearchBar from "../../components/pagination-components/SearchBar";
 import PaginationBar from "../../components/pagination-components/PaginationBar";
 import { useSongActions } from "../../hooks/useSongActions";
 import Modal from "../../components/UI/Modal";
+import SongForm from "../../components/SongForm";
+import type { Song } from "../../api/types";
+import { getFormString ,formatDurationForForm } from "../../utils/formDataValidation";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
   const [songToDelete, setSongToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [songToEdit, setSongToEdit] = useState<Song | null>(null);
   const navigate = useNavigate();
   const { songs, total, pageSize, loading, error, reload } = useSongs(search, page);
-  const { deleteSong } = useSongActions();
+  const { deleteSong, update, loading: actionLoading } = useSongActions();
   const totalPages = Math.ceil(total / pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
@@ -31,6 +35,37 @@ const Home = () => {
     }
     setDeletingSongId(null);
   };
+
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!songToEdit) return;
+
+    const formData = new FormData(event.currentTarget);
+    const durationValue = getFormString(formData, "duration").trim();
+    const duration = durationValue ? Number(durationValue) : undefined;
+
+    if (duration !== undefined && (!Number.isFinite(duration) || duration < 0 || duration > 1440)) {
+      toast.error("Invalid duration", {
+        description: "Duration must be between 0 and 1440 minutes.",
+      });
+      return;
+    }
+
+    const updatedSong = await update(songToEdit.id, {
+      title: getFormString(formData, "title"),
+      artist: getFormString(formData, "artist"),
+      album: getFormString(formData, "album").trim() || undefined,
+      duration,
+    });
+
+    if (updatedSong) {
+      setSongToEdit(null);
+      reload();
+      toast.success(`"${updatedSong.title}" updated successfully`);
+    }
+  };
+
+  
 
   return (
     <section className={`home-page ${containerStyle}`}>
@@ -109,6 +144,20 @@ const Home = () => {
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
                       )}
                     </button>
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        setSongToEdit(song);
+                      }}
+                      disabled={deletingSongId === song.id}
+                      title={`Edit ${song.title}`}
+                      aria-label={`Edit ${song.title}`}
+                      className="absolute bottom-3 right-14 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-emerald-200/80 bg-white/90 text-emerald-600 opacity-70 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-emerald-900/70 dark:bg-zinc-900/90 dark:text-emerald-400 dark:hover:bg-emerald-950/50 dark:hover:text-emerald-300 sm:opacity-0 sm:group-hover/song-card:opacity-100"
+                    >
+                      <Settings className="h-4 w-4" aria-hidden="true" />
+                    </button>
                   </div>
                 ))}
               </MyGridContainer>
@@ -150,6 +199,26 @@ const Home = () => {
             Delete
           </button>
         </div>
+      </Modal>
+      <Modal
+        isOpen={songToEdit !== null}
+        onClose={() => setSongToEdit(null)}
+        title="Edit song(Metadata only)"
+      >
+        {songToEdit && (
+          <SongForm
+            key={songToEdit.id}
+            onSubmit={handleUpdate}
+            loading={actionLoading}
+            submitLabel="Update Song"
+            initialValues={{
+              title: songToEdit.title,
+              artist: songToEdit.artist,
+              album: songToEdit.album === "Unknown Album" ? "" : songToEdit.album,
+              duration: formatDurationForForm(songToEdit.duration),
+            }}
+          />
+        )}
       </Modal>
     </section>
   );
