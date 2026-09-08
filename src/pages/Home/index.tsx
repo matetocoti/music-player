@@ -8,6 +8,7 @@ import SongBox from "../../components/SongBox";
 import useSongs from "../../hooks/useSongs";
 import SearchBar from "../../components/pagination-components/SearchBar";
 import PaginationBar from "../../components/pagination-components/PaginationBar";
+import  PaginationSelect  from "../../components/pagination-components/PaginationSelect";
 import { useSongActions } from "../../hooks/useSongActions";
 import Modal from "../../components/UI/Modal";
 import SongForm from "../../components/SongForm";
@@ -17,11 +18,12 @@ import { getFormString ,formatDurationForForm } from "../../utils/formDataValida
 const Home = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
   const [songToDelete, setSongToDelete] = useState<{ id: string; title: string } | null>(null);
   const [songToEdit, setSongToEdit] = useState<Song | null>(null);
   const navigate = useNavigate();
-  const { songs, total, pageSize, loading, error, reload } = useSongs(search, page);
+  const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
   const { deleteSong, update, loading: actionLoading } = useSongActions();
   const totalPages = Math.ceil(total / pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
@@ -165,9 +167,20 @@ const Home = () => {
           </>
         )}
       </div>
-      <div className="fixed left-0 right-0 bottom-20 sm:bottom-20 z-50 flex justify-center pointer-events-none px-5">
-        <div className="pointer-events-auto w-full max-w-sm rounded-2xl border border-zinc-200/60 bg-white/50 px-3 py-3 shadow-2xl backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
-          <PaginationBar page={page} totalPages={totalPages} setPage={setPage} />
+      <div className="fixed bottom-20 left-0 right-0 z-50 pointer-events-none px-5 sm:bottom-20">
+        <div className="relative flex w-full items-center justify-center">
+          <div className="pointer-events-auto flex w-full max-w-sm items-center justify-center rounded-2xl border border-zinc-200/60 bg-white/50 px-3 py-3 shadow-2xl backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
+            <PaginationBar page={page} totalPages={totalPages} setPage={setPage} />
+          </div>
+          <div className="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 hidden sm:block sm:right-4">
+            <PaginationSelect
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => {
+                setPageSize(newPageSize);
+                setPage(1);
+              }}
+            />
+          </div>
         </div>
       </div>
       <Modal
