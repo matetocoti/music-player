@@ -8,10 +8,10 @@ interface TimeCounterProps {
 
 const TimeCounter = ({ currentTime, duration }: TimeCounterProps) => {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium tracking-wide text-zinc-200">
+    <div className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-zinc-200/70 px-4 py-2 text-sm font-medium tracking-wide text-zinc-800 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200">
       <span>{formatDuration(currentTime)}</span>
-      <span className="text-zinc-500">/</span>
-      <span className="text-zinc-400">{formatDuration(duration)}</span>
+      <span className="text-zinc-500 dark:text-zinc-500">/</span>
+      <span className="text-zinc-500 dark:text-zinc-400">{formatDuration(duration)}</span>
     </div>
   );
 };

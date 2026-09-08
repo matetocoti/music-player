@@ -22,20 +22,20 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
   } as CSSProperties;
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-inner shadow-black/20 sm:items-end">
+    <div className="flex flex-col items-center gap-2 rounded-2xl border border-zinc-300 bg-zinc-200/70 px-4 py-3 shadow-inner shadow-zinc-500/10 sm:items-end dark:border-white/10 dark:bg-white/5 dark:shadow-black/20">
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-100 transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-zinc-100 text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-white"
           onClick={onMuteToggle}
           aria-label={clampedVolume === 0 ? "Ativar som" : "Silenciar"}
           title={clampedVolume === 0 ? "Ativar som" : "Silenciar"}
         >
           <VolumeIcon className="h-5 w-5" />
         </button>
-        <div className="hidden text-right text-xs text-zinc-400 sm:block">
+        <div className="hidden text-right text-xs text-zinc-500 dark:text-zinc-400 sm:block">
           <p className="uppercase tracking-[0.24em]">Volume</p>
-          <p className="text-sm font-semibold text-zinc-100">{volumeLabel}</p>
+          <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{volumeLabel}</p>
         </div>
       </div>
       <input
@@ -49,7 +49,7 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
         aria-label="Volume Control"
         style={trackStyle}
       />
-      <p className="text-xs text-zinc-400 sm:hidden">{volumeLabel}</p>
+      <p className="text-xs text-zinc-500 dark:text-zinc-400 sm:hidden">{volumeLabel}</p>
       <style>{`
         input[type='range']::-webkit-slider-runnable-track {
           height: 0.5rem;

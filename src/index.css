@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* =====================================================
   index.css
   Estilos globais e fundação visual da aplicação
