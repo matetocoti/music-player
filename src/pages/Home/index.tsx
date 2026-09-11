@@ -48,6 +48,7 @@ const Home = () => {
         }}
         onAddSong={() => operations.setIsCreateModalOpen(true)}
         onOpenSettings={() => setIsGridSettingsOpen(true)}
+        totalSongs={total}
       />
 
       <LibraryGrid

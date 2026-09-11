@@ -7,13 +7,17 @@ interface LibraryToolbarProps {
   onSearchChange: (search: string) => void;
   onAddSong: () => void;
   onOpenSettings: () => void;
+  totalSongs: number;
 }
 
-const LibraryToolbar = ({ search, onSearchChange, onAddSong, onOpenSettings }: LibraryToolbarProps) => (
+const LibraryToolbar = ({ search, onSearchChange, onAddSong, onOpenSettings, totalSongs }: LibraryToolbarProps) => (
   <div className="flex flex-col gap-3 rounded-3xl border border-zinc-200/70 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:flex-row sm:items-center sm:justify-between">
     <div>
       <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-500">Discover</p>
       <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Find your next favorite song</h2>
+      <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+        {totalSongs} {totalSongs === 1 ? "item" : "items"} in your library
+      </p>
     </div>
     <div className="flex items-center gap-3 sm:w-[520px]">
       <div className="min-w-0 flex-1">
