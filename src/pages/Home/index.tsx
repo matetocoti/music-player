@@ -1,19 +1,20 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 
 import type { Song } from "../../api/types";
-import CreateSongModal from "../../components/CreateSongModal";
-import DeleteSongModal from "../../components/DeleteSongModal";
-import EditSongModal from "../../components/EditSongModal";
-import LibraryGrid from "../../components/LibraryGrid";
-import LibraryToolbar from "../../components/LibraryToolbar";
-import PaginationFooter from "../../components/PaginationFooter";
+import CreateSongModal from "../../components/Home/Modals/CreateSongModal";
+import DeleteSongModal from "../../components/Home/Modals/DeleteSongModal";
+import EditSongModal from "../../components/Home/Modals/EditSongModal";
+import LibraryGrid from "../../components/Home/Sections/LibraryGrid";
+import LibraryToolbar from "../../components/Home/Sections/LibraryToolbar";
+import PaginationFooter from "../../components/Home/Pagination/PaginationFooter";
+import usePersistedState from "../../hooks/usePersistedState";
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
 
 const Home = () => {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(15);
+  const [search, setSearch] = usePersistedState("music-player-search", "");
+  const [page, setPage] = usePersistedState("music-player-page", 1);
+  const [pageSize, setPageSize] = usePersistedState("music-player-page-size", 15);
   const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
   const operations = useSongOperations(reload);
   const totalPages = Math.ceil(total / pageSize);

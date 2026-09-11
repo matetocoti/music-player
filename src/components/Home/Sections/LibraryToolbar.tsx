@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 
-import SearchBar from "./pagination-components/SearchBar";
+import SearchBar from "../../pagination-components/SearchBar";
 
 interface LibraryToolbarProps {
   search: string;
@@ -11,12 +11,8 @@ interface LibraryToolbarProps {
 const LibraryToolbar = ({ search, onSearchChange, onAddSong }: LibraryToolbarProps) => (
   <div className="flex flex-col gap-3 rounded-3xl border border-zinc-200/70 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-500">
-        Discover
-      </p>
-      <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-        Find your next favorite song
-      </h2>
+      <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-500">Discover</p>
+      <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Find your next favorite song</h2>
     </div>
     <div className="flex items-center gap-3 sm:w-[480px]">
       <div className="flex-1">

@@ -1,5 +1,5 @@
-import type { Song } from "../api/types";
-import Modal from "./UI/Modal";
+import type { Song } from "../../../api/types";
+import Modal from "../../UI/Modal";
 
 interface DeleteSongModalProps {
   isOpen: boolean;

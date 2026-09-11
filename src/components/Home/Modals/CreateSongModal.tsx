@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 
-import Modal from "./UI/Modal";
-import SongForm from "./SongForm";
+import Modal from "../../UI/Modal";
+import SongForm from "../../SongForm";
 
 interface CreateSongModalProps {
   isOpen: boolean;

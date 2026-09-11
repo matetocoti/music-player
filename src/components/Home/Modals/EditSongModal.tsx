@@ -1,9 +1,9 @@
 import type { FormEvent } from "react";
 
-import type { Song } from "../api/types";
-import { formatDurationForForm } from "../utils/formDataValidation";
-import Modal from "./UI/Modal";
-import SongForm from "./SongForm";
+import type { Song } from "../../../api/types";
+import { formatDurationForForm } from "../../../utils/formDataValidation";
+import Modal from "../../UI/Modal";
+import SongForm from "../../SongForm";
 
 interface EditSongModalProps {
   isOpen: boolean;
