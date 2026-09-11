@@ -19,6 +19,16 @@ footer {
   border-top-width: 1px;
 }
 
+.library-grid {
+  grid-template-columns: repeat(var(--library-grid-columns), minmax(0, 1fr));
+}
+
+@media (max-width: 639px) {
+  .library-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   header,
   footer {

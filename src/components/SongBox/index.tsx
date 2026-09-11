@@ -42,9 +42,9 @@ const SongBox = ({ song, className = '', children }: SongBoxProps) => {
         </div>
       </div>
       <div>
-      <div className="mt-4 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 transition-colors duration-300 group-hover:text-emerald-500 sm:mt-6 sm:gap-2 sm:text-[11px] dark:text-zinc-600 dark:group-hover:text-emerald-400">
-        <PlayCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
-        <span>Tap to play</span>
+      <div className="mt-4 flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.08em] text-zinc-400 transition-colors duration-300 group-hover:text-emerald-500 sm:mt-6 sm:gap-2 sm:text-[11px] sm:tracking-[0.2em] dark:text-zinc-600 dark:group-hover:text-emerald-400">
+        <PlayCircle className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
+        <span className="min-w-0 truncate">Tap to play</span>
       </div>
       </div>
       {children}

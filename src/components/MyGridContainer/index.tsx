@@ -1,14 +1,16 @@
-import { memo, type JSX, type ReactNode } from 'react';
+import { memo, type CSSProperties, type JSX, type ReactNode } from 'react';
 
 interface MyGridContainerProps {
   children?: ReactNode; 
   className?: string;
+  style?: CSSProperties;
 }
 
-const MyGridContainer = ({ children, className = '' }: MyGridContainerProps): JSX.Element => {
+const MyGridContainer = ({ children, className = '', style }: MyGridContainerProps): JSX.Element => {
   return (
     <div 
-      className={`grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 sm:gap-1 lg:gap-1 ${className}`.trim()}
+      style={style}
+      className={`grid gap-1 ${className}`.trim()}
     >
       {children}
     </div>
