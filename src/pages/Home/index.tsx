@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LoaderCircle, Plus, Settings, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,9 +22,9 @@ const Home = () => {
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
   const [songToDelete, setSongToDelete] = useState<{ id: string; title: string } | null>(null);
   const [songToEdit, setSongToEdit] = useState<Song | null>(null);
-  const navigate = useNavigate();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
-  const { deleteSong, update, loading: actionLoading } = useSongActions();
+  const { create, deleteSong, update, loading: actionLoading } = useSongActions();
   const totalPages = Math.ceil(total / pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
@@ -67,6 +67,33 @@ const Home = () => {
     }
   };
 
+  const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const durationValue = getFormString(formData, "duration").trim();
+    const duration = durationValue ? Number(durationValue) : undefined;
+
+    if (duration !== undefined && (!Number.isFinite(duration) || duration < 0 || duration > 1440)) {
+      toast.error("Invalid duration", {
+        description: "Duration must be between 0 and 1440 minutes.",
+      });
+      return;
+    }
+
+    const createdSong = await create({
+      title: getFormString(formData, "title"),
+      artist: getFormString(formData, "artist"),
+      album: getFormString(formData, "album").trim() || undefined,
+      duration,
+    });
+
+    if (createdSong) {
+      setIsCreateModalOpen(false);
+      reload();
+      toast.success(`"${createdSong.title}" added successfully`);
+    }
+  };
+
   
 
   return (
@@ -94,7 +121,7 @@ const Home = () => {
 
           <button
             type="button"
-            onClick={() => navigate("/save-song")}
+            onClick={() => setIsCreateModalOpen(true)}
             title="Add song(metadata only)"
             aria-label="Add song(metadata only)"
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-400/40 bg-emerald-500/15 text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-500/25"
@@ -232,6 +259,17 @@ const Home = () => {
             }}
           />
         )}
+      </Modal>
+      <Modal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        title="Add song (Metadata only)"
+      >
+        <SongForm
+          onSubmit={handleCreate}
+          loading={actionLoading}
+          submitLabel="Save Song"
+        />
       </Modal>
     </section>
   );
