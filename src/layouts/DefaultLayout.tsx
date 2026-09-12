@@ -36,7 +36,7 @@ const DefaultLayout: FC = () => {
 
       <main
         id="main-content"
-        className="mx-auto flex w-full max-w-7xl flex-1 flex-col p-4 sm:p-6 lg:p-8"
+        className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col p-4 sm:p-6 lg:p-8"
       >
         <Outlet />
       </main>

@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { LoaderCircle, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -12,36 +12,40 @@ interface LibraryGridProps {
   error: string | null;
   deletingSongId: string | null;
   columns: number;
-  rows: number;
   onDeleteSong: (song: Pick<Song, "id" | "title">) => void;
   onEditSong: (song: Song) => void;
 }
 
-const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, rows, onDeleteSong, onEditSong }: LibraryGridProps) => (
-  <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-    {loading ? (
+const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteSong, onEditSong }: LibraryGridProps) => {
+  let content: ReactNode;
+
+  if (loading) {
+    content = (
       <div className="flex flex-1 items-center justify-center rounded-3xl border border-zinc-200/70 bg-white/70 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="animate-pulse text-sm font-medium text-zinc-500 dark:text-zinc-400">Loading songs...</p>
       </div>
-    ) : error ? (
+    );
+  } else if (error) {
+    content = (
       <div className="flex flex-1 items-center justify-center rounded-3xl border border-rose-200 bg-rose-50 shadow-sm dark:border-rose-900/40 dark:bg-rose-950/30">
         <p className="text-sm font-medium text-rose-700 dark:text-rose-300">Error loading songs: {error}</p>
       </div>
-    ) : (
+    );
+  } else {
+    content = (
       <MyGridContainer
-        className="library-grid flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1"
+        className={`library-grid flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
         style={{
           "--library-grid-columns": columns,
-          gridTemplateRows: `repeat(${rows}, minmax(150px, auto))`,
         } as CSSProperties}
       >
         {songs.map((song) => (
-          <div key={song.id} className="group/song-card relative mx-1 mt-4 min-w-0 sm:mx-5">
+          <div key={song.id} className={`group/song-card relative mx-1 mt-4 min-w-0 ${columns < 5 ? "sm:mx-5" : ""}`}>
             <Link
               to={`/player/${song.id}`}
               className="block max-h-fit rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-100 dark:focus-visible:ring-offset-zinc-900"
             >
-              <SongBox song={song} className="pb-12" />
+              <SongBox song={song} className={`pb-12 ${columns === 6 ? "song-box-expanded" : ""}`} />
             </Link>
             <button
               type="button"
@@ -74,8 +78,10 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, rows, onD
           </div>
         ))}
       </MyGridContainer>
-    )}
-  </div>
-);
+    );
+  }
+
+  return <div className="flex min-h-0 min-w-0 flex-1 flex-col">{content}</div>;
+};
 
 export default LibraryGrid;

@@ -9,18 +9,18 @@ import LibraryGrid from "../../components/Home/Sections/LibraryGrid";
 import LibraryToolbar from "../../components/Home/Sections/LibraryToolbar";
 import PaginationFooter from "../../components/Home/Pagination/PaginationFooter";
 import usePersistedState from "../../hooks/usePersistedState";
+import useResponsiveGridColumns from "../../hooks/useResponsiveGridColumns";
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
 
 const Home = () => {
   const defaultPageSize = 15;
   const defaultGridColumns = 4;
-  const defaultGridRows = 2;
   const [search, setSearch] = usePersistedState("music-player-search", "");
   const [page, setPage] = usePersistedState("music-player-page", 1);
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
-  const [gridRows, setGridRows] = usePersistedState("music-player-grid-rows", defaultGridRows);
+  const maxGridColumns = useResponsiveGridColumns();
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
   const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
   const operations = useSongOperations(reload);
@@ -33,7 +33,6 @@ const Home = () => {
 
   const resetLibraryDefaults = () => {
     setGridColumns(defaultGridColumns);
-    setGridRows(defaultGridRows);
     setPageSize(defaultPageSize);
     setPage(1);
   };
@@ -56,8 +55,7 @@ const Home = () => {
         loading={loading}
         error={error}
         deletingSongId={operations.deletingSongId}
-        columns={gridColumns}
-        rows={gridRows}
+        columns={Math.min(gridColumns, maxGridColumns)}
         onDeleteSong={openDeleteModal}
         onEditSong={operations.setSongToEdit}
       />
@@ -92,10 +90,8 @@ const Home = () => {
         isOpen={isGridSettingsOpen}
         onClose={() => setIsGridSettingsOpen(false)}
         columns={gridColumns}
-        rows={gridRows}
         pageSize={pageSize}
         onColumnsChange={setGridColumns}
-        onRowsChange={setGridRows}
         onPageSizeChange={(newPageSize) => {
           setPageSize(newPageSize);
           setPage(1);

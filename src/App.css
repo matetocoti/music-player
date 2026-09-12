@@ -23,6 +23,16 @@ footer {
   grid-template-columns: repeat(var(--library-grid-columns), minmax(0, 1fr));
 }
 
+.song-box-expanded .truncate {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.song-box-expanded {
+  min-height: 186px;
+}
+
 @media (max-width: 639px) {
   .library-grid {
     grid-template-columns: 1fr;

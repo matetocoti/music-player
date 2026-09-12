@@ -5,10 +5,8 @@ interface LibrarySettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   columns: number;
-  rows: number;
   pageSize: number;
   onColumnsChange: (columns: number) => void;
-  onRowsChange: (rows: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   onResetDefaults: () => void;
 }
@@ -17,10 +15,8 @@ const LibrarySettingsModal = ({
   isOpen,
   onClose,
   columns,
-  rows,
   pageSize,
   onColumnsChange,
-  onRowsChange,
   onPageSizeChange,
   onResetDefaults,
 }: LibrarySettingsModalProps) => (
@@ -31,14 +27,12 @@ const LibrarySettingsModal = ({
           Grid layout
         </h3>
         <p className="mt-1 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-          Choose how many columns and rows are visible in your library.
+          Choose how many columns are visible in your library.
         </p>
         <div className="mt-4">
           <GridControls
             columns={columns}
-            rows={rows}
             onColumnsChange={onColumnsChange}
-            onRowsChange={onRowsChange}
           />
         </div>
       </div>
@@ -46,7 +40,7 @@ const LibrarySettingsModal = ({
       <div className="border-t border-zinc-200/80 pt-5 dark:border-zinc-800">
         <label className="flex items-center justify-between gap-4 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
           <span>
-            Items per page
+            {'Items per page'}
             <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
               Controls how many songs are loaded for each page.
             </span>
