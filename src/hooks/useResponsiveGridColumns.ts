@@ -16,9 +16,13 @@ export const getDefaultGridColumns = (width: number): number => {
   return 6;
 };
 
-export const getDefaultPageSize = (width: number): number => (
-  getDefaultGridColumns(width) === 1 ? 9 : 12
-);
+export const getDefaultPageSize = (width: number): number => {
+  const defaultColumns = getDefaultGridColumns(width);
+
+  if (defaultColumns === 1) return 9;
+  if (defaultColumns === 6) return 18;
+  return 12;
+};
 
 const useResponsiveGridColumns = (): number => {
   const [maxColumns, setMaxColumns] = useState(() => (
