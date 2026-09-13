@@ -9,18 +9,18 @@ import LibraryGrid from "../../components/Home/Sections/LibraryGrid";
 import LibraryToolbar from "../../components/Home/Sections/LibraryToolbar";
 import PaginationFooter from "../../components/Home/Pagination/PaginationFooter";
 import usePersistedState from "../../hooks/usePersistedState";
-import useResponsiveGridColumns from "../../hooks/useResponsiveGridColumns";
+import useResponsiveGridColumns, { getDefaultGridColumns, getDefaultPageSize } from "../../hooks/useResponsiveGridColumns";
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
 
 const Home = () => {
-  const defaultPageSize = 15;
-  const defaultGridColumns = 4;
+  const maxGridColumns = useResponsiveGridColumns();
+  const defaultGridColumns = getDefaultGridColumns(window.innerWidth);
+  const defaultPageSize = getDefaultPageSize(window.innerWidth);
   const [search, setSearch] = usePersistedState("music-player-search", "");
   const [page, setPage] = usePersistedState("music-player-page", 1);
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
-  const maxGridColumns = useResponsiveGridColumns();
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
   const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
   const operations = useSongOperations(reload);

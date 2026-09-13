@@ -1,3 +1,4 @@
+import { Info } from "lucide-react"; // Added Info icon
 import Modal from "../../UI/Modal";
 import GridControls from "../Sections/GridControls";
 
@@ -57,15 +58,24 @@ const LibrarySettingsModal = ({
           </select>
         </label>
       </div>
-      <button
-        type="button"
-        onClick={onResetDefaults}
-        className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-600 transition hover:border-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-emerald-500/60 dark:hover:text-emerald-400"
-      >
-        Reset to defaults
-      </button>
+      
+      <div className="pt-2">
+        <button
+          type="button"
+          onClick={onResetDefaults}
+          className="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-600 transition hover:border-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-emerald-500/60 dark:hover:text-emerald-400"
+        >
+          Reset to defaults
+        </button>
+        <span className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+          <Info className="h-3.5 w-3.5 opacity-80" aria-hidden="true" />
+          Defaults are optimized for your current screen and performance.
+        </span>
+      </div>
     </div>
   </Modal>
 );
 
 export default LibrarySettingsModal;
+
+//  The default term is just a way to care about performance and optimization, but the user can change it in the settings.
