@@ -16,10 +16,23 @@ interface LibraryGridProps {
   onEditSong: (song: Song) => void;
 }
 
+const pageAnimationKey = (songs: Song[]): string => {
+  if (songs.length === 0) {
+    return "empty";
+  }
+
+  const firstSongId = songs.at(0)!.id;
+  const lastSongId = songs.at(-1)!.id;
+
+  return `${firstSongId}-${lastSongId}`;
+};
+
+
+
 const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteSong, onEditSong }: LibraryGridProps) => {
   let content: ReactNode;
 
-  if (loading) {
+  if (loading && songs.length === 0) {
     content = (
       <div className="flex flex-1 items-center justify-center rounded-3xl border border-zinc-200/70 bg-white/70 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="animate-pulse text-sm font-medium text-zinc-500 dark:text-zinc-400">Loading songs...</p>
@@ -33,8 +46,10 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
     );
   } else {
     content = (
-      <MyGridContainer
-        className={`library-grid flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
+      <div className="relative flex min-h-0 flex-1 flex-col" aria-busy={loading}>
+        <MyGridContainer
+        key={`${songs.map((song) => song.id).join("-")}-${pageAnimationKey(songs)}`}
+        className={`library-grid library-grid-enter flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
         style={{
           "--library-grid-columns": columns,
         } as CSSProperties}
@@ -77,11 +92,20 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
             </button>
           </div>
         ))}
-      </MyGridContainer>
+        </MyGridContainer>
+        {loading && (
+          <div className="pointer-events-none absolute inset-x-0 top-2 flex justify-center">
+            <span className="rounded-full border border-emerald-200/70 bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-600 shadow-sm backdrop-blur-sm dark:border-emerald-900/60 dark:bg-zinc-900/90 dark:text-emerald-400">
+              Updating
+            </span>
+          </div>
+        )}
+      </div>
     );
   }
 
   return <div className="flex min-h-0 min-w-0 flex-1 flex-col">{content}</div>;
 };
+
 
 export default LibraryGrid;
