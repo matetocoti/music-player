@@ -1,4 +1,11 @@
-import type { PaginatedSongs, Song ,CreateSongRequest ,UpdateSongRequest } from "./types";
+import type {
+  PaginatedSongs,
+  Song,
+  CreateSongRequest,
+  UpdateSongRequest,
+  SongOrderBy,
+  SongOrderDirection,
+} from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 const SONGS_API_URL = `${API_URL}/songs`;
@@ -13,12 +20,16 @@ export async function listSongs(
   query: string,
   page: number,
   perPage: number,
+  orderBy: SongOrderBy = "id",
+  orderDirection: SongOrderDirection = "asc",
   signal?: AbortSignal,
 ): Promise<PaginatedSongs> {
   const params = new URLSearchParams({
     query,
     page: String(page),
     per_page: String(perPage),
+    order_by: orderBy,
+    order_direction: orderDirection,
   });
   const response = await fetch(`${SONGS_API_URL}?${params.toString()}`, { signal });
   await ensureOk(response, "Failed to load songs");

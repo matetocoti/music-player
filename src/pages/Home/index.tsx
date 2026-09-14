@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 
-import type { Song } from "../../api/types";
+import type { Song, SongOrderBy, SongOrderDirection } from "../../api/types";
 import CreateSongModal from "../../components/Home/Modals/CreateSongModal";
 import DeleteSongModal from "../../components/Home/Modals/DeleteSongModal";
 import EditSongModal from "../../components/Home/Modals/EditSongModal";
@@ -21,8 +21,16 @@ const Home = () => {
   const [page, setPage] = usePersistedState("music-player-page", 1);
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
+  const [orderBy, setOrderBy] = usePersistedState<SongOrderBy>("music-player-order-by", "id");
+  const [orderDirection, setOrderDirection] = usePersistedState<SongOrderDirection>("music-player-order-direction", "asc");
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
-  const { songs, total, loading, error, reload } = useSongs(search, page, pageSize);
+  const { songs, total, loading, error, reload } = useSongs(
+    search,
+    page,
+    pageSize,
+    orderBy,
+    orderDirection,
+  );
   const operations = useSongOperations(reload);
   const totalPages = Math.ceil(total / pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
@@ -48,6 +56,19 @@ const Home = () => {
         onAddSong={() => operations.setIsCreateModalOpen(true)}
         onOpenSettings={() => setIsGridSettingsOpen(true)}
         totalSongs={total}
+        orderBy={orderBy}
+        orderDirection={orderDirection}
+        onOrderByChange={(newOrderBy) => {
+          setOrderBy(newOrderBy);
+          if (newOrderBy === "id") {
+            setOrderDirection("asc");
+          }
+          setPage(1);
+        }}
+        onOrderDirectionChange={(newOrderDirection) => {
+          setOrderDirection(newOrderDirection);
+          setPage(1);
+        }}
       />
 
       <LibraryGrid

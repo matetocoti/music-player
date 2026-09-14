@@ -7,6 +7,9 @@ export type Song = {
   url?: string;
 };
 
+export type SongOrderBy = "id" | "title" | "artist" | "album" | "duration";
+export type SongOrderDirection = "asc" | "desc";
+
 export type CreateSongRequest = {
   title: string;
   artist: string;
