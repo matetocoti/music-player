@@ -55,7 +55,7 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
         } as CSSProperties}
       >
         {songs.map((song) => (
-          <div key={song.id} className={`group/song-card relative mx-1 mt-4 min-w-0 ${columns < 5 ? "sm:mx-5" : ""}`}>
+          <div key={song.id} className={`group/song-card relative mt-3 min-w-0 sm:mt-4 ${columns < 5 ? "sm:mx-5" : "sm:mx-1"}`}>
             <Link
               to={`/player/${song.id}`}
               className="block max-h-fit rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-100 dark:focus-visible:ring-offset-zinc-900"

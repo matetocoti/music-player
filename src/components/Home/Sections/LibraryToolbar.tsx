@@ -43,12 +43,12 @@ const LibraryToolbar = ({
   const [areControlsOpen, setAreControlsOpen] = useState(true);
 
   return (
-  <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200/60 bg-white/40 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 dark:border-zinc-800/60 dark:bg-zinc-900/40 sm:flex-row sm:items-center sm:justify-between">
+  <div className="flex flex-col gap-3 rounded-xl border border-zinc-200/60 bg-white/40 p-3 shadow-sm backdrop-blur-xl transition-all duration-500 dark:border-zinc-800/60 dark:bg-zinc-900/40 sm:gap-4 sm:rounded-2xl sm:p-4 sm:flex-row sm:items-center sm:justify-between">
     <div className="group cursor-default">
       <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 transition-colors duration-300 dark:text-emerald-500">
         Discover
       </p>
-      <h2 className="text-lg font-semibold tracking-tight text-zinc-900 transition-colors duration-300 dark:text-zinc-100">
+      <h2 className="text-base font-semibold tracking-tight text-zinc-900 transition-colors duration-300 sm:text-lg dark:text-zinc-100">
         Find your next favorite song
       </h2>
       <p className="mt-1 text-xs font-medium text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
@@ -56,7 +56,7 @@ const LibraryToolbar = ({
       </p>
     </div>
     
-    <div className="flex flex-wrap items-center justify-end gap-3 sm:w-[620px]">
+    <div className="flex flex-wrap items-center justify-end gap-2 sm:w-[620px] sm:gap-3">
       <div className="min-w-0 basis-full transition-all duration-300 ease-out sm:flex-1 sm:basis-auto">
         <SearchBar search={search} onSearchChange={onSearchChange} />
       </div>
@@ -66,7 +66,7 @@ const LibraryToolbar = ({
         onClick={() => setAreControlsOpen((isOpen) => !isOpen)}
         aria-expanded={areControlsOpen}
         aria-controls="library-toolbar-controls"
-        className="group flex h-10 w-full items-center justify-center gap-2 rounded-2xl border border-zinc-200/70 bg-white/60 px-3 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur-md transition-all duration-300 ease-out hover:border-emerald-400/50 hover:bg-emerald-500/10 hover:text-emerald-500 sm:hidden dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:border-emerald-500/50 dark:hover:text-emerald-400"
+        className="group flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200/70 bg-white/60 px-3 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur-md transition-all duration-300 ease-out hover:border-emerald-400/50 hover:bg-emerald-500/10 hover:text-emerald-500 sm:hidden dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:border-emerald-500/50 dark:hover:text-emerald-400"
       >
         <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
         <span>Library controls</span>
@@ -77,7 +77,7 @@ const LibraryToolbar = ({
         id="library-toolbar-controls"
         className={`grid w-full transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none sm:contents ${areControlsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
       >
-        <div className="flex min-h-0 flex-wrap gap-3 overflow-hidden sm:contents">
+        <div className="flex min-h-0 flex-wrap gap-2 overflow-hidden sm:contents">
         <label className="group flex h-12 items-center gap-2 rounded-2xl border border-zinc-200/70 bg-white/60 px-3 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur-md transition-all duration-300 ease-out hover:border-emerald-400/50 hover:bg-white/80 focus-within:border-emerald-500/50 focus-within:ring-4 focus-within:ring-emerald-500/10 dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:border-emerald-500/50 dark:hover:bg-zinc-800/80 dark:focus-within:border-emerald-500/50 dark:focus-within:ring-emerald-500/10">
         <ArrowDownAZ className="h-4 w-4 shrink-0 text-emerald-500 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" aria-hidden="true" />
         <span className="sr-only">Sort by</span>
