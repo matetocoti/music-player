@@ -17,7 +17,13 @@ router = APIRouter()
 
 @router.get("")
 def list_songs(params: Annotated[SongListParams, Query()],) -> PaginatedSongsResponseDTO:
-    result = songs_service.list_songs(params.query, params.page, params.per_page)
+    result = songs_service.list_songs(
+        params.query,
+        params.page,
+        params.per_page,
+        params.order_by,
+        params.order_direction,
+    )
     return PaginatedSongsResponseDTO(
         data=[SongResponseDTO.from_entity(song) for song in result["data"]],
         total=result["total"],

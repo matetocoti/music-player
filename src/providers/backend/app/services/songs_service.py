@@ -17,6 +17,16 @@ class PaginatedSongs(TypedDict):
 
 
 class SongsService:
+    ORDER_DIRECTIONS = {"asc": "ASC", "desc": "DESC"}
+
+    ORDER_BY = {
+        "id": "CAST(id AS INTEGER)",
+        "title": "CASEFOLD(title)",
+        "artist": "CASEFOLD(artist)",
+        "album": "CASEFOLD(album)",
+        "duration": "duration",
+    }
+
     def __init__(self) -> None:
         app_root = Path(__file__).resolve().parents[1]
         workspace_root = Path(__file__).resolve().parents[5]
@@ -66,16 +76,29 @@ class SongsService:
                 songs.append(SongEntity.from_mapping(values))
         return songs
 
-    def list_songs(self, query: str, page: int, per_page: int) -> PaginatedSongs:
+    def list_songs(
+        self,
+        query: str,
+        page: int,
+        per_page: int,
+        order_by: str = "id",
+        order_direction: str = "asc",
+    ) -> PaginatedSongs:
         page = max(page, 1)
         per_page = max(per_page, 1)
+        order_clause = self.ORDER_BY.get(order_by, self.ORDER_BY["id"])
+        direction_clause = self.ORDER_DIRECTIONS.get(
+            order_direction, self.ORDER_DIRECTIONS["asc"]
+        )
         search = f"%{query}%"
         with self._connect() as connection:
             total = connection.execute(
                 SongsQueries.COUNT_BY_SEARCH, (search, search)
             ).fetchone()[0]
             rows = connection.execute(
-                SongsQueries.LIST,
+                SongsQueries.LIST.format(
+                    order_by=order_clause, order_direction=direction_clause
+                ),
                 (search, search, per_page, (page - 1) * per_page),
             ).fetchall()
         return {

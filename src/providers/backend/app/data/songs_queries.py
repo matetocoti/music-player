@@ -28,7 +28,7 @@ class SongsQueries:
         FROM songs
         WHERE CASEFOLD(title) LIKE CASEFOLD(?)
            OR CASEFOLD(artist) LIKE CASEFOLD(?)
-        ORDER BY CAST(id AS INTEGER), id
+        ORDER BY {order_by} {order_direction}, id {order_direction}
         LIMIT ? OFFSET ?
     """
 

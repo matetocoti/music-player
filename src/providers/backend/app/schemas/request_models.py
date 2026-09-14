@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic import field_validator, model_validator
 
@@ -8,7 +10,7 @@ from app.Common.Security.validation import (
 	validate_stream_params,
 )
 
-# Auxiliary function to convert minutes to seconds and validate the duration - to avoid code duplication in SaveSongRequest and UpdateSongRequest
+
 def _convert_minutes_to_seconds(value) -> int | None:
 	if value is None:
 		return None
@@ -26,6 +28,8 @@ class SongListParams(BaseModel):
 	page: int = Field(default=1, ge=1)
 	per_page: int = Field(default=15, ge=1, le=100)
 	query: str = Field(default="", max_length=100)
+	order_by: Literal["id", "title", "artist", "album", "duration"] = "id"
+	order_direction: Literal["asc", "desc"] = "asc"
 
 	@field_validator("query")
 	@classmethod
