@@ -12,6 +12,7 @@ import usePersistedState from "../../hooks/usePersistedState";
 import useResponsiveGridColumns, { getDefaultGridColumns, getDefaultPageSize } from "../../hooks/useResponsiveGridColumns";
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
+import { getTotalPages } from "../../utils/library";
 
 const Home = () => {
   const maxGridColumns = useResponsiveGridColumns();
@@ -32,7 +33,7 @@ const Home = () => {
     orderDirection,
   );
   const operations = useSongOperations(reload);
-  const totalPages = Math.ceil(total / pageSize);
+  const totalPages = getTotalPages(total, pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
   const openDeleteModal = (song: Pick<Song, "id" | "title">) => {

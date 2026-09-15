@@ -1,6 +1,7 @@
 import { Grid2X2 } from "lucide-react";
 
 import useResponsiveGridColumns from "../../../hooks/useResponsiveGridColumns";
+import { getAvailableGridColumns } from "../../../utils/library";
 
 interface GridControlsProps {
   columns: number;
@@ -9,7 +10,7 @@ interface GridControlsProps {
 
 const GridControls = ({ columns, onColumnsChange }: GridControlsProps) => {
   const maxColumns = useResponsiveGridColumns();
-  const availableColumns = Array.from({ length: maxColumns }, (_, index) => index + 1);
+  const availableColumns = getAvailableGridColumns(maxColumns);
 
   return (
     <div className="flex items-center gap-2 rounded-2xl border border-zinc-200/70 bg-white/70 px-3 py-2 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60">

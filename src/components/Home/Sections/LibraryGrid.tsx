@@ -3,6 +3,7 @@ import { LoaderCircle, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { Song } from "../../../api/types";
+import { getLibraryGridKey } from "../../../utils/library";
 import MyGridContainer from "../../MyGridContainer";
 import SongBox from "../../SongBox";
 
@@ -15,19 +16,6 @@ interface LibraryGridProps {
   onDeleteSong: (song: Pick<Song, "id" | "title">) => void;
   onEditSong: (song: Song) => void;
 }
-
-const pageAnimationKey = (songs: Song[]): string => {
-  if (songs.length === 0) {
-    return "empty";
-  }
-
-  const firstSongId = songs.at(0)!.id;
-  const lastSongId = songs.at(-1)!.id;
-
-  return `${firstSongId}-${lastSongId}`;
-};
-
-
 
 const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteSong, onEditSong }: LibraryGridProps) => {
   let content: ReactNode;
@@ -48,7 +36,7 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
     content = (
       <div className="relative flex min-h-0 flex-1 flex-col" aria-busy={loading}>
         <MyGridContainer
-        key={`${songs.map((song) => song.id).join("-")}-${pageAnimationKey(songs)}`}
+        key={getLibraryGridKey(songs)}
         className={`library-grid library-grid-enter flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
         style={{
           "--library-grid-columns": columns,

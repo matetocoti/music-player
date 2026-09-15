@@ -1,6 +1,7 @@
 import { memo } from "react";
 import type { CSSProperties, ChangeEvent } from "react";
 import { Volume1, Volume2, VolumeX } from "lucide-react";
+import { clampVolume, getVolumeLabel } from "../../../utils/volume";
 
 interface VolumeBarProps {
   volume: number;
@@ -9,8 +10,8 @@ interface VolumeBarProps {
 }
 
 const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => {
-  const clampedVolume = Math.min(100, Math.max(0, volume));
-  const volumeLabel = clampedVolume > 0 ? `${clampedVolume}%` : "Muted";
+  const clampedVolume = clampVolume(volume);
+  const volumeLabel = getVolumeLabel(clampedVolume);
   const VolumeIcon = clampedVolume === 0 ? VolumeX : clampedVolume < 50 ? Volume1 : Volume2;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

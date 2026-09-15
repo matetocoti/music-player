@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowDown, ArrowDownAZ, ChevronDown, Plus, Settings2, SlidersHorizontal } from "lucide-react";
 
 import type { SongOrderBy, SongOrderDirection } from "../../../api/types";
+import { getOrderDirectionLabel } from "../../../utils/library";
 import SearchBar from "../../pagination-components/SearchBar";
 
 interface LibraryToolbarProps {
@@ -15,18 +16,6 @@ interface LibraryToolbarProps {
   onOrderByChange: (orderBy: SongOrderBy) => void;
   onOrderDirectionChange: (orderDirection: SongOrderDirection) => void;
 }
-
-const getOrderDirectionLabel = (orderBy: SongOrderBy, orderDirection: SongOrderDirection,): string => {
-  if (orderBy === "id") {
-    return "Default order";
-  }
-
-  if (orderDirection === "asc") {
-    return "Ascending order";
-  }
-
-  return "Descending order";
-};
 
 const LibraryToolbar = ({
   search,
