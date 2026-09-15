@@ -50,34 +50,36 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
             >
               <SongBox song={song} className={`pb-12 ${columns === 6 ? "song-box-expanded" : ""}`} />
             </Link>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                onDeleteSong(song);
-              }}
-              disabled={deletingSongId === song.id}
-              title={`Delete ${song.title}`}
-              aria-label={`Delete ${song.title}`}
-              className="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-rose-200/80 bg-white/90 text-rose-500 opacity-70 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-rose-50 hover:text-rose-600 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait disabled:opacity-100 dark:border-rose-900/70 dark:bg-zinc-900/90 dark:text-rose-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-300 sm:opacity-0 sm:group-hover/song-card:opacity-100"
-            >
-              {deletingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
-            </button>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                onEditSong(song);
-              }}
-              disabled={deletingSongId === song.id}
-              title={`Edit ${song.title}`}
-              aria-label={`Edit ${song.title}`}
-              className="absolute bottom-3 right-14 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-emerald-200/80 bg-white/90 text-emerald-600 opacity-70 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-emerald-900/70 dark:bg-zinc-900/90 dark:text-emerald-400 dark:hover:bg-emerald-950/50 dark:hover:text-emerald-300 sm:opacity-0 sm:group-hover/song-card:opacity-100"
-            >
-              <Settings className="h-4 w-4" aria-hidden="true" />
-            </button>
+            <div className="absolute bottom-3 right-3 z-10 flex shrink-0 items-center gap-2 opacity-70 transition sm:opacity-0 sm:group-hover/song-card:opacity-100">
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onEditSong(song);
+                }}
+                disabled={deletingSongId === song.id}
+                title={`Edit ${song.title}`}
+                aria-label={`Edit ${song.title}`}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-200/80 bg-white/90 text-emerald-600 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:cursor-wait dark:border-emerald-900/70 dark:bg-zinc-900/90 dark:text-emerald-400 dark:hover:bg-emerald-950/50 dark:hover:text-emerald-300"
+              >
+                <Settings className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onDeleteSong(song);
+                }}
+                disabled={deletingSongId === song.id}
+                title={`Delete ${song.title}`}
+                aria-label={`Delete ${song.title}`}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-rose-200/80 bg-white/90 text-rose-500 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-rose-50 hover:text-rose-600 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait dark:border-rose-900/70 dark:bg-zinc-900/90 dark:text-rose-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-300"
+              >
+                {deletingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
+              </button>
+            </div>
           </div>
         ))}
         </MyGridContainer>
