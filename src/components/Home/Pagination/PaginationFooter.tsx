@@ -34,7 +34,7 @@ const PaginationFooter = ({ page, totalPages, onPageChange }: PaginationFooterPr
         aria-label="Show pagination"
         className={`pointer-events-auto absolute left-0 flex h-10 w-10 items-center justify-center rounded-r-full border border-l-0 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:hidden ${
           isCollapsed
-            ? "translate-x-0 border-emerald-500/80 bg-emerald-100/95 text-emerald-700 opacity-100 shadow-[0_4px_18px_rgba(16,185,129,0.28)] dark:border-emerald-500/60 dark:bg-emerald-500/15 dark:text-emerald-400"
+            ? "translate-x-0 border-emerald-500/80 bg-emerald-100/95 text-emerald-700 opacity-100 shadow-[0_4px_18px_rgba(var(--brand-rgb),0.28)] dark:border-emerald-500/60 dark:bg-emerald-500/15 dark:text-emerald-400"
             : "-translate-x-4 border-zinc-300/70 bg-white/25 text-zinc-700 opacity-0 shadow-md dark:border-zinc-600/80 dark:bg-zinc-950/45 dark:text-zinc-200"
         }`}
       >

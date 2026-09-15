@@ -9,9 +9,9 @@ const AppToaster = () => {
       expand
       toastOptions={{
         style: {
-          background: '#111827',
-          border: '1px solid rgba(16, 185, 129, 0.35)',
-          color: '#f4f4f5',
+          background: 'var(--toast-background)',
+          border: '1px solid rgba(var(--brand-rgb), 0.35)',
+          color: 'var(--toast-text)',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
         },
       }}

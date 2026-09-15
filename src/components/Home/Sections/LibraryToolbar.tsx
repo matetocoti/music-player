@@ -125,7 +125,7 @@ const LibraryToolbar = ({
         onClick={onAddSong}
         title="Add song (metadata only)"
         aria-label="Add song (metadata only)"
-        className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all duration-300 ease-out hover:scale-105 hover:border-emerald-400/60 hover:bg-emerald-500/25 hover:text-emerald-500 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] active:scale-95 dark:text-emerald-300"
+        className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-600 shadow-[0_0_15px_rgba(var(--brand-rgb),0.15)] backdrop-blur-md transition-all duration-300 ease-out hover:scale-105 hover:border-emerald-400/60 hover:bg-emerald-500/25 hover:text-emerald-500 hover:shadow-[0_0_25px_rgba(var(--brand-rgb),0.3)] active:scale-95 dark:text-emerald-300"
       >
         <Plus className="h-5 w-5 transition-transform duration-300 ease-out group-hover:rotate-90 group-hover:scale-110" />
         </button>

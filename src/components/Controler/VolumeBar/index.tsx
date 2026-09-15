@@ -18,7 +18,7 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
   };
 
   const trackStyle = {
-    background: `linear-gradient(to right, #10b981 0%, #10b981 ${clampedVolume}%, rgba(255,255,255,0.12) ${clampedVolume}%, rgba(255,255,255,0.12) 100%)`,
+    background: `linear-gradient(to right, var(--brand-500) 0%, var(--brand-500) ${clampedVolume}%, rgba(255,255,255,0.12) ${clampedVolume}%, rgba(255,255,255,0.12) 100%)`,
   } as CSSProperties;
 
   return (
@@ -65,8 +65,8 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
           width: 1rem;
           border-radius: 9999px;
           border: 2px solid rgba(255, 255, 255, 0.9);
-          background: #10b981;
-          box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.16);
+          background: var(--brand-500);
+          box-shadow: 0 0 0 6px var(--brand-glow);
         }
 
         input[type='range']::-moz-range-track {
@@ -80,8 +80,8 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
           width: 1rem;
           border-radius: 9999px;
           border: 2px solid rgba(255, 255, 255, 0.9);
-          background: #10b981;
-          box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.16);
+          background: var(--brand-500);
+          box-shadow: 0 0 0 6px var(--brand-glow);
         }
       `}</style>
     </div>
