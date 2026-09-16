@@ -1,4 +1,4 @@
-﻿import { memo, useMemo, type ReactNode } from 'react';
+﻿import { memo, useMemo, Children, isValidElement, type ReactNode } from 'react';
 import { Disc3, PlayCircle } from 'lucide-react';
 import type { Song } from '../../api/types';
 import { formatDuration } from '../../utils/formatTime';
@@ -12,6 +12,8 @@ interface SongBoxProps {
 const SongBox = ({ song, className = '', children }: SongBoxProps) => {
   const { title, artist, album = 'Unknown Album', duration: songDuration } = song;
   const duration = useMemo(() => formatDuration(songDuration), [songDuration]);
+
+  const actionItems = Children.toArray(children).filter(Boolean);
 
   return (
     <article
@@ -43,15 +45,29 @@ const SongBox = ({ song, className = '', children }: SongBoxProps) => {
         </div>
       </div>
 
-      <div className="mt-4 flex min-w-0 items-center gap-1.5 whitespace-nowrap pr-20 text-[10px] font-bold uppercase tracking-[0.08em] text-zinc-400 transition-colors duration-300 group-hover:text-emerald-500 sm:mt-6 sm:gap-2 sm:pr-24 sm:text-[11px] sm:tracking-[0.2em] dark:text-zinc-600 dark:group-hover:text-emerald-400">
-        <PlayCircle className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
-        <span className="min-w-0 truncate">
-          <span className="sm:hidden">Tap to play</span>
-          <span className="hidden sm:inline">Click to play</span>
-        </span>
+      <div className="mt-4 flex flex-col gap-2 sm:mt-6">
+        <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.08em] text-zinc-400 transition-colors duration-300 group-hover:text-emerald-500 sm:gap-2 sm:text-[11px] sm:tracking-[0.2em] dark:text-zinc-600 dark:group-hover:text-emerald-400">
+          <PlayCircle className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
+          <span className="min-w-0 truncate">
+            <span className="sm:hidden">Play it</span>
+            <span className="hidden sm:inline">Play it</span>
+          </span>
+        </div>
+
+        {actionItems.length > 0 && (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {actionItems.map((child, index) => (
+              <div
+                key={isValidElement(child) && child.key != null ? child.key : index}
+                className="flex h-7 w-7 shrink-0 items-center justify-center sm:h-8 sm:w-8 [&>*]:h-full [&>*]:w-full"
+              >
+                {child}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {children}
     </article>
   );
 };
