@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import Header from "../components/UI/Header";
 import Footer from "../components/UI/Footer";
+import { RESET_DEFAULTS_EVENT } from "../utils/storage";
 
 const DefaultLayout: FC = () => {
   const [isLightMode, setIsLightMode] = useState(() => {
@@ -12,6 +13,13 @@ const DefaultLayout: FC = () => {
   useEffect(() => {
     localStorage.setItem("music-player-theme", isLightMode ? "light" : "dark");
   }, [isLightMode]);
+
+  useEffect(() => {
+    const resetTheme = () => setIsLightMode(false);
+
+    window.addEventListener(RESET_DEFAULTS_EVENT, resetTheme);
+    return () => window.removeEventListener(RESET_DEFAULTS_EVENT, resetTheme);
+  }, []);
 
   return (
     <div className={`flex min-h-screen w-full flex-col bg-gradient-to-b from-zinc-100 via-zinc-200 to-zinc-400 text-zinc-900 transition-colors duration-300 dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50 selection:bg-emerald-500 selection:text-white ${isLightMode ? "" : "dark"}`}>

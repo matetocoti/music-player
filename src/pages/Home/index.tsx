@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import type { Song, SongOrderBy, SongOrderDirection } from "../../api/types";
 import CreateSongModal from "../../components/Home/Modals/CreateSongModal";
@@ -13,6 +13,7 @@ import useResponsiveGridColumns, { getDefaultGridColumns, getDefaultPageSize } f
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
 import { getTotalPages } from "../../utils/library";
+import { RESET_DEFAULTS_EVENT } from "../../utils/storage";
 
 const Home = () => {
   const maxGridColumns = useResponsiveGridColumns();
@@ -22,6 +23,7 @@ const Home = () => {
   const [page, setPage] = usePersistedState("music-player-page", 1);
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
+  const [highContrast, setHighContrast] = usePersistedState("music-player-high-contrast", false);
   const [orderBy, setOrderBy] = usePersistedState<SongOrderBy>("music-player-order-by", "id");
   const [orderDirection, setOrderDirection] = usePersistedState<SongOrderDirection>("music-player-order-direction", "asc");
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
@@ -36,14 +38,23 @@ const Home = () => {
   const totalPages = getTotalPages(total, pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("high-contrast", highContrast);
+  }, [highContrast]);
+
   const openDeleteModal = (song: Pick<Song, "id" | "title">) => {
     operations.setSongToDelete(song);
   };
 
   const resetLibraryDefaults = () => {
+    setSearch("");
+    setOrderBy("id");
+    setOrderDirection("asc");
     setGridColumns(defaultGridColumns);
     setPageSize(defaultPageSize);
     setPage(1);
+    setHighContrast(false);
+    window.dispatchEvent(new Event(RESET_DEFAULTS_EVENT));
   };
 
   return (
@@ -113,11 +124,13 @@ const Home = () => {
         onClose={() => setIsGridSettingsOpen(false)}
         columns={gridColumns}
         pageSize={pageSize}
+        highContrast={highContrast}
         onColumnsChange={setGridColumns}
         onPageSizeChange={(newPageSize) => {
           setPageSize(newPageSize);
           setPage(1);
         }}
+        onHighContrastChange={setHighContrast}
         onResetDefaults={resetLibraryDefaults}
       />
     </section>

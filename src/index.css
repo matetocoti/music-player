@@ -92,4 +92,16 @@ a:hover {
   border-radius: 16px;
 }
 
+html.high-contrast :focus-visible {
+  outline: 3px solid #facc15;
+  outline-offset: 3px;
+}
+
+html.high-contrast .border-zinc-200\/70,
+html.high-contrast .border-zinc-200\/80,
+html.high-contrast .border-zinc-800,
+html.high-contrast .border-zinc-800\/60 {
+  border-color: currentColor;
+}
+
 
