@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useId } from "react";
 import type { CSSProperties, ChangeEvent } from "react";
 import { Volume1, Volume2, VolumeX } from "lucide-react";
 import { getVolumeState } from "../../../utils/volume";
@@ -11,6 +11,7 @@ interface VolumeBarProps {
 
 const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => {
   const volumeState = getVolumeState(volume);
+  const uid = useId();
   const VolumeIcon = {
     muted: VolumeX,
     low: Volume1,
@@ -26,11 +27,14 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
   } as CSSProperties;
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-2xl border border-zinc-300 bg-zinc-200/70 px-4 py-3 shadow-inner shadow-zinc-500/10 sm:items-end dark:border-white/10 dark:bg-white/5 dark:shadow-black/20">
+    <div
+      data-volume-slider={uid}
+      className="flex flex-col items-center gap-2 rounded-2xl border border-zinc-300 bg-zinc-200/70 px-4 py-3 shadow-inner shadow-zinc-500/10 sm:items-end dark:border-white/10 dark:bg-white/5 dark:shadow-black/20"
+    >
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-zinc-100 text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-white"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-zinc-100 text-zinc-700 transition-all duration-200 ease-out active:scale-95 hover:bg-white hover:text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40 sm:duration-300 sm:hover:scale-100 sm:hover:shadow-md sm:active:scale-100 sm:active:opacity-70 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-white"
           onClick={onMuteToggle}
           aria-label={volumeState.toggleLabel}
           title={volumeState.toggleLabel}
@@ -55,13 +59,13 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
       />
       <p className="text-xs text-zinc-500 dark:text-zinc-400 sm:hidden">{volumeState.label}</p>
       <style>{`
-        input[type='range']::-webkit-slider-runnable-track {
+        [data-volume-slider="${uid}"] input[type='range']::-webkit-slider-runnable-track {
           height: 0.5rem;
           border-radius: 9999px;
           background: ${trackStyle.background};
         }
 
-        input[type='range']::-webkit-slider-thumb {
+        [data-volume-slider="${uid}"] input[type='range']::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           margin-top: -0.35rem;
@@ -70,22 +74,42 @@ const VolumeBar = ({ volume, onVolumeChange, onMuteToggle }: VolumeBarProps) => 
           border-radius: 9999px;
           border: 2px solid rgba(255, 255, 255, 0.9);
           background: var(--brand-500);
+          box-shadow: 0 0 0 3px transparent;
+          transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        [data-volume-slider="${uid}"] input[type='range']:hover::-webkit-slider-thumb,
+        [data-volume-slider="${uid}"] input[type='range']:active::-webkit-slider-thumb {
           box-shadow: 0 0 0 6px var(--brand-glow);
         }
 
-        input[type='range']::-moz-range-track {
+        [data-volume-slider="${uid}"] input[type='range']:focus-visible::-webkit-slider-thumb {
+          box-shadow: 0 0 0 4px var(--brand-glow), 0 0 0 6px rgba(255,255,255,0.8);
+        }
+
+        [data-volume-slider="${uid}"] input[type='range']::-moz-range-track {
           height: 0.5rem;
           border-radius: 9999px;
           background: ${trackStyle.background};
         }
 
-        input[type='range']::-moz-range-thumb {
+        [data-volume-slider="${uid}"] input[type='range']::-moz-range-thumb {
           height: 1rem;
           width: 1rem;
           border-radius: 9999px;
           border: 2px solid rgba(255, 255, 255, 0.9);
           background: var(--brand-500);
+          box-shadow: 0 0 0 3px transparent;
+          transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        [data-volume-slider="${uid}"] input[type='range']:hover::-moz-range-thumb,
+        [data-volume-slider="${uid}"] input[type='range']:active::-moz-range-thumb {
           box-shadow: 0 0 0 6px var(--brand-glow);
+        }
+
+        [data-volume-slider="${uid}"] input[type='range']:focus-visible::-moz-range-thumb {
+          box-shadow: 0 0 0 4px var(--brand-glow), 0 0 0 6px rgba(255,255,255,0.8);
         }
       `}</style>
     </div>
