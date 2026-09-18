@@ -52,15 +52,21 @@ function usePlayer(song: Song | null) {
   }, [song]);
 
   useEffect(() => {
-    if (!videoId || !playerRef.current) return;
+    if (!videoId) return;
 
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const checkDuration = () => {
-      if (cancelled || !playerRef.current) return;
+      if (cancelled) return;
 
-      const playerDuration = playerRef.current.getDuration();
+      const getDuration = playerRef.current?.getDuration;
+      if (typeof getDuration !== "function") {
+        timeoutId = setTimeout(checkDuration, 300);
+        return;
+      }
+
+      const playerDuration = getDuration();
       if (playerDuration > 0) setDuration(playerDuration);
       else timeoutId = setTimeout(checkDuration, 800);
     };
@@ -77,7 +83,10 @@ function usePlayer(song: Song | null) {
     if (!playing) return;
 
     const intervalId = setInterval(() => {
-      const time = playerRef.current?.getCurrentTime();
+      const getCurrentTime = playerRef.current?.getCurrentTime;
+      if (typeof getCurrentTime !== "function") return;
+
+      const time = getCurrentTime();
       if (typeof time === "number") setCurrentTime(time);
     }, 500);
 

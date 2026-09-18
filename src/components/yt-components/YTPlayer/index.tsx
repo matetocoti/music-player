@@ -9,7 +9,6 @@ import {
 
 import "./YTPlayer.css";
 
-// Define the interface for the methods exposed by the YTPlayer component
 export interface YTPlayerHandle {
   play: () => void;
   pause: () => void;
@@ -20,12 +19,12 @@ export interface YTPlayerHandle {
   restart: () => void;
 }
 
-// Define the props for the YTPlayer component
+
 interface YTPlayerProps {
   videoId?: string;
 }
 
-// Define the type for the YouTube Player instance
+
 type YTPlayerInstance = {
   playVideo: () => void;
   pauseVideo: () => void;
@@ -37,7 +36,7 @@ type YTPlayerInstance = {
   destroy?: () => void;
 };
 
-// Extend the global Window interface to include YouTube Player types
+
 declare global {
   interface Window {
     YT?: {
@@ -69,16 +68,16 @@ const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) =>
   const playerRef = useRef<YTPlayerInstance | null>(null);
   
   useImperativeHandle(ref, () => ({
-    play: () => playerRef.current?.playVideo(),
-    pause: () => playerRef.current?.pauseVideo(),
-    setVolume: (volume: number) => playerRef.current?.setVolume(volume),
-    getCurrentTime: () => playerRef.current?.getCurrentTime() ?? 0,
-    getDuration: () => playerRef.current?.getDuration() ?? 0,
-    seekTo: (seconds: number) => playerRef.current?.seekTo(seconds),
+    play: () => playerRef.current?.playVideo?.(),
+    pause: () => playerRef.current?.pauseVideo?.(),
+    setVolume: (volume: number) => playerRef.current?.setVolume?.(volume),
+    getCurrentTime: () => playerRef.current?.getCurrentTime?.() ?? 0,
+    getDuration: () => playerRef.current?.getDuration?.() ?? 0,
+    seekTo: (seconds: number) => playerRef.current?.seekTo?.(seconds),
     restart: () => {
       if (playerRef.current) {
-        playerRef.current.seekTo(0);
-        playerRef.current.playVideo();
+        playerRef.current.seekTo?.(0);
+        playerRef.current.playVideo?.();
       }
     },
   }));
@@ -87,7 +86,10 @@ const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) =>
     if (!containerRef.current || !window.YT?.Player) return;
     playerRef.current = new window.YT.Player(containerRef.current, {
       videoId: videoId!,
-      playerVars: PLAYER_VARS,
+      playerVars: {
+        ...PLAYER_VARS,
+        origin: window.location.origin,
+      },
     });
   }, [videoId]);
 
@@ -106,7 +108,10 @@ const YTPlayer = forwardRef<YTPlayerHandle, YTPlayerProps>(({ videoId }, ref) =>
         }
       };
       window.onYouTubeIframeAPIReady = onReady;
-      document.body.appendChild(script);
+
+      if (!document.querySelector(`script[src="${YOUTUBE_API_URL}"]`)) {
+        document.body.appendChild(script);
+      }
     }
 
     return () => {
