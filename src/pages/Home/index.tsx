@@ -36,7 +36,7 @@ const Home = () => {
   );
   const operations = useSongOperations(reload);
   const totalPages = getTotalPages(total, pageSize);
-  const containerStyle = "flex h-full w-full flex-1 flex-col overflow-hidden gap-6 sm:gap-8 lg:gap-10 pb-48";
+  const containerStyle = "flex h-full w-full flex-1 flex-col overflow-visible gap-6 sm:gap-8 lg:gap-10 pb-48";
 
   useEffect(() => {
     document.documentElement.classList.toggle("high-contrast", highContrast);
