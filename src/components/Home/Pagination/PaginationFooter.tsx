@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import PaginationBar from "../../pagination-components/PaginationBar";
+import { ScrollToTop } from "../../UI/ScrollToTop";
 
 interface PaginationFooterProps {
   page: number;
@@ -45,6 +46,10 @@ const PaginationFooter = ({ page, totalPages, onPageChange }: PaginationFooterPr
       }`}>
         <PaginationBar page={page} totalPages={totalPages} setPage={onPageChange} />
       </div>
+      <ScrollToTop
+        isCollapsed={isCollapsed}
+        className="absolute left-2 top-1/2 z-10 -translate-y-1/2"
+      />
       <button
         type="button"
         onClick={() => setIsCollapsed(true)}
