@@ -102,21 +102,21 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
     );
   } else {
     content = (
-      <div className="relative flex min-h-0 flex-1 flex-col" aria-busy={loading}>
+      <div className="relative flex min-h-fit flex-col" aria-busy={loading}>
         <MyGridContainer
         key={getLibraryGridKey(songs)}
-        className={`library-grid library-grid-enter flex-0 min-w-0 gap-1 overflow-x-hidden overflow-y-auto pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
+        className={`library-grid library-grid-enter min-w-0 gap-1 overflow-visible pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
         style={{
           "--library-grid-columns": columns,
         } as CSSProperties}
       >
         {songs.map((song) => (
-          <div key={song.id} className={`group/song-card relative mt-3 min-w-0 sm:mt-4 ${columns < 5 ? "sm:mx-5" : "sm:mx-1"}`}>
+          <div key={song.id} className={`group/song-card relative flex h-full min-h-0 min-w-0 flex-col mt-3 sm:mt-4 ${columns < 5 ? "sm:mx-5" : "sm:mx-1"}`}>
             <Link
               to={`/player/${song.id}`}
-              className="block max-h-fit rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-100 dark:focus-visible:ring-offset-zinc-900"
+              className="block h-full min-h-0 rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-100 dark:focus-visible:ring-offset-zinc-900"
             >
-              <SongBox song={song} className={`pb-12 ${columns === 6 ? "song-box-expanded" : ""}`} />
+              <SongBox song={song} className={`h-full pb-12 ${columns === 6 ? "song-box-expanded" : ""}`} />
             </Link>
             <SongCardActions
               song={song}
