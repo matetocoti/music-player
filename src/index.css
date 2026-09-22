@@ -29,7 +29,6 @@
   - Estilos base de HTML e body
 ===================================================== */
 
-
 :root {
   --brand-50: #eff5ff;
   --brand-100: #dce8f8;
@@ -45,10 +44,12 @@
   --brand-rgb: 99, 132, 184;
   --brand-glow: rgba(var(--brand-rgb), 0.16);
 
-  --background: #121212;
+
+  --background: #fafafa;
+  --text: #18181b;
+  --muted: #71717a;
+
   --primary: var(--brand-600);
-  --text: #FFFFFF;
-  --muted: #B3B3B3;
   --font-ui: "DM Sans", "Segoe UI", sans-serif;
   --font-heading: "Space Grotesk", "DM Sans", sans-serif;
   --font-code: "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
@@ -62,6 +63,12 @@
   --footer-height: 60px;
 }
 
+
+.dark {
+  --background: #121212;
+  --text: #ffffff;
+  --muted: #b3b3b3;
+}
 
 *,
 *::before,
@@ -83,6 +90,7 @@ body {
   background: var(--background);
   color: var(--text);
   min-height: 100vh;
+  transition: background-color 300ms ease, color 300ms ease;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -93,28 +101,108 @@ h3 {
   font-family: var(--font-heading);
 }
 
-
 a {
   color: var(--primary);
   text-decoration: none;
+  transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
 }
 
 a:hover {
   text-decoration: none;
-  box-shadow: 0 0 10px var(--primary);
+  box-shadow: 0 0 0 6px var(--brand-glow);
   border-radius: 16px;
 }
 
 html.high-contrast :focus-visible {
-  outline: 3px solid #facc15;
+  outline: 3px solid #005fcc !important;
   outline-offset: 3px;
+  box-shadow: 0 0 0 2px #ffffff !important;
 }
 
-html.high-contrast .border-zinc-200\/70,
-html.high-contrast .border-zinc-200\/80,
-html.high-contrast .border-zinc-800,
-html.high-contrast .border-zinc-800\/60 {
+html.high-contrast :disabled {
+  opacity: 0.75 !important;
+}
+
+html.high-contrast [class*="border-zinc-"],
+html.high-contrast [class*="border-slate-"],
+html.high-contrast [class*="border-emerald-"],
+html.high-contrast [class*="border-rose-"] {
+  border-color: currentColor !important;
+  border-width: 1px !important;
+}
+
+html.high-contrast:not(:has(.dark)) {
+  --background: #ffffff;
+  --text: #111827;
+  --muted: #374151;
+  --primary: #005fcc;
+  --brand-500: #005fcc;
+  --brand-600: #004a99;
+  --brand-700: #003b7a;
+}
+
+html.high-contrast:not(:has(.dark)) body {
+  background: #ffffff;
+  color: #111827;
+}
+
+html.high-contrast:not(:has(.dark)) [class*="text-zinc-4"],
+html.high-contrast:not(:has(.dark)) [class*="text-zinc-5"],
+html.high-contrast:not(:has(.dark)) [class*="text-slate-4"],
+html.high-contrast:not(:has(.dark)) [class*="text-slate-5"] {
+  color: #374151 !important;
+}
+
+html.high-contrast:not(:has(.dark)) [class*="text-zinc-6"],
+html.high-contrast:not(:has(.dark)) [class*="text-slate-6"] {
+  color: #1f2937 !important;
+}
+
+html.high-contrast:not(:has(.dark)) [class*="bg-white/"],
+html.high-contrast:not(:has(.dark)) [class*="bg-zinc-50/"],
+html.high-contrast:not(:has(.dark)) [class*="bg-zinc-100/"],
+html.high-contrast:not(:has(.dark)) [class*="bg-zinc-200/"] {
+  background-color: #ffffff !important;
+}
+
+html.high-contrast:has(.dark) :focus-visible {
+  outline-color: #facc15 !important;
+  box-shadow: 0 0 0 2px #111827 !important;
+}
+
+html.high-contrast:has(.dark) body {
+  background: #000000;
+  color: #ffffff;
+}
+
+html.high-contrast:has(.dark) [class*="text-zinc-4"],
+html.high-contrast:has(.dark) [class*="text-zinc-5"],
+html.high-contrast:has(.dark) [class*="text-zinc-6"],
+html.high-contrast:has(.dark) [class*="text-slate-4"],
+html.high-contrast:has(.dark) [class*="text-slate-5"],
+html.high-contrast:has(.dark) [class*="text-slate-6"] {
+  color: #d1d5db !important;
+}
+
+html.high-contrast:has(.dark) [class*="bg-zinc-900/"],
+html.high-contrast:has(.dark) [class*="bg-zinc-950/"],
+html.high-contrast:has(.dark) [class*="bg-white/"] {
+  background-color: #111827 !important;
+}
+
+html.high-contrast [class*="shadow-"] {
+  box-shadow: 0 0 0 1px currentColor !important;
+}
+
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea,
+html.high-contrast button {
   border-color: currentColor;
 }
 
-
+html.high-contrast input::placeholder,
+html.high-contrast textarea::placeholder {
+  color: currentColor !important;
+  opacity: 0.85 !important;
+}
