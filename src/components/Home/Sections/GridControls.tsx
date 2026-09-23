@@ -2,6 +2,7 @@ import { Grid2X2 } from "lucide-react";
 
 import useResponsiveGridColumns from "../../../hooks/useResponsiveGridColumns";
 import { clampGridColumns, getAvailableGridColumns } from "../../../utils/library";
+import Select from "../../UI/Select";
 
 interface GridControlsProps {
   columns: number;
@@ -17,16 +18,13 @@ const GridControls = ({ columns, onColumnsChange }: GridControlsProps) => {
       <Grid2X2 className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden="true" />
       <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         <span>Cols</span>
-        <select
-          value={clampGridColumns(columns, maxColumns)}
-          onChange={(event) => onColumnsChange(Number(event.target.value))}
-          aria-label="Grid columns"
-          className="cursor-pointer rounded-lg border border-zinc-200 bg-transparent px-1.5 py-1 text-xs font-bold text-emerald-600 outline-none focus:border-emerald-400 dark:border-zinc-700 dark:text-emerald-400"
-        >
-          {availableColumns.map((value) => (
-            <option key={value} value={value}>{value}</option>
-          ))}
-        </select>
+        <Select
+          value={String(clampGridColumns(columns, maxColumns))}
+          onChange={(value) => onColumnsChange(Number(value))}
+          ariaLabel="Grid columns"
+          options={availableColumns.map((value) => ({ value: String(value), label: String(value) }))}
+          className="border border-zinc-200 px-1.5 py-1 dark:border-zinc-700"
+        />
       </label>
       <span className="text-zinc-300 dark:text-zinc-700">x</span>
     </div>

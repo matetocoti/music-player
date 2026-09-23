@@ -1,6 +1,7 @@
 import { Info } from "lucide-react";
 import type { ReactNode } from "react";
 import Modal from "../../UI/Modal";
+import Select from "../../UI/Select";
 import GridControls from "../Sections/GridControls";
 
 interface SettingsSectionProps {
@@ -73,16 +74,13 @@ const LibrarySettingsModal = ({
               Controls how many songs are loaded for each page.
             </span>
           </span>
-          <select
-            value={pageSize}
-            onChange={(event) => onPageSizeChange(Number(event.target.value))}
-            aria-label="Items per page"
-            className="cursor-pointer rounded-xl border border-zinc-200 bg-transparent px-3 py-2 text-sm font-bold text-emerald-600 outline-none transition focus:border-emerald-400 dark:border-zinc-700 dark:text-emerald-400"
-          >
-            {[9, 12, 15, 18].map((size) => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </select>
+          <Select
+            value={String(pageSize)}
+            onChange={(value) => onPageSizeChange(Number(value))}
+            ariaLabel="Items per page"
+            options={[9, 12, 15, 18].map((size) => ({ value: String(size), label: String(size) }))}
+            className="rounded-xl border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-700"
+          />
         </label>
       </SettingsSection>
 
