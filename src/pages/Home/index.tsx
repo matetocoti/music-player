@@ -9,10 +9,11 @@ import LibraryGrid from "../../components/Home/Sections/LibraryGrid";
 import LibraryToolbar from "../../components/Home/Sections/LibraryToolbar";
 import PaginationFooter from "../../components/Home/Pagination/PaginationFooter";
 import usePersistedState from "../../hooks/usePersistedState";
+import useKeyboardShortcuts from "../../hooks/useKeyboardShortcuts";
 import useResponsiveGridColumns, { getDefaultGridColumns, getDefaultPageSize } from "../../hooks/useResponsiveGridColumns";
 import useSongOperations from "../../hooks/useSongOperations";
 import useSongs from "../../hooks/useSongs";
-import { getTotalPages } from "../../utils/library";
+import { getNextPage, getPreviousPage, getTotalPages } from "../../utils/library";
 import { RESET_DEFAULTS_EVENT } from "../../utils/storage";
 
 const Home = () => {
@@ -24,6 +25,7 @@ const Home = () => {
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
   const [highContrast, setHighContrast] = usePersistedState("music-player-high-contrast", false);
+  const [keyboardControls, setKeyboardControls] = usePersistedState("music-player-keyboard-controls", true);
   const [orderBy, setOrderBy] = usePersistedState<SongOrderBy>("music-player-order-by", "id");
   const [orderDirection, setOrderDirection] = usePersistedState<SongOrderDirection>("music-player-order-direction", "asc");
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
@@ -54,8 +56,17 @@ const Home = () => {
     setPageSize(defaultPageSize);
     setPage(1);
     setHighContrast(false);
+    setKeyboardControls(true);
     window.dispatchEvent(new Event(RESET_DEFAULTS_EVENT));
   };
+
+  useKeyboardShortcuts({
+    enabled: keyboardControls,
+    onAddSong: () => operations.setIsCreateModalOpen(true),
+    onOpenSettings: () => setIsGridSettingsOpen(true),
+    onPreviousPage: () => setPage(getPreviousPage(page)),
+    onNextPage: () => setPage(getNextPage(page, totalPages)),
+  });
 
   return (
     <section className={`home-page ${containerStyle}`}>
@@ -89,6 +100,7 @@ const Home = () => {
         error={error}
         deletingSongId={operations.deletingSongId}
         columns={Math.min(gridColumns, maxGridColumns)}
+        keyboardControls={keyboardControls}
         onDeleteSong={openDeleteModal}
         onEditSong={operations.setSongToEdit}
       />
@@ -125,12 +137,14 @@ const Home = () => {
         columns={gridColumns}
         pageSize={pageSize}
         highContrast={highContrast}
+        keyboardControls={keyboardControls}
         onColumnsChange={setGridColumns}
         onPageSizeChange={(newPageSize) => {
           setPageSize(newPageSize);
           setPage(1);
         }}
         onHighContrastChange={setHighContrast}
+        onKeyboardControlsChange={setKeyboardControls}
         onResetDefaults={resetLibraryDefaults}
       />
     </section>

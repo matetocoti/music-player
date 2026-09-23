@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { LoaderCircle, MoreVertical, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { Song } from "../../../api/types";
 import { getLibraryGridKey } from "../../../utils/library";
@@ -14,6 +14,7 @@ interface LibraryGridProps {
   error: string | null;
   deletingSongId: string | null;
   columns: number;
+  keyboardControls: boolean;
   onDeleteSong: (song: Pick<Song, "id" | "title">) => void;
   onEditSong: (song: Song) => void;
 }
@@ -85,7 +86,40 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
   );
 };
 
-const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteSong, onEditSong }: LibraryGridProps) => {
+const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, keyboardControls, onDeleteSong, onEditSong }: LibraryGridProps) => {
+  const songLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+
+  useEffect(() => {
+    if (!keyboardControls || songs.length === 0) return;
+
+    const activeElement = document.activeElement;
+    const isInsideLibrary = activeElement instanceof HTMLElement && activeElement.closest("#library-content");
+    const isPageNavigation = activeElement instanceof HTMLButtonElement && activeElement.closest("[aria-label=\"Previous page\"], [aria-label=\"Next page\"]");
+
+    if (!activeElement || activeElement === document.body || isInsideLibrary || isPageNavigation) {
+      songLinkRefs.current[0]?.focus();
+    }
+  }, [keyboardControls, songs]);
+
+  const handleSongKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>, index: number) => {
+    if (!keyboardControls) return;
+
+    const key = event.key;
+    let nextIndex = index;
+
+    if (key.toLowerCase() === "d") nextIndex = index + 1;
+    if (key.toLowerCase() === "a") nextIndex = index - 1;
+    if (key.toLowerCase() === "s") nextIndex = index + columns;
+    if (key.toLowerCase() === "w") nextIndex = index - columns;
+    if (key === "Home") nextIndex = 0;
+    if (key === "End") nextIndex = songs.length - 1;
+
+    if (nextIndex === index || nextIndex < 0 || nextIndex >= songs.length) return;
+
+    event.preventDefault();
+    songLinkRefs.current[nextIndex]?.focus();
+  };
+
   let content: ReactNode;
 
   if (loading && songs.length === 0) {
@@ -102,7 +136,7 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
     );
   } else {
     content = (
-      <div className="relative flex min-h-fit flex-col" aria-busy={loading}>
+      <div id="library-content" className="relative flex min-h-fit flex-col" aria-busy={loading}>
         <MyGridContainer
         key={getLibraryGridKey(songs)}
         className={`library-grid library-grid-enter min-w-0 gap-1 overflow-visible pr-0 sm:gap-1 sm:pr-5 lg:gap-1 ${columns >= 5 ? "sm:pr-1" : ""}`}
@@ -110,10 +144,15 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, onDeleteS
           "--library-grid-columns": columns,
         } as CSSProperties}
       >
-        {songs.map((song) => (
+        {songs.map((song, index) => (
           <div key={song.id} className={`group/song-card relative flex h-full min-h-0 min-w-0 flex-col mt-3 sm:mt-4 ${columns < 5 ? "sm:mx-5" : "sm:mx-1"}`}>
             <Link
+              ref={(element) => {
+                songLinkRefs.current[index] = element;
+              }}
               to={`/player/${song.id}`}
+              aria-label={`Play ${song.title}`}
+              onKeyDown={(event) => handleSongKeyDown(event, index)}
               className="block h-full min-h-0 rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-100 dark:focus-visible:ring-offset-zinc-900"
             >
               <SongBox song={song} className={`h-full pb-12 ${columns === 6 ? "song-box-expanded" : ""}`} />

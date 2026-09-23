@@ -23,13 +23,6 @@ const DefaultLayout: FC = () => {
 
   return (
     <div className={`flex min-h-screen w-full flex-col bg-gradient-to-b from-zinc-100 via-zinc-200 to-zinc-400 text-zinc-900 transition-colors duration-300 dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50 selection:bg-emerald-500 selection:text-white ${isLightMode ? "" : "dark"}`}>
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-4 focus:ring-emerald-600/20"
-      >
-        Skip to main content
-      </a>
-
       <Header title="My Music App">
         <button
           type="button"

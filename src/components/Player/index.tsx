@@ -2,6 +2,8 @@ import { memo } from "react";
 
 import type { Song } from "../../api/types";
 import usePlayer from "../../hooks/usePlayer";
+import useKeyboardShortcuts from "../../hooks/useKeyboardShortcuts";
+import usePersistedState from "../../hooks/usePersistedState";
 import Controler from "../Controler";
 import Powered from "../Powered";
 import BackButton from "../UI/BackButton";
@@ -19,6 +21,16 @@ const containerStyle =
 
 const Player = ({ song, loading, error }: PlayerProps) => {
   const player = usePlayer(song);
+  const [keyboardControls] = usePersistedState("music-player-keyboard-controls", true);
+
+  useKeyboardShortcuts({
+    enabled: keyboardControls,
+    onPlayToggle: player.togglePlay,
+    onMuteToggle: player.handleMuteToggle,
+    onRestart: player.handleRestart,
+    onVolumeChange: player.handleVolumeChange,
+    volume: player.volume,
+  });
 
   if (loading) {
     return (

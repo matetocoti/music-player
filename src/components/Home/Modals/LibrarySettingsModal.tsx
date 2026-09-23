@@ -32,9 +32,11 @@ interface LibrarySettingsModalProps {
   columns: number;
   pageSize: number;
   highContrast: boolean;
+  keyboardControls: boolean;
   onColumnsChange: (columns: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   onHighContrastChange: (enabled: boolean) => void;
+  onKeyboardControlsChange: (enabled: boolean) => void;
   onResetDefaults: () => void;
 }
 
@@ -44,9 +46,11 @@ const LibrarySettingsModal = ({
   columns,
   pageSize,
   highContrast,
+  keyboardControls,
   onColumnsChange,
   onPageSizeChange,
   onHighContrastChange,
+  onKeyboardControlsChange,
   onResetDefaults,
 }: LibrarySettingsModalProps) => (
   <Modal isOpen={isOpen} onClose={onClose} title="Library settings">
@@ -106,6 +110,45 @@ const LibrarySettingsModal = ({
             <span className="pointer-events-none relative ml-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 peer-checked:translate-x-5 dark:bg-zinc-100" />
           </span>
         </label>
+        <label className="mt-3 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/70 p-3 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300/70 hover:bg-emerald-50/40 dark:border-zinc-800 dark:bg-zinc-950/30 dark:text-zinc-200 dark:hover:border-emerald-800/70 dark:hover:bg-emerald-950/20">
+          <span>
+            {`Keyboard controls`}
+            <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
+              Enable keyboard shortcuts for playback and library navigation.
+            </span>
+          </span>
+          <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
+            <input
+              type="checkbox"
+              checked={keyboardControls}
+              onChange={(event) => onKeyboardControlsChange(event.target.checked)}
+              className="peer absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0 focus-visible:outline-none"
+            />
+            <span className="pointer-events-none absolute inset-0 rounded-full border border-zinc-300 bg-zinc-200 transition-colors duration-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400 peer-focus-visible:ring-offset-2 dark:border-zinc-600 dark:bg-zinc-700 dark:peer-checked:border-emerald-500 dark:peer-checked:bg-emerald-500 dark:peer-focus-visible:ring-offset-zinc-900" />
+            <span className="pointer-events-none relative ml-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 peer-checked:translate-x-5 dark:bg-zinc-100" />
+          </span>
+        </label>
+        <details className="mt-3 rounded-2xl border border-zinc-200/70 bg-zinc-50/70 text-sm text-zinc-600 transition-colors open:border-emerald-300/70 dark:border-zinc-800 dark:bg-zinc-950/30 dark:text-zinc-300 dark:open:border-emerald-800/70">
+          <summary className="cursor-pointer px-3 py-2.5 font-semibold text-zinc-700 outline-none marker:text-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-400 dark:text-zinc-200">
+            How to use the keyboard
+          </summary>
+          <div className="space-y-3 border-t border-zinc-200/70 px-3 pb-3 pt-3 text-xs dark:border-zinc-800">
+            <div>
+              <p className="mb-1 font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Library</p>
+              <p>The first song is focused automatically when the library opens.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">W / S</kbd> move between rows; <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">A / D</kbd> move between songs.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Enter</kbd> opens the focused song.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Home / End</kbd> jump to the first or last song.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">N</kbd> adds a song; <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">O</kbd> opens settings.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">← / →</kbd> change pages.</p>
+            </div>
+            <div>
+              <p className="mb-1 font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Player</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Space</kbd> plays or pauses, <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">M</kbd> mutes.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">R</kbd> restarts, <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Up/Down</kbd> changes volume.</p>
+            </div>
+          </div>
+        </details>
       </SettingsSection>
       
       <footer className="border-t border-zinc-200/80 pt-5 dark:border-zinc-800">
