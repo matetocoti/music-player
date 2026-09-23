@@ -20,7 +20,7 @@ const isEditableTarget = (target: EventTarget | null) => {
 };
 
 const useKeyboardShortcuts = ({
-  enabled = true,
+  enabled = false,
   onPlayToggle,
   onMuteToggle,
   onRestart,

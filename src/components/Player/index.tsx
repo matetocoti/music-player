@@ -21,7 +21,7 @@ const containerStyle =
 
 const Player = ({ song, loading, error }: PlayerProps) => {
   const player = usePlayer(song);
-  const [keyboardControls] = usePersistedState("music-player-keyboard-controls", true);
+  const [keyboardControls] = usePersistedState("music-player-keyboard-controls", false);
 
   useKeyboardShortcuts({
     enabled: keyboardControls,

@@ -110,9 +110,14 @@ const LibrarySettingsModal = ({
             <span className="pointer-events-none relative ml-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 peer-checked:translate-x-5 dark:bg-zinc-100" />
           </span>
         </label>
-        <label className="mt-3 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/70 p-3 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300/70 hover:bg-emerald-50/40 dark:border-zinc-800 dark:bg-zinc-950/30 dark:text-zinc-200 dark:hover:border-emerald-800/70 dark:hover:bg-emerald-950/20">
-          <span>
-            {`Keyboard controls`}
+        <label aria-label="Keyboard controls, experimental" className="mt-3 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/70 p-3 text-sm font-semibold text-zinc-700 transition-colors hover:border-emerald-300/70 hover:bg-emerald-50/40 dark:border-zinc-800 dark:bg-zinc-950/30 dark:text-zinc-200 dark:hover:border-emerald-800/70 dark:hover:bg-emerald-950/20">
+          <span className="flex min-w-0 flex-col">
+            <span className="flex items-center gap-2">
+              <span>Keyboard controls</span>
+              <span aria-hidden="true" className="rounded-full border border-amber-300/80 bg-amber-100/70 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700 dark:border-amber-700/70 dark:bg-amber-950/40 dark:text-amber-300">
+                Experimental
+              </span>
+            </span>
             <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
               Enable keyboard shortcuts for playback and library navigation.
             </span>

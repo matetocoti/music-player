@@ -25,7 +25,7 @@ const Home = () => {
   const [pageSize, setPageSize] = usePersistedState("music-player-page-size", defaultPageSize);
   const [gridColumns, setGridColumns] = usePersistedState("music-player-grid-columns", defaultGridColumns);
   const [highContrast, setHighContrast] = usePersistedState("music-player-high-contrast", false);
-  const [keyboardControls, setKeyboardControls] = usePersistedState("music-player-keyboard-controls", true);
+  const [keyboardControls, setKeyboardControls] = usePersistedState("music-player-keyboard-controls", false);
   const [orderBy, setOrderBy] = usePersistedState<SongOrderBy>("music-player-order-by", "id");
   const [orderDirection, setOrderDirection] = usePersistedState<SongOrderDirection>("music-player-order-direction", "asc");
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
@@ -56,7 +56,7 @@ const Home = () => {
     setPageSize(defaultPageSize);
     setPage(1);
     setHighContrast(false);
-    setKeyboardControls(true);
+    setKeyboardControls(false);
     window.dispatchEvent(new Event(RESET_DEFAULTS_EVENT));
   };
 
