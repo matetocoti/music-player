@@ -151,6 +151,7 @@ const LibrarySettingsModal = ({
               <p className="mb-1 font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Player</p>
               <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Space</kbd> plays or pauses, <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">M</kbd> mutes.</p>
               <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">R</kbd> restarts, <kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Up/Down</kbd> changes volume.</p>
+              <p><kbd className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">Esc</kbd> returns to the previous page.</p>
             </div>
           </div>
         </details>

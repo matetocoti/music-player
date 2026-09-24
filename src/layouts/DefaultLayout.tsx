@@ -16,7 +16,6 @@ const DefaultLayout: FC = () => {
 
   useEffect(() => {
     const resetTheme = () => setIsLightMode(false);
-
     window.addEventListener(RESET_DEFAULTS_EVENT, resetTheme);
     return () => window.removeEventListener(RESET_DEFAULTS_EVENT, resetTheme);
   }, []);
