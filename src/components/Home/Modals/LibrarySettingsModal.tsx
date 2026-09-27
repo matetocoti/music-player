@@ -23,13 +23,11 @@ const SettingsSection = ({ title, description, children }: SettingsSectionProps)
   </section>
 );
 
-
 const Kbd = ({ children }: { children: ReactNode }) => (
   <kbd className="rounded-md border border-zinc-300/80 bg-white px-1.5 py-0.5 font-mono text-[11px] font-semibold text-zinc-900 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100">
     {children}
   </kbd>
 );
-
 
 interface ToggleRowProps {
   title: string;
@@ -94,14 +92,16 @@ const LibrarySettingsModal = ({
     <div className="max-h-[calc(100dvh-9rem)] space-y-6 overflow-y-auto pr-1">
       <div className="hidden sm:block">
         <SettingsSection title="Grid layout" description="Choose how many columns are visible in your library.">
-          <GridControls columns={columns} onColumnsChange={onColumnsChange} />
+          <span className="ml-4 pt-1.5 flex bg-white/1 rounded-l rounded-r border-l border-zinc-200/80 pl-4 dark:border-slate-500/50">
+            <GridControls columns={columns} onColumnsChange={onColumnsChange}/>
+          </span>
         </SettingsSection>
       </div>
 
       <SettingsSection title="Library" description="Control how many songs are loaded at a time.">
-        <label className="flex items-center justify-between gap-4 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+        <div className="flex items-center justify-between gap-4 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
           <span>
-            {'Items per page'}
+            {`Items per page`}
             <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
               Controls how many songs are loaded for each page.
             </span>
@@ -112,7 +112,7 @@ const LibrarySettingsModal = ({
             ariaLabel="Items per page"
             options={[9, 12, 15, 18].map((size) => ({ value: String(size), label: String(size) }))}
           />
-        </label>
+        </div>
       </SettingsSection>
 
       <SettingsSection
@@ -142,7 +142,9 @@ const LibrarySettingsModal = ({
               </span>
             }
           />
+
           <Details summary="How to use the keyboard">
+            <div className="space-y-4 text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
               <div className="space-y-1.5">
                 <p className="font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Library</p>
                 <p>The first song is focused automatically when the library opens.</p>
@@ -158,6 +160,7 @@ const LibrarySettingsModal = ({
                 <p><Kbd>R</Kbd> restarts, <Kbd>↑</Kbd> / <Kbd>↓</Kbd> changes volume.</p>
                 <p><Kbd>Esc</Kbd> returns to the previous page.</p>
               </div>
+            </div>
           </Details>
         </div>
       </SettingsSection>

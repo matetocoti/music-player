@@ -19,10 +19,6 @@ const Footer = ({ textContent, children, className = "" }: FooterProps) => {
     >
       <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center justify-between gap-2 text-center text-sm text-zinc-600 sm:flex-row sm:gap-6 sm:text-left dark:text-zinc-300">
         <div className="flex items-center justify-center gap-2 sm:justify-start">
-          <span className="relative inline-flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-0 sm:opacity-40 sm:[animation-duration:3s]" />
-            <span className="relative inline-block h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(var(--brand-rgb),0.7)] sm:shadow-[0_0_8px_rgba(var(--brand-rgb),0.5)]" />
-          </span>
           <span className="font-medium tracking-tight">{content}</span>
         </div>
 
