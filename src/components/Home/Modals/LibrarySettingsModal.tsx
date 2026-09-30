@@ -1,4 +1,4 @@
-import { Info, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import type { InputHTMLAttributes, ReactNode } from "react";
 import Modal from "../../UI/Modal";
 import Details from "../../UI/Details";
@@ -226,10 +226,7 @@ const LibrarySettingsModal = ({
           Reset to defaults
         </button>
         <span className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-zinc-500 dark:text-zinc-400">
-          <Info
-            className="h-3.5 w-3.5 shrink-0 opacity-80"
-            aria-hidden="true"
-          />
+          
           Defaults are optimized for your current screen and performance.
         </span>
       </footer>
