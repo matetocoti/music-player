@@ -21,7 +21,7 @@ const DefaultLayout: FC = () => {
   }, []);
 
   return (
-    <div className={`flex min-h-screen w-full flex-col bg-gradient-to-b from-zinc-100 via-zinc-200 to-zinc-400 text-zinc-900 transition-colors duration-300 dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50 selection:bg-emerald-500 selection:text-white ${isLightMode ? "" : "dark"}`}>
+    <div className={`flex min-h-screen w-full flex-col bg-gradient-to-b from-stone-100 via-zinc-200 to-stone-300 text-zinc-900 transition-colors duration-300 dark:from-[#1d1b1a] dark:via-[#171819] dark:to-[#101112] dark:text-zinc-50 selection:bg-emerald-500 selection:text-white ${isLightMode ? "" : "dark"}`}>
       <Header title="My Music App">
         <button
           type="button"
