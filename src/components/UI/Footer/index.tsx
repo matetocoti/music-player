@@ -19,10 +19,10 @@ const Footer = ({ textContent, children, className = "" }: FooterProps) => {
     >
       <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center justify-between gap-2 text-center text-sm text-zinc-600 sm:flex-row sm:gap-6 sm:text-left dark:text-zinc-300">
         <div className="flex items-center justify-center gap-2 sm:justify-start">
-          <span className="font-medium tracking-tight">{content}</span>
+          <span className="font-reading font-medium tracking-tight">{content}</span>
         </div>
 
-        <div className="flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400 sm:justify-end sm:font-medium sm:tracking-[0.28em]">
+        <div className="font-label flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400 sm:justify-end sm:font-medium sm:tracking-[0.28em]">
           <span>Music</span>
           <span className="h-1 w-1 rounded-full bg-zinc-400" />
           <span>Curated</span>

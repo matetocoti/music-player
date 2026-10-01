@@ -16,10 +16,10 @@ const PlayerHeader = ({ title, artist }: PlayerHeaderProps) => {
         className="pointer-events-none absolute -right-8 -top-10 h-20 w-20 rounded-full bg-cyan-300/10 blur-2xl dark:bg-cyan-400/8"
         aria-hidden="true"
       />
-      <h1 className="relative truncate font-mono text-lg font-bold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-xl lg:text-2xl">
+      <h1 className="font-heading relative truncate text-lg leading-tight tracking-tight text-slate-950 dark:text-white sm:text-xl lg:text-2xl">
         {title}
       </h1>
-      <p className="relative mt-0.5 truncate text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400 sm:text-sm">
+      <p className="font-reading relative mt-0.5 truncate text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400 sm:text-sm">
         {artist}
       </p>
     </div>

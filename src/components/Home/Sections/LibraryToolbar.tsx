@@ -64,13 +64,13 @@ const LibraryToolbar = ({
   return (
   <div className="relative z-30 flex flex-col gap-3 rounded-xl border border-zinc-200/60 bg-white/40 p-3 shadow-sm backdrop-blur-xl transition-all duration-500 dark:border-zinc-800/60 dark:bg-zinc-900/40 sm:gap-4 sm:rounded-2xl sm:p-4 sm:flex-row sm:items-center sm:justify-between">
     <div className="group cursor-default">
-      <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 transition-colors duration-300 dark:text-emerald-500">
+      <p className="font-label text-xs font-bold uppercase tracking-widest text-emerald-600 transition-colors duration-300 dark:text-emerald-500">
         Discover
       </p>
-      <h2 className="text-base font-semibold tracking-tight text-zinc-900 transition-colors duration-300 sm:text-lg dark:text-zinc-100">
+      <h2 className="font-reading text-lg font-semibold leading-snug tracking-normal text-zinc-900 transition-colors duration-300 sm:text-xl dark:text-zinc-100">
         Find your next favorite song
       </h2>
-      <p className="mt-1 text-xs font-medium text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
+      <p className="font-reading mt-1 text-xs font-medium text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
         <span className="font-bold text-zinc-700 dark:text-zinc-300">{totalSongs}</span> {totalSongs === 1 ? "item" : "items"} in your library
       </p>
     </div>

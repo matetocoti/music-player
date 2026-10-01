@@ -13,6 +13,7 @@ const AppToaster = () => {
           border: '1px solid rgba(var(--brand-rgb), 0.35)',
           color: 'var(--toast-text)',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
+          fontFamily: 'var(--font-hand)',
         },
       }}
     />

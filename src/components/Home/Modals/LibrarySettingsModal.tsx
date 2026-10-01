@@ -114,24 +114,26 @@ const LibrarySettingsModal = ({
 
       <SettingsSection
         title="Library"
-        description="Control how many songs are loaded at a time."
+        description="Set the behavior of your library."
       >
-        <div className="flex items-center justify-between gap-4 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
-          <span>
-            {`Items per page`}
-            <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
-              Controls how many songs are loaded for each page.
+        <div className="border-l border-zinc-200/80 pl-4 dark:border-zinc-800">
+          <div className="flex items-center justify-between gap-4 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+            <span>
+              {`Items per page`}
+              <span className="mt-1 block text-xs font-normal text-zinc-500 dark:text-zinc-400">
+                Controls how many songs are loaded for each page.
+              </span>
             </span>
-          </span>
-          <Select
-            value={String(pageSize)}
-            onChange={(value) => onPageSizeChange(Number(value))}
-            ariaLabel="Items per page"
-            options={[9, 12, 15, 18].map((size) => ({
-              value: String(size),
-              label: String(size),
-            }))}
-          />
+            <Select
+              value={String(pageSize)}
+              onChange={(value) => onPageSizeChange(Number(value))}
+              ariaLabel="Items per page"
+              options={[9, 12, 15, 18].map((size) => ({
+                value: String(size),
+                label: String(size),
+              }))}
+            />
+          </div>
         </div>
       </SettingsSection>
 

@@ -22,7 +22,7 @@ const SongBox = ({ song, className = '', children }: SongBoxProps) => {
       <div>
         <div className="mb-3 flex items-start justify-between gap-2 sm:mb-4 sm:gap-3">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-sm font-semibold tracking-tight text-zinc-900 sm:text-base dark:text-zinc-100">
+            <h3 className="font-reading truncate text-sm font-semibold tracking-normal text-zinc-900 sm:text-base dark:text-zinc-100">
               {title}
             </h3>
             <p className="truncate text-xs font-medium text-zinc-500 sm:text-sm dark:text-zinc-400">

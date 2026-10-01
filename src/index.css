@@ -1,13 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+/* #region Imports & Tailwind */
+@import url("https://fonts.googleapis.com/css2?family=Caprasimo&family=Monoton&family=Permanent+Marker&family=Rye&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* #endregion Imports & Tailwind */
 
-/* Paleta de identidade: remapeamento dinâmico do tema Tailwind v4 */
+
+/* #region Theme Remap — Brand tokens → slot "emerald" do Tailwind */
 @theme inline {
-  --font-sans: var(--font-ui);
+  --font-sans: var(--font-reading);
   --font-mono: var(--font-code);
-  --font-display: var(--font-heading);
+  --font-display: var(--font-display-face);
   --color-emerald-50: var(--brand-50);
   --color-emerald-100: var(--brand-100);
   --color-emerald-200: var(--brand-200);
@@ -20,13 +23,17 @@
   --color-emerald-900: var(--brand-900);
   --color-emerald-950: var(--brand-950);
 }
+/* #endregion Theme Remap */
+
 
 /* =====================================================
    index.css
    Estilos globais e fundação visual da aplicação
    ===================================================== */
 
+/* #region Design Tokens */
 :root {
+  /* Marca */
   --brand-50: #eff5ff;
   --brand-100: #dce8f8;
   --brand-200: #bfd1eb;
@@ -42,23 +49,32 @@
   --brand-rgb-light: 127, 157, 202;
   --brand-glow: rgba(var(--brand-rgb), 0.16);
 
+  /* Elevação com tinta de marca — opt-in via .shadow-brand-* (ver utilitários) */
+  --shadow-brand-sm: 0 2px 8px -2px rgba(var(--brand-rgb), 0.25);
+  --shadow-brand-md: 0 8px 24px -4px rgba(var(--brand-rgb), 0.25), 0 2px 8px -2px rgba(var(--brand-rgb), 0.15);
+  --shadow-brand-lg: 0 20px 48px -12px rgba(var(--brand-rgb), 0.35), 0 8px 24px -8px rgba(var(--brand-rgb), 0.2);
+
+  /* Superfície */
   --background: #fafafa;
   --text: #18181b;
   --muted: #71717a;
-
   --primary: var(--brand-600);
-  --font-ui: "DM Sans", "Segoe UI", sans-serif;
-  --font-heading: "Space Grotesk", "DM Sans", sans-serif;
-  --font-code: "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
-  --font: var(--font-ui);
 
+  /* Tipografia */
+  --font-reading: "STIX Two Text", Georgia, serif;
+  --font-heading: "Caprasimo", Georgia, serif;
+  --font-display-face: "Monoton", cursive;
+  --font-label: "Rye", Georgia, serif;
+  --font-hand: "Permanent Marker", cursive;
+  --font-code: "Cascadia Code", Consolas, monospace;
+  --font: var(--font-reading);
+
+  /* Diversos */
   --toast-background: #111827;
   --toast-text: #f4f4f5;
-
   --gutter: 1rem;
   --header-height: 60px;
   --footer-height: 60px;
-
   --auto-constrast-yellow: #ffee00;
 }
 
@@ -66,8 +82,15 @@
   --background: #121212;
   --text: #ffffff;
   --muted: #b3b3b3;
-}
 
+  --shadow-brand-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.5);
+  --shadow-brand-md: 0 10px 28px -6px rgba(0, 0, 0, 0.55), 0 2px 10px -2px rgba(var(--brand-rgb-light), 0.12);
+  --shadow-brand-lg: 0 24px 56px -14px rgba(0, 0, 0, 0.65), 0 10px 28px -10px rgba(var(--brand-rgb-light), 0.18);
+}
+/* #endregion Design Tokens */
+
+
+/* #region Reset & Base Layout */
 *,
 *::before,
 *::after {
@@ -94,11 +117,65 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
 }
+/* #endregion Reset & Base Layout */
 
-h1,
-h2,
-h3 {
+
+/* #region Native UI Theming */
+
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+
+html {
+  accent-color: var(--primary);
+}
+
+::selection {
+  background: rgba(var(--brand-rgb), 0.35);
+}
+
+::-moz-selection {
+  background: rgba(var(--brand-rgb), 0.35);
+}
+/* #endregion Native UI Theming */
+
+
+/* #region Typography */
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+}
+
+.font-display {
+  font-family: var(--font-display-face);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-label {
+  font-family: var(--font-label);
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+.font-reading {
+  font-family: var(--font-reading);
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+em, i {
+  font-style: italic;
 }
 
 a {
@@ -113,6 +190,50 @@ a:hover {
   border-radius: 16px;
 }
 
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid rgba(var(--brand-rgb), 0.5);
+  font-style: italic;
+  color: var(--muted);
+}
+
+hr {
+  border: none;
+  height: 1px;
+  margin: 2rem 0;
+  background: linear-gradient(to right, transparent, rgba(var(--brand-rgb), 0.35), transparent);
+}
+
+li::marker {
+  color: var(--primary);
+}
+
+code {
+  font-family: var(--font-code);
+  font-size: 0.9em;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: rgba(var(--brand-rgb), 0.1);
+}
+
+pre {
+  font-family: var(--font-code);
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  background: rgba(var(--brand-rgb), 0.08);
+}
+
+pre code {
+  padding: 0;
+  background: none;
+}
+/* #endregion Typography */
+
+
+/* #region Scrollbar */
+/* Chromium / WebKit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -139,6 +260,63 @@ a:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--brand-rgb), 0.35) transparent;
+}
+
+.dark {
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+/* #endregion Scrollbar */
+
+
+/* #region Decorative Utilities (opt-in) */
+
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, var(--brand-400), var(--brand-700));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .text-gradient-brand {
+  background: linear-gradient(135deg, var(--brand-300), var(--brand-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.shadow-brand-sm { box-shadow: var(--shadow-brand-sm); }
+.shadow-brand-md { box-shadow: var(--shadow-brand-md); }
+.shadow-brand-lg { box-shadow: var(--shadow-brand-lg); }
+
+
+.bg-grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.bg-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dark .bg-grain::after {
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+}
+/* #endregion Decorative Utilities */
+
+
+/* #region Motion & Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
@@ -149,7 +327,13 @@ a:hover {
     scroll-behavior: auto !important;
   }
 }
+/* #endregion Motion & Accessibility */
 
+
+/* #region High Contrast Mode */
+
+
+/* #region HC — Focus & Disabled */
 html.high-contrast :focus-visible {
   outline: 3px solid var(--auto-constrast-yellow) !important;
   outline-offset: 3px;
@@ -159,6 +343,9 @@ html.high-contrast :focus-visible {
 html.high-contrast :disabled {
   opacity: 0.75 !important;
 }
+/* #endregion HC — Focus & Disabled */
+
+/* #region HC — Borders */
 
 html.high-contrast [class*="border-zinc-"],
 html.high-contrast [class*="border-slate-"],
@@ -167,8 +354,9 @@ html.high-contrast [class*="border-rose-"] {
   border-color: currentColor !important;
   border-width: 1px !important;
 }
+/* #endregion HC — Borders */
 
-/* Light Mode + High Contrast */
+/* #region HC — Light Mode */
 html.high-contrast:not(.dark):not(:has(.dark)) {
   --background: #ffffff;
   --text: #111827;
@@ -186,6 +374,7 @@ html.high-contrast:not(.dark):not(:has(.dark)) #root {
   color: #111827 !important;
 }
 
+
 html.high-contrast:not(.dark):not(:has(.dark))
   :is([class~="text-zinc-400"], [class~="text-zinc-500"],
       [class~="text-slate-400"], [class~="text-slate-500"]) {
@@ -202,8 +391,9 @@ html.high-contrast:not(.dark):not(:has(.dark))
       [class*="bg-zinc-200/"], [class*="bg-slate-50/"], [class*="bg-slate-100/"]) {
   background-color: #ffffff !important;
 }
+/* #endregion HC — Light Mode */
 
-/* Dark Mode + High Contrast */
+/* #region HC — Dark Mode */
 html.high-contrast:is(.dark, :has(.dark)) :focus-visible {
   outline-color: var(--auto-constrast-yellow) !important;
   box-shadow: 0 0 0 2px #111827 !important;
@@ -225,6 +415,9 @@ html.high-contrast:is(.dark, :has(.dark))
   :is([class*="bg-zinc-900/"], [class*="bg-zinc-950/"], [class*="bg-slate-900/"]) {
   background-color: #111827 !important;
 }
+/* #endregion HC — Dark Mode */
+
+/* #region HC — Shadows & Forms */
 
 html.high-contrast [class*="shadow-"]:not(:focus-visible) {
   box-shadow: 0 0 0 1px currentColor !important;
@@ -242,3 +435,5 @@ html.high-contrast textarea::placeholder {
   color: currentColor !important;
   opacity: 0.85 !important;
 }
+/* #endregion HC — Shadows & Forms */
+/* #endregion High Contrast Mode */
