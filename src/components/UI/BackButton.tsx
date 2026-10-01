@@ -43,7 +43,7 @@ const BackButton = ({
       aria-label={ariaLabel || "Back"}
       title={ariaLabel || "Back"}
       onClick={handleClick}
-      className={`group inline-flex shrink-0 cursor-pointer items-center justify-center border border-slate-200/80 bg-white/70 font-medium text-slate-600 shadow-sm backdrop-blur-md transition-all duration-300 ease-out hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400 sm:active:scale-100 sm:active:opacity-70 ${shapeClasses} ${className}`.trim()}
+      className={`group inline-flex shrink-0 cursor-pointer items-center justify-center border border-slate-200/80 bg-white/90 font-medium text-slate-600 shadow-sm transition-all duration-300 ease-out hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-slate-700/80 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400 sm:active:scale-100 sm:active:opacity-70 ${shapeClasses} ${className}`.trim()}
     >
       <ArrowLeft
         className="h-4 w-4 shrink-0 transition-transform duration-300 ease-out group-hover:-translate-x-0.5 sm:h-5 sm:w-5"

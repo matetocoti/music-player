@@ -15,7 +15,7 @@ const Footer = ({ textContent, children, className = "" }: FooterProps) => {
 
   return (
     <footer
-      className={`border-t border-zinc-200/80 bg-white/60 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8 dark:border-zinc-800 dark:bg-zinc-950/60 ${className}`.trim()}
+      className={`border-t border-stone-300/80 bg-stone-200/90 px-4 py-4 sm:px-6 lg:px-8 dark:border-zinc-800 dark:bg-zinc-950/90 ${className}`.trim()}
     >
       <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center justify-between gap-2 text-center text-sm text-zinc-600 sm:flex-row sm:gap-6 sm:text-left dark:text-zinc-300">
         <div className="flex items-center justify-center gap-2 sm:justify-start">

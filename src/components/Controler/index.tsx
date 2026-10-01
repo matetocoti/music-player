@@ -36,7 +36,7 @@ const Controler = ({
   } as CSSProperties;
 
   return (
-    <div className={`controller-surface relative flex w-full flex-col gap-3 overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-br from-white via-zinc-100 to-zinc-200 p-4 text-zinc-900 shadow-[0_20px_60px_rgba(24,24,27,0.12)] backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-white dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:rounded-[1.75rem] sm:px-6 sm:py-5 ${playing ? "controller-surface-playing" : ""}`}>
+    <div className={`controller-surface relative flex w-full flex-col gap-3 overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-br from-white via-zinc-100 to-zinc-200 p-4 text-zinc-900 shadow-[0_20px_60px_rgba(24,24,27,0.12)] transition-colors duration-300 dark:border-white/10 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-white dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:rounded-[1.75rem] sm:px-6 sm:py-5 ${playing ? "controller-surface-playing" : ""}`}>
       <div className="relative z-10 flex shrink-0 flex-col items-center justify-center sm:items-start">
         <TimeCounter currentTime={currentTime} duration={duration} />
         <div className="controller-waveform" aria-hidden="true" style={waveformStyle}>

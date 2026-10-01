@@ -121,7 +121,7 @@ const Select = ({
         role="listbox"
         aria-label={ariaLabel}
         aria-hidden={!isOpen}
-        className={`absolute right-0 top-[calc(100%+0.5rem)] z-[60] min-w-32 origin-top-right rounded-xl border border-zinc-200/90 bg-white/95 p-1.5 text-left shadow-xl shadow-zinc-950/10 backdrop-blur-xl transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none dark:border-zinc-700/90 dark:bg-zinc-900/95 dark:shadow-black/40 ${
+        className={`absolute right-0 top-[calc(100%+0.5rem)] z-[60] min-w-32 origin-top-right rounded-xl border border-zinc-200/90 bg-white p-1.5 text-left shadow-xl shadow-zinc-950/10 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none dark:border-zinc-700/90 dark:bg-zinc-900 dark:shadow-black/40 ${
           isOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1 scale-95 opacity-0"
         } ${menuClassName}`}
       >

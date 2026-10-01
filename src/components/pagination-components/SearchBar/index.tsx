@@ -22,9 +22,9 @@ const SearchBar = ({
   };
 
   return (
-    <div className={`relative flex w-full max-w-xl items-center ${className}`.trim()}>
+        <div className={`library-search relative flex w-full max-w-xl items-center ${className}`.trim()}>
       <Search
-        className="absolute left-3 h-4 w-4 text-zinc-400 sm:left-3.5 sm:h-5 sm:w-5 dark:text-zinc-500"
+            className="absolute left-3 h-4 w-4 text-[#a56345]/75 sm:left-3.5 sm:h-5 sm:w-5 dark:text-[#d59672]/75"
         aria-hidden="true"
       />
       <input
@@ -34,7 +34,7 @@ const SearchBar = ({
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         aria-label={placeholder}
-        className="h-10 w-full rounded-2xl border border-zinc-200/80 bg-white/90 pl-9 pr-10 text-xs text-zinc-700 outline-none transition-all placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 sm:h-12 sm:pl-11 sm:pr-11 sm:text-sm dark:border-zinc-800/80 dark:bg-zinc-600/80 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-emerald-500/50 dark:focus:ring-emerald-500/20"
+            className="font-reading h-10 w-full rounded-xl border border-stone-300/80 bg-stone-50/85 pl-9 pr-10 text-xs text-zinc-700 outline-none shadow-[0_4px_14px_rgba(70,55,45,0.06)] transition-all placeholder:text-zinc-400 hover:border-stone-400 focus:border-[#a56345] focus:ring-4 focus:ring-[#c7835a]/15 sm:h-12 sm:rounded-2xl sm:pl-11 sm:pr-11 sm:text-sm dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-[#d59672] dark:focus:ring-[#d59672]/15"
       />
       {search.length > 0 && (
         <button

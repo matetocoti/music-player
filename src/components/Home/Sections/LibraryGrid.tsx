@@ -32,7 +32,7 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
   return (
     <div className="absolute bottom-3 right-3 z-10 flex shrink-0 items-center gap-2 opacity-70 transition sm:opacity-0 sm:group-hover/song-card:opacity-100">
       <div
-        className={`flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-zinc-200/80 bg-white/90 p-1 shadow-sm backdrop-blur transition-[max-width,opacity,transform] duration-300 ease-out motion-reduce:transition-none dark:border-zinc-700 dark:bg-zinc-900/90 ${
+        className={`flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-zinc-200/80 bg-white/95 p-1 shadow-sm transition-[max-width,opacity,transform] duration-300 ease-out motion-reduce:transition-none dark:border-zinc-700 dark:bg-zinc-900/95 ${
           isOpen ? "max-w-24 translate-x-0 scale-100 opacity-100" : "pointer-events-none max-w-0 translate-x-2 scale-95 border-transparent p-0 opacity-0"
         }`}
         aria-hidden={!isOpen}
@@ -78,7 +78,7 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
         title="Song actions"
         aria-label={`Song actions for ${song.title}`}
         aria-expanded={isOpen}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200/80 bg-white/90 text-zinc-500 shadow-sm backdrop-blur transition hover:scale-105 hover:border-emerald-400 hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200/80 bg-white/95 text-zinc-500 shadow-sm transition hover:scale-105 hover:border-emerald-400 hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:border-zinc-700 dark:bg-zinc-900/95 dark:text-zinc-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
       >
         <MoreVertical className={`h-4 w-4 transition-transform duration-300 ease-out motion-reduce:transition-none ${isOpen ? "rotate-90" : "rotate-0"}`} aria-hidden="true" />
       </button>
@@ -168,7 +168,7 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, keyboardC
         </MyGridContainer>
         {loading && (
           <div className="pointer-events-none absolute inset-x-0 top-2 flex justify-center">
-            <span className="rounded-full border border-emerald-200/70 bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-600 shadow-sm backdrop-blur-sm dark:border-emerald-900/60 dark:bg-zinc-900/90 dark:text-emerald-400">
+            <span className="rounded-full border border-emerald-200/70 bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-600 shadow-sm dark:border-emerald-900/60 dark:bg-zinc-900/95 dark:text-emerald-400">
               Updating
             </span>
           </div>

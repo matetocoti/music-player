@@ -61,7 +61,7 @@ const Player = ({ song, loading, error }: PlayerProps) => {
         <BackButton
           fallbackTo="/"
           ariaLabel="Back to Home"
-          className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-zinc-200/80 bg-white/80 p-0 text-zinc-600 shadow-sm backdrop-blur-md transition-all duration-300 ease-out hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95 sm:h-10 sm:w-10 sm:active:scale-100 sm:active:opacity-70 dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400"
+          className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-zinc-200/80 bg-white/95 p-0 text-zinc-600 shadow-sm transition-all duration-300 ease-out hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95 sm:h-10 sm:w-10 sm:active:scale-100 sm:active:opacity-70 dark:border-zinc-700/80 dark:bg-zinc-900/95 dark:text-zinc-300 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400"
         />
       </div>
 
