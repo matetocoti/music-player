@@ -13,6 +13,8 @@ class SongEntity:
     album: str = ""
     duration: int = 0
     url: str = ""
+    category: str = ""
+    favorite: bool = False
 
     @classmethod
     def from_mapping(cls, payload: Mapping[str, Any]) -> "SongEntity":
@@ -23,6 +25,8 @@ class SongEntity:
             album=str(payload.get("album") or ""),
             duration=int(payload.get("duration") or 0),
             url=str(payload.get("url") or ""),
+            category=str(payload.get("category") or ""),
+            favorite=bool(payload.get("favorite", False)),
         )
 
     def to_storage_payload(self) -> dict[str, Any]:
@@ -33,4 +37,6 @@ class SongEntity:
             "album": self.album,
             "duration": self.duration,
             "url": self.url,
+            "category": self.category,
+            "favorite": int(self.favorite),
         }

@@ -14,6 +14,8 @@ class SongResponseDTO(BaseModel):
     artist: str
     album: Optional[str] = "Unknown Album"
     duration: Optional[int] = None
+    category: str = ""
+    favorite: bool = False
 
     @property
     def duration_in_minutes(self) -> Optional[float]:
@@ -29,6 +31,8 @@ class SongResponseDTO(BaseModel):
             artist=song.artist,
             album=song.album or "Unknown Album",
             duration=song.duration,
+            category=song.category,
+            favorite=song.favorite,
         )
 
 

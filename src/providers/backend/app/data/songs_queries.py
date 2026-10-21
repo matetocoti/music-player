@@ -6,34 +6,43 @@ class SongsQueries:
             artist TEXT NOT NULL,
             album TEXT NOT NULL DEFAULT '',
             duration INTEGER NOT NULL DEFAULT 0,
-            url TEXT NOT NULL DEFAULT ''
+            url TEXT NOT NULL DEFAULT '',
+            category TEXT NOT NULL DEFAULT '',
+            favorite INTEGER NOT NULL DEFAULT 0 CHECK (favorite IN (0, 1))
         )
     """
 
     COUNT_ALL = "SELECT COUNT(*) FROM songs"
 
-    INSERT = """
-        INSERT OR REPLACE INTO songs (id, title, artist, album, duration, url)
-        VALUES (:id, :title, :artist, :album, :duration, :url)
+    LIST_CATEGORIES = """
+        SELECT DISTINCT category
+        FROM songs
+        WHERE TRIM(category) <> ''
+        ORDER BY CASEFOLD(category)
     """
 
-    COUNT_BY_SEARCH = """
+    INSERT = """
+        INSERT OR REPLACE INTO songs
+            (id, title, artist, album, duration, url, category, favorite)
+        VALUES
+            (:id, :title, :artist, :album, :duration, :url, :category, :favorite)
+    """
+
+    COUNT = """
         SELECT COUNT(*) FROM songs
-        WHERE CASEFOLD(title) LIKE CASEFOLD(?)
-           OR CASEFOLD(artist) LIKE CASEFOLD(?)
+        WHERE {filters}
     """
 
     LIST = """
-        SELECT id, title, artist, album, duration
+        SELECT id, title, artist, album, duration, category, favorite
         FROM songs
-        WHERE CASEFOLD(title) LIKE CASEFOLD(?)
-           OR CASEFOLD(artist) LIKE CASEFOLD(?)
+        WHERE {filters}
         ORDER BY {order_by} {order_direction}, id {order_direction}
         LIMIT ? OFFSET ?
     """
 
     GET_BY_ID = """
-        SELECT id, title, artist, album, duration
+        SELECT id, title, artist, album, duration, category, favorite
         FROM songs
         WHERE id = ?
         LIMIT 1
@@ -45,6 +54,8 @@ class SongsQueries:
             artist = :artist,
             album = :album,
             duration = :duration,
-            url = :url
+            url = :url,
+            category = :category,
+            favorite = :favorite
         WHERE id = ?
     """

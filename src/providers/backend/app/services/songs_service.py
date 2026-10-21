@@ -48,6 +48,18 @@ class SongsService:
     def _ensure_database(self) -> None:
         with self._connect() as connection:
             connection.execute(SongsQueries.CREATE_TABLE)
+            columns = {
+                row["name"]
+                for row in connection.execute("PRAGMA table_info(songs)").fetchall()
+            }
+            if "category" not in columns:
+                connection.execute(
+                    "ALTER TABLE songs ADD COLUMN category TEXT NOT NULL DEFAULT ''"
+                )
+            if "favorite" not in columns:
+                connection.execute(
+                    "ALTER TABLE songs ADD COLUMN favorite INTEGER NOT NULL DEFAULT 0"
+                )
             if connection.execute(SongsQueries.COUNT_ALL).fetchone()[0] == 0:
                 self._seed_database(connection)
 
@@ -83,6 +95,8 @@ class SongsService:
         per_page: int,
         order_by: str = "id",
         order_direction: str = "asc",
+        category: str = "",
+        favorite: bool | None = None,
     ) -> PaginatedSongs:
         page = max(page, 1)
         per_page = max(per_page, 1)
@@ -91,15 +105,31 @@ class SongsService:
             order_direction, self.ORDER_DIRECTIONS["asc"]
         )
         search = f"%{query}%"
+        filters = [
+            "(CASEFOLD(title) LIKE CASEFOLD(?) "
+            "OR CASEFOLD(artist) LIKE CASEFOLD(?) "
+            "OR CASEFOLD(album) LIKE CASEFOLD(?))"
+        ]
+        parameters: list[Any] = [search, search, search]
+        if category:
+            filters.append("CASEFOLD(category) = CASEFOLD(?)")
+            parameters.append(category)
+        if favorite is not None:
+            filters.append("favorite = ?")
+            parameters.append(int(favorite))
+        where_clause = " AND ".join(filters)
         with self._connect() as connection:
             total = connection.execute(
-                SongsQueries.COUNT_BY_SEARCH, (search, search)
+                SongsQueries.COUNT.format(filters=where_clause), parameters
             ).fetchone()[0]
+            list_parameters = [*parameters, per_page, (page - 1) * per_page]
             rows = connection.execute(
                 SongsQueries.LIST.format(
-                    order_by=order_clause, order_direction=direction_clause
+                    filters=where_clause,
+                    order_by=order_clause,
+                    order_direction=direction_clause,
                 ),
-                (search, search, per_page, (page - 1) * per_page),
+                list_parameters,
             ).fetchall()
         return {
             "data": [SongEntity.from_mapping(dict(row)) for row in rows],
@@ -107,6 +137,15 @@ class SongsService:
             "page": page,
             "per_page": per_page,
         }
+
+    def list_categories(self) -> list[str]:
+        with self._connect() as connection:
+            rows = connection.execute(SongsQueries.LIST_CATEGORIES).fetchall()
+        categories: dict[str, str] = {}
+        for row in rows:
+            category = row["category"].strip()
+            categories.setdefault(category.casefold(), category)
+        return list(categories.values())
 
     def get_song_by_id(self, song_id: str) -> SongEntity | None:
         with self._connect() as connection:
@@ -136,6 +175,8 @@ class SongsService:
                     payload["album"],
                     payload["duration"],
                     payload["url"],
+                    payload["category"],
+                    payload["favorite"],
                     song_id,
                 ),
             )

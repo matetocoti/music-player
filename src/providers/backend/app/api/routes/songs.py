@@ -15,6 +15,11 @@ from app.services.songs_service import songs_service
 router = APIRouter()
 
 
+@router.get("/categories")
+def list_categories() -> list[str]:
+    return songs_service.list_categories()
+
+
 @router.get("")
 def list_songs(params: Annotated[SongListParams, Query()],) -> PaginatedSongsResponseDTO:
     result = songs_service.list_songs(
@@ -23,6 +28,8 @@ def list_songs(params: Annotated[SongListParams, Query()],) -> PaginatedSongsRes
         params.per_page,
         params.order_by,
         params.order_direction,
+        params.category,
+        params.favorite,
     )
     return PaginatedSongsResponseDTO(
         data=[SongResponseDTO.from_entity(song) for song in result["data"]],

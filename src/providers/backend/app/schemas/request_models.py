@@ -28,12 +28,19 @@ class SongListParams(BaseModel):
 	page: int = Field(default=1, ge=1)
 	per_page: int = Field(default=15, ge=1, le=100)
 	query: str = Field(default="", max_length=100)
+	category: str = Field(default="", max_length=100)
+	favorite: bool | None = None
 	order_by: Literal["id", "title", "artist", "album", "duration"] = "id"
 	order_direction: Literal["asc", "desc"] = "asc"
 
 	@field_validator("query")
 	@classmethod
 	def normalize_query(cls, value: str) -> str:
+		return validate_optional_text(value) or ""
+
+	@field_validator("category")
+	@classmethod
+	def normalize_category(cls, value: str) -> str:
 		return validate_optional_text(value) or ""
 
 class ResolveSongParams(BaseModel):
@@ -52,13 +59,15 @@ class SaveSongRequest(BaseModel):
 	artist: str
 	album: str | None = None
 	duration: int | None = None
+	category: str | None = Field(default=None, max_length=100)
+	favorite: bool = False
 
 	@field_validator("title", "artist")
 	@classmethod
 	def validate_required_fields(cls, value: str, info) -> str:
 		return validate_required_text(value, info.field_name)
 
-	@field_validator("album")
+	@field_validator("album", "category")
 	@classmethod
 	def normalize_optional_fields(cls, value: str | None) -> str | None:
 		return validate_optional_text(value)
@@ -75,13 +84,15 @@ class UpdateSongRequest(BaseModel):
 	artist: str | None = None
 	album: str | None = None
 	duration: int | None = None
+	category: str | None = Field(default=None, max_length=100)
+	favorite: bool | None = None
 
 	@field_validator("title", "artist")
 	@classmethod
 	def normalize_text(cls, value: str | None) -> str | None:
 		return validate_optional_text(value)
 
-	@field_validator("album")
+	@field_validator("album", "category")
 	@classmethod
 	def normalize_album(cls, value: str | None) -> str | None:
 		return validate_optional_text(value)

@@ -324,13 +324,28 @@ The backend enables CORS for the local Vite origin `http://localhost:5173`.
 | --- | --- | --- |
 | `GET` | `/` | Backend health check / Health check do backend |
 | `GET` | `/songs` | Paginated, filtered and sorted library / Biblioteca paginada, filtrada e ordenada |
+| `GET` | `/songs/categories` | List available song categories / Listar categorias disponíveis |
 | `GET` | `/songs/{song_id}` | Get one song / Buscar uma música |
 | `POST` | `/songs` | Create song metadata / Criar metadados |
 | `PUT` | `/songs/{song_id}` | Update song metadata / Atualizar metadados |
 | `DELETE` | `/songs/{song_id}` | Delete a song / Excluir uma música |
 | `GET` | `/ytmusic/resolve` | Resolve a title and artist to a video source / Resolver título e artista em uma fonte de vídeo |
 
-`GET /songs` accepts `query`, `page`, `per_page`, `order_by` and `order_direction` query parameters.
+`GET /songs` accepts `query`, `category`, `favorite`, `page`, `per_page`, `order_by` and
+`order_direction` query parameters. `category` applies an exact case-insensitive category
+filter, while `favorite=true` or `favorite=false` filters by favorite status.
+
+`GET /songs/categories` returns the non-empty categories available for use in a category
+select, for example `["Rock", "Pop"]`.
+
+In the Swagger documentation (`/docs`), the `category` query parameter in `GET /songs`
+is rendered as a select using the categories currently stored in the database.
+The `category` field in `POST /songs` and `PUT /songs/{song_id}` documents both options:
+selecting an existing category or entering a new category name.
+
+Song creation and updates support the `category` string and `favorite` boolean fields. For
+example, `POST /songs` can receive `{ "title": "Song", "artist": "Artist",
+"category": "Rock", "favorite": true }`.
 
 ## Project structure / Estrutura do projeto
 
