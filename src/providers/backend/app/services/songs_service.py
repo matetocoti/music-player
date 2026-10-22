@@ -7,6 +7,7 @@ from typing import Any, TypedDict
 
 from app.core.entities.song import SongEntity
 from app.data.songs_queries import SongsQueries
+from app.schemas.request_models import SaveSongRequest
 
 
 class PaginatedSongs(TypedDict):
@@ -14,6 +15,13 @@ class PaginatedSongs(TypedDict):
     total: int
     page: int
     per_page: int
+
+
+class TxtImportResult(TypedDict):
+    total: int
+    saved: int
+    failed: int
+    errors: list[dict[str, Any]]
 
 
 class SongsService:
@@ -189,5 +197,66 @@ class SongsService:
                 "DELETE FROM songs WHERE id = ?", (song_id,)
             )
         return cursor.rowcount > 0
+
+    def save_songs_txt(self, txt_content: str) -> TxtImportResult:
+        result: TxtImportResult = {
+            "total": 0,
+            "saved": 0,
+            "failed": 0,
+            "errors": [],
+        }
+
+        for line_number, line in enumerate(txt_content.splitlines(), start=1):
+            if not line.strip():
+                continue
+
+            result["total"] += 1
+            parts = [part.strip() for part in line.split(".")]
+            if (
+                len(parts) == 7
+                and parts[3].isdigit()
+                and parts[4].isdigit()
+            ):
+                parts[3:5] = [f"{parts[3]}.{parts[4]}"]
+            if len(parts) > 6:
+                self._record_txt_error(
+                    result, line_number, "A linha deve conter no máximo 6 campos."
+                )
+                continue
+
+            parts.extend([""] * (6 - len(parts)))
+            title, artist, album, duration, category, favorite = parts
+            try:
+                payload = SaveSongRequest(
+                    title=title,
+                    artist=artist,
+                    album=album or None,
+                    duration=duration or None, # type: ignore
+                    category=category or None,
+                    favorite=self._parse_txt_boolean(favorite),
+                )
+                self.save_song(SongEntity.from_mapping(payload.model_dump()))
+            except (TypeError, ValueError, sqlite3.Error) as error:
+                self._record_txt_error(result, line_number, str(error))
+            else:
+                result["saved"] += 1
+
+        return result
+
+    @staticmethod
+    def _parse_txt_boolean(value: str) -> bool:
+        if not value:
+            return False
+        normalized = value.casefold()
+        if normalized in {"true", "1", "sim", "yes"}:
+            return True
+        if normalized in {"false", "0", "nao", "não", "no"}:
+            return False
+        raise ValueError("favorite deve ser true, false, 1, 0, sim ou nao.")
+
+    @staticmethod
+    def _record_txt_error(result: TxtImportResult, line_number: int, message: str) -> None:
+        result["failed"] += 1
+        result["errors"].append({"line": line_number, "error": message})
 
 songs_service = SongsService()

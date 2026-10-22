@@ -15,6 +15,25 @@ def configure_openapi(app: FastAPI, list_categories: Callable[[], list[str]],) -
             version="1.0.0",
             routes=app.routes,
         )
+        songs_txt_post = schema.get("paths", {}).get("/songs/txt", {}).get("post", {})
+        songs_txt_post["requestBody"] = {
+            "required": True,
+            "content": {
+                "text/plain": {
+                    "schema": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "UTF-8 TXT file contents",
+                    }
+                }
+            },
+        }
+        songs_txt_post["description"] = (
+            "Upload a UTF-8 plain-text file. Use one song per line with fields "
+            "separated by periods: title.artist.album.duration.category.favorite. "
+            "The last four fields are optional."
+        )
+        schema.setdefault("paths", {}).setdefault("/songs/txt", {})["post"] = songs_txt_post
         categories = list_categories()
         songs_get = schema.get("paths", {}).get("/songs", {}).get("get", {})
 

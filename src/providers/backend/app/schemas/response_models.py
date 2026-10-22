@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Mapping, Optional
 
 from pydantic import BaseModel
 
@@ -41,3 +41,27 @@ class PaginatedSongsResponseDTO(BaseModel):
     total: int
     page: int
     per_page: int
+
+
+class TxtImportErrorDTO(BaseModel):
+    line: int
+    error: str
+
+
+class TxtImportResponseDTO(BaseModel):
+    total: int
+    saved: int
+    failed: int
+    errors: list[TxtImportErrorDTO]
+
+
+def create_txt_import_response(result: Mapping[str, Any],) -> TxtImportResponseDTO:
+    return TxtImportResponseDTO(
+        total=result["total"],
+        saved=result["saved"],
+        failed=result["failed"],
+        errors=[
+            TxtImportErrorDTO(**error)
+            for error in result["errors"]
+        ],
+    )

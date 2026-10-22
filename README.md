@@ -326,7 +326,8 @@ The backend enables CORS for the local Vite origin `http://localhost:5173`.
 | `GET` | `/songs` | Paginated, filtered and sorted library / Biblioteca paginada, filtrada e ordenada |
 | `GET` | `/songs/categories` | List available song categories / Listar categorias disponíveis |
 | `GET` | `/songs/{song_id}` | Get one song / Buscar uma música |
-| `POST` | `/songs` | Create song metadata / Criar metadados |
+| `POST` | `/songs` | Create song metadata (returns `202` without a body) / Criar metadados (retorna `202` sem corpo) |
+| `POST` | `/songs/txt` | Import song metadata from a plain TXT body / Importar metadados a partir do corpo TXT |
 | `PUT` | `/songs/{song_id}` | Update song metadata / Atualizar metadados |
 | `DELETE` | `/songs/{song_id}` | Delete a song / Excluir uma música |
 | `GET` | `/ytmusic/resolve` | Resolve a title and artist to a video source / Resolver título e artista em uma fonte de vídeo |
@@ -346,6 +347,21 @@ selecting an existing category or entering a new category name.
 Song creation and updates support the `category` string and `favorite` boolean fields. For
 example, `POST /songs` can receive `{ "title": "Song", "artist": "Artist",
 "category": "Rock", "favorite": true }`.
+
+`POST /songs/txt` accepts the UTF-8 contents of a TXT file as a plain request body, so it
+does not require the multipart upload dependency. Use one song per line with fields
+separated by periods, in this order:
+`title.artist.album.duration.category.favorite`. The last four fields are optional;
+`duration` follows the same minutes-based input accepted by `POST /songs`, and `favorite`
+accepts `true`, `false`, `1`, `0`, `sim` or `nao`. For example:
+
+```text
+Song One.Artist One.Album One.3.Rock.true
+Another Song.Another Artist.Album.2.Pop.false
+```
+
+The endpoint returns an import summary containing `total`, `saved`, `failed` and an
+`errors` list with the line number for each rejected record.
 
 ## Project structure / Estrutura do projeto
 
