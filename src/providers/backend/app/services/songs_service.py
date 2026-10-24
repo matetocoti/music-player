@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import re
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, ClassVar, TypedDict
 
 from app.core.entities.song import SongEntity
 from app.data.songs_queries import SongsQueries
@@ -25,9 +27,14 @@ class TxtImportResult(TypedDict):
 
 
 class SongsService:
-    ORDER_DIRECTIONS = {"asc": "ASC", "desc": "DESC"}
+    # ------------------------------------------------------------------
+    # Constantes | Constants
+    # ------------------------------------------------------------------
 
-    ORDER_BY = {
+    
+    ORDER_DIRECTIONS: ClassVar[dict[str, str]] = {"asc": "ASC", "desc": "DESC"}
+
+    ORDER_BY: ClassVar[dict[str, str]] = {
         "id": "CAST(id AS INTEGER)",
         "title": "CASEFOLD(title)",
         "artist": "CASEFOLD(artist)",
@@ -35,19 +42,73 @@ class SongsService:
         "duration": "duration",
     }
 
+    
+    _MIGRATION_COLUMNS: ClassVar[dict[str, str]] = {
+        "category": "TEXT NOT NULL DEFAULT ''",
+        "favorite": "INTEGER NOT NULL DEFAULT 0",
+    }
+
+    _UPDATE_FIELDS: ClassVar[tuple[str, ...]] = (
+        "title",
+        "artist",
+        "album",
+        "duration",
+        "url",
+        "category",
+        "favorite",
+    )
+
+    _TABLE_INFO: ClassVar[str] = "PRAGMA table_info(songs)"
+    _DELETE_BY_ID: ClassVar[str] = "DELETE FROM songs WHERE id = ?"
+    _SEARCH_FILTER: ClassVar[str] = (
+        "(CASEFOLD(title) LIKE ? "
+        "OR CASEFOLD(artist) LIKE ? "
+        "OR CASEFOLD(album) LIKE ?)"
+    )
+
+  
+    _SEED_BLOCK: ClassVar[re.Pattern[str]] = re.compile(r"new Song\(\{(.*?)\}\)", re.S)
+    _SEED_FIELD: ClassVar[re.Pattern[str]] = re.compile(
+        r'(\w+)\s*:\s*("(?:[^"\\]|\\.)*"|\d+)'
+    )
+    _SEED_REQUIRED: ClassVar[frozenset[str]] = frozenset({"id", "title", "artist"})
+
+    
+    _TXT_SEPARATOR: ClassVar[str] = "."
+    _TXT_MAX_FIELDS: ClassVar[int] = 6
+    _TRUE_VALUES: ClassVar[frozenset[str]] = frozenset({"true", "1", "sim", "yes"})
+    _FALSE_VALUES: ClassVar[frozenset[str]] = frozenset(
+        {"false", "0", "nao", "não", "no"}
+    )
+
+    # ------------------------------------------------------------------
+    # Infraestrutura (conexão, schema, seed) | Infrastructure (connection, schema, seed)
+    # ------------------------------------------------------------------
+
     def __init__(self) -> None:
-        app_root = Path(__file__).resolve().parents[1]
-        workspace_root = Path(__file__).resolve().parents[5]
+        here = Path(__file__).resolve()
+        app_root = here.parents[1]
+        workspace_root = here.parents[5]
         self.db_path = app_root / "data" / "music.sqlite"
         self.seed_path = workspace_root / "src" / "data" / "songs.mock.ts"
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._ensure_database()
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        """Abre uma conexão, faz commit/rollback e sempre a fecha ao sair.
+
+        O `with sqlite3.connect(...)` puro só faz commit/rollback: a conexão
+        continuava aberta até o garbage collector recolhê-la.
+        """
         connection = sqlite3.connect(self.db_path)
         connection.row_factory = sqlite3.Row
         connection.create_function("CASEFOLD", 1, self._casefold)
-        return connection
+        try:
+            with connection:
+                yield connection
+        finally:
+            connection.close()
 
     @staticmethod
     def _casefold(value: str | None) -> str:
@@ -56,18 +117,12 @@ class SongsService:
     def _ensure_database(self) -> None:
         with self._connect() as connection:
             connection.execute(SongsQueries.CREATE_TABLE)
-            columns = {
-                row["name"]
-                for row in connection.execute("PRAGMA table_info(songs)").fetchall()
-            }
-            if "category" not in columns:
-                connection.execute(
-                    "ALTER TABLE songs ADD COLUMN category TEXT NOT NULL DEFAULT ''"
-                )
-            if "favorite" not in columns:
-                connection.execute(
-                    "ALTER TABLE songs ADD COLUMN favorite INTEGER NOT NULL DEFAULT 0"
-                )
+            existing = {row["name"] for row in connection.execute(self._TABLE_INFO)}
+            for name, definition in self._MIGRATION_COLUMNS.items():
+                if name not in existing:
+                    connection.execute(
+                        f"ALTER TABLE songs ADD COLUMN {name} {definition}"
+                    )
             if connection.execute(SongsQueries.COUNT_ALL).fetchone()[0] == 0:
                 self._seed_database(connection)
 
@@ -80,21 +135,34 @@ class SongsService:
     def _load_seed_songs(self) -> list[SongEntity]:
         source = self.seed_path.read_text(encoding="utf-8")
         songs: list[SongEntity] = []
-        for block in re.findall(r"new Song\(\{(.*?)\}\)", source, flags=re.S):
+        for block in self._SEED_BLOCK.findall(source):
             values: dict[str, Any] = {}
-            for field in block.split(","):
-                key, separator, raw_value = field.partition(":")
-                if not separator:
-                    continue
-                key = key.strip()
-                raw_value = raw_value.strip()
-                if raw_value.startswith('"') and raw_value.endswith('"'):
-                    values[key] = raw_value[1:-1]
-                elif raw_value.isdigit():
-                    values[key] = int(raw_value)
-            if {"id", "title", "artist"}.issubset(values):
+            for key, raw_value in self._SEED_FIELD.findall(block):
+                values[key] = (
+                    raw_value[1:-1] if raw_value.startswith('"') else int(raw_value)
+                )
+            if self._SEED_REQUIRED.issubset(values):
                 songs.append(SongEntity.from_mapping(values))
         return songs
+
+    # ------------------------------------------------------------------
+    # Leitura|Reaad
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def _build_filters(
+        cls, query: str, category: str, favorite: bool | None
+    ) -> tuple[str, list[Any]]:
+        search = f"%{query}%".casefold()
+        filters = [cls._SEARCH_FILTER]
+        parameters: list[Any] = [search, search, search]
+        if category:
+            filters.append("CASEFOLD(category) = ?")
+            parameters.append(category.casefold())
+        if favorite is not None:
+            filters.append("favorite = ?")
+            parameters.append(int(favorite))
+        return " AND ".join(filters), parameters
 
     def list_songs(
         self,
@@ -112,58 +180,51 @@ class SongsService:
         direction_clause = self.ORDER_DIRECTIONS.get(
             order_direction, self.ORDER_DIRECTIONS["asc"]
         )
-        search = f"%{query}%"
-        filters = [
-            "(CASEFOLD(title) LIKE CASEFOLD(?) "
-            "OR CASEFOLD(artist) LIKE CASEFOLD(?) "
-            "OR CASEFOLD(album) LIKE CASEFOLD(?))"
-        ]
-        parameters: list[Any] = [search, search, search]
-        if category:
-            filters.append("CASEFOLD(category) = CASEFOLD(?)")
-            parameters.append(category)
-        if favorite is not None:
-            filters.append("favorite = ?")
-            parameters.append(int(favorite))
-        where_clause = " AND ".join(filters)
+        where_clause, parameters = self._build_filters(query, category, favorite)
+
         with self._connect() as connection:
             total = connection.execute(
                 SongsQueries.COUNT.format(filters=where_clause), parameters
             ).fetchone()[0]
-            list_parameters = [*parameters, per_page, (page - 1) * per_page]
             rows = connection.execute(
                 SongsQueries.LIST.format(
                     filters=where_clause,
                     order_by=order_clause,
                     order_direction=direction_clause,
                 ),
-                list_parameters,
+                [*parameters, per_page, (page - 1) * per_page],
             ).fetchall()
-        return {
-            "data": [SongEntity.from_mapping(dict(row)) for row in rows],
-            "total": total,
-            "page": page,
-            "per_page": per_page,
-        }
+            songs = [SongEntity.from_mapping(dict(row)) for row in rows]
+
+        return {"data": songs, "total": total, "page": page, "per_page": per_page}
 
     def list_categories(self) -> list[str]:
         with self._connect() as connection:
-            rows = connection.execute(SongsQueries.LIST_CATEGORIES).fetchall()
+            names = [
+                row["category"].strip()
+                for row in connection.execute(SongsQueries.LIST_CATEGORIES)
+            ]
         categories: dict[str, str] = {}
-        for row in rows:
-            category = row["category"].strip()
-            categories.setdefault(category.casefold(), category)
+        for name in names:
+            categories.setdefault(name.casefold(), name)
         return list(categories.values())
 
     def get_song_by_id(self, song_id: str) -> SongEntity | None:
         with self._connect() as connection:
             row = connection.execute(SongsQueries.GET_BY_ID, (song_id,)).fetchone()
-        return SongEntity.from_mapping(dict(row)) if row else None
+            return SongEntity.from_mapping(dict(row)) if row else None
+
+    # ------------------------------------------------------------------
+    # Escrita|Write
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _insert(connection: sqlite3.Connection, song: SongEntity) -> None:
+        connection.execute(SongsQueries.INSERT, song.to_storage_payload())
 
     def save_song(self, song: SongEntity) -> SongEntity:
-        payload = song.to_storage_payload()
         with self._connect() as connection:
-            connection.execute(SongsQueries.INSERT, payload)
+            self._insert(connection, song)
         return song
 
     def update_song(self, song_id: str, updates: dict[str, Any]) -> SongEntity | None:
@@ -172,31 +233,24 @@ class SongsService:
             if row is None:
                 return None
 
-            current = dict(row)
-            current.update(updates)
-            payload = SongEntity.from_mapping(current).to_storage_payload()
+            payload = SongEntity.from_mapping(
+                {**dict(row), **updates}
+            ).to_storage_payload()
             connection.execute(
                 SongsQueries.UPDATE,
-                (
-                    payload["title"],
-                    payload["artist"],
-                    payload["album"],
-                    payload["duration"],
-                    payload["url"],
-                    payload["category"],
-                    payload["favorite"],
-                    song_id,
-                ),
+                (*(payload[field] for field in self._UPDATE_FIELDS), song_id),
             )
 
         return SongEntity.from_mapping(payload)
 
     def delete_song(self, song_id: str) -> bool:
         with self._connect() as connection:
-            cursor = connection.execute(
-                "DELETE FROM songs WHERE id = ?", (song_id,)
-            )
-        return cursor.rowcount > 0
+            deleted = connection.execute(self._DELETE_BY_ID, (song_id,)).rowcount
+        return deleted > 0
+
+    # ------------------------------------------------------------------
+    # Importação TXT | TXT Import
+    # ------------------------------------------------------------------
 
     def save_songs_txt(self, txt_content: str) -> TxtImportResult:
         result: TxtImportResult = {
@@ -206,57 +260,70 @@ class SongsService:
             "errors": [],
         }
 
-        for line_number, line in enumerate(txt_content.splitlines(), start=1):
-            if not line.strip():
-                continue
+   
+        with self._connect() as connection:
+            for line_number, line in enumerate(txt_content.splitlines(), start=1):
+                if not line.strip():
+                    continue
 
-            result["total"] += 1
-            parts = [part.strip() for part in line.split(".")]
-            if (
-                len(parts) == 7
-                and parts[3].isdigit()
-                and parts[4].isdigit()
-            ):
-                parts[3:5] = [f"{parts[3]}.{parts[4]}"]
-            if len(parts) > 6:
-                self._record_txt_error(
-                    result, line_number, "A linha deve conter no máximo 6 campos."
-                )
-                continue
-
-            parts.extend([""] * (6 - len(parts)))
-            title, artist, album, duration, category, favorite = parts
-            try:
-                payload = SaveSongRequest(
-                    title=title,
-                    artist=artist,
-                    album=album or None,
-                    duration=duration or None, # type: ignore
-                    category=category or None,
-                    favorite=self._parse_txt_boolean(favorite),
-                )
-                self.save_song(SongEntity.from_mapping(payload.model_dump()))
-            except (TypeError, ValueError, sqlite3.Error) as error:
-                self._record_txt_error(result, line_number, str(error))
-            else:
-                result["saved"] += 1
+                result["total"] += 1
+                try:
+                    title, artist, album, duration, category, favorite = (
+                        self._split_txt_line(line)
+                    )
+                    payload = SaveSongRequest(
+                        title=title,
+                        artist=artist,
+                        album=album or None,
+                        duration=duration or None,  # type: ignore
+                        category=category or None,
+                        favorite=self._parse_txt_boolean(favorite),
+                    )
+                    self._insert(
+                        connection, SongEntity.from_mapping(payload.model_dump())
+                    )
+                except (TypeError, ValueError, sqlite3.Error) as error:
+                    self._record_txt_error(result, line_number, str(error))
+                else:
+                    result["saved"] += 1
 
         return result
 
-    @staticmethod
-    def _parse_txt_boolean(value: str) -> bool:
+    @classmethod
+    def _split_txt_line(cls, line: str) -> list[str]:
+        
+        parts = [part.strip() for part in line.split(cls._TXT_SEPARATOR)]
+        
+        if (
+            len(parts) == cls._TXT_MAX_FIELDS + 1
+            and parts[3].isdigit()
+            and parts[4].isdigit()
+        ):
+            parts[3:5] = [f"{parts[3]}.{parts[4]}"]
+        if len(parts) > cls._TXT_MAX_FIELDS:
+            raise ValueError(
+                f"The line has too many fields (expected {cls._TXT_MAX_FIELDS}, got {len(parts)})."
+            )
+        parts.extend([""] * (cls._TXT_MAX_FIELDS - len(parts)))
+        return parts
+
+    @classmethod
+    def _parse_txt_boolean(cls, value: str) -> bool:
         if not value:
             return False
         normalized = value.casefold()
-        if normalized in {"true", "1", "sim", "yes"}:
+        if normalized in cls._TRUE_VALUES:
             return True
-        if normalized in {"false", "0", "nao", "não", "no"}:
+        if normalized in cls._FALSE_VALUES:
             return False
-        raise ValueError("favorite deve ser true, false, 1, 0, sim ou nao.")
+        raise ValueError("favorite must be a boolean value (true/false, 1/0, yes/no).")
 
     @staticmethod
-    def _record_txt_error(result: TxtImportResult, line_number: int, message: str) -> None:
+    def _record_txt_error(
+        result: TxtImportResult, line_number: int, message: str
+    ) -> None:
         result["failed"] += 1
         result["errors"].append({"line": line_number, "error": message})
+
 
 songs_service = SongsService()
