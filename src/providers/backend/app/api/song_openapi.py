@@ -14,7 +14,7 @@ CSV_IMPORT_RESPONSES: dict[int | str, dict[str, Any]] = {
         "description": "The file is not valid UTF-8.",
         "content": {
             "application/json": {
-                "example": {"detail": "O arquivo CSV deve usar codificação UTF-8."}
+                "example": {"detail": "The CSV file must be UTF-8 encoded."}
             }
         },
     }
