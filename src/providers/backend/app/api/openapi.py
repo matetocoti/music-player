@@ -12,28 +12,27 @@ def configure_openapi(app: FastAPI, list_categories: Callable[[], list[str]],) -
 
         schema = get_openapi(
             title=app.title,
-            version="1.0.0",
+            version="1.1.0",
             routes=app.routes,
         )
-        songs_txt_post = schema.get("paths", {}).get("/songs/txt", {}).get("post", {})
-        songs_txt_post["requestBody"] = {
+        songs_csv_post = schema.get("paths", {}).get("/songs/csv", {}).get("post", {})
+        songs_csv_post["requestBody"] = {
             "required": True,
             "content": {
-                "text/plain": {
+                "text/csv": {
                     "schema": {
                         "type": "string",
                         "format": "binary",
-                        "description": "UTF-8 TXT file contents",
+                        "description": "UTF-8 CSV file contents",
                     }
                 }
             },
         }
-        songs_txt_post["description"] = (
-            "Upload a UTF-8 plain-text file. Use one song per line with fields "
-            "separated by periods: title.artist.album.duration.category.favorite. "
-            "The last four fields are optional."
+        songs_csv_post["description"] = (
+            "Upload a UTF-8 CSV file. Use one song per row with fields in this order: "
+            "title,artist,album,duration,category,favorite. The last four fields are optional."
         )
-        schema.setdefault("paths", {}).setdefault("/songs/txt", {})["post"] = songs_txt_post
+        schema.setdefault("paths", {}).setdefault("/songs/csv", {})["post"] = songs_csv_post
         categories = list_categories()
         songs_get = schema.get("paths", {}).get("/songs", {}).get("get", {})
 

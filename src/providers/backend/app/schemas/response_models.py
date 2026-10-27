@@ -43,25 +43,25 @@ class PaginatedSongsResponseDTO(BaseModel):
     per_page: int
 
 
-class TxtImportErrorDTO(BaseModel):
+class CsvImportErrorDTO(BaseModel):
     line: int
     error: str
 
 
-class TxtImportResponseDTO(BaseModel):
+class CsvImportResponseDTO(BaseModel):
     total: int
     saved: int
     failed: int
-    errors: list[TxtImportErrorDTO]
+    errors: list[CsvImportErrorDTO]
 
 
-def create_txt_import_response(result: Mapping[str, Any],) -> TxtImportResponseDTO:
-    return TxtImportResponseDTO(
+def create_csv_import_response(result: Mapping[str, Any],) -> CsvImportResponseDTO:
+    return CsvImportResponseDTO(
         total=result["total"],
         saved=result["saved"],
         failed=result["failed"],
         errors=[
-            TxtImportErrorDTO(**error)
+            CsvImportErrorDTO(**error)
             for error in result["errors"]
         ],
     )

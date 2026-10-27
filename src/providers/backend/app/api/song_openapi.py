@@ -1,34 +1,34 @@
 from typing import Any
 
 
-TXT_IMPORT_SUMMARY = "Import songs from a TXT file"
+CSV_IMPORT_SUMMARY = "Import songs from a CSV file"
 
-TXT_IMPORT_DESCRIPTION = (
-    "Upload a UTF-8 plain-text file. Use one song per line with fields separated "
-    "by periods: title.artist.album.duration.category.favorite. "
-    "The last four fields are optional."
+CSV_IMPORT_DESCRIPTION = (
+    "Upload a UTF-8 CSV file. Use one song per row with fields in this order: "
+    "title,artist,album,duration,category,favorite. The last four fields are optional. "
+    "Fields containing commas must be quoted according to CSV rules."
 )
 
-TXT_IMPORT_RESPONSES: dict[int | str, dict[str, Any]] = {
+CSV_IMPORT_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: {
         "description": "The file is not valid UTF-8.",
         "content": {
             "application/json": {
-                "example": {"detail": "O arquivo TXT deve usar codificação UTF-8."}
+                "example": {"detail": "O arquivo CSV deve usar codificação UTF-8."}
             }
         },
     }
 }
 
-TXT_IMPORT_REQUEST_BODY: dict[str, Any] = {
+CSV_IMPORT_REQUEST_BODY: dict[str, Any] = {
     "requestBody": {
         "required": True,
         "content": {
-            "text/plain": {
+            "text/csv": {
                 "schema": {
                     "type": "string",
                     "format": "binary",
-                    "description": "UTF-8 TXT file contents",
+                    "description": "UTF-8 CSV file contents",
                 }
             }
         },

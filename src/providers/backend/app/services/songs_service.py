@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import csv
+import io
 import re
 import sqlite3
 from collections.abc import Iterator
@@ -19,7 +21,7 @@ class PaginatedSongs(TypedDict):
     per_page: int
 
 
-class TxtImportResult(TypedDict):
+class CsvImportResult(TypedDict):
     total: int
     saved: int
     failed: int
@@ -74,8 +76,7 @@ class SongsService:
     _SEED_REQUIRED: ClassVar[frozenset[str]] = frozenset({"id", "title", "artist"})
 
     
-    _TXT_SEPARATOR: ClassVar[str] = "."
-    _TXT_MAX_FIELDS: ClassVar[int] = 6
+    _CSV_MAX_FIELDS: ClassVar[int] = 6
     _TRUE_VALUES: ClassVar[frozenset[str]] = frozenset({"true", "1", "sim", "yes"})
     _FALSE_VALUES: ClassVar[frozenset[str]] = frozenset(
         {"false", "0", "nao", "não", "no"}
@@ -249,66 +250,66 @@ class SongsService:
         return deleted > 0
 
     # ------------------------------------------------------------------
-    # Importação TXT | TXT Import
+    # Importação CSV | CSV Import
     # ------------------------------------------------------------------
 
-    def save_songs_txt(self, txt_content: str) -> TxtImportResult:
-        result: TxtImportResult = {
+    def save_songs_csv(self, csv_content: str) -> CsvImportResult:
+        result: CsvImportResult = {
             "total": 0,
             "saved": 0,
             "failed": 0,
             "errors": [],
         }
 
-   
         with self._connect() as connection:
-            for line_number, line in enumerate(txt_content.splitlines(), start=1):
-                if not line.strip():
+            reader = csv.reader(io.StringIO(csv_content), strict=True)
+            while True:
+                try:
+                    row = next(reader)
+                except StopIteration:
+                    break
+                except csv.Error as error:
+                    result["total"] += 1
+                    self._record_csv_error(result, reader.line_num, str(error))
+                    break
+
+                line_number = reader.line_num
+                if not row or not any(field.strip() for field in row):
                     continue
 
                 result["total"] += 1
                 try:
-                    title, artist, album, duration, category, favorite = (
-                        self._split_txt_line(line)
-                    )
+                    title, artist, album, duration, category, favorite = self._split_csv_row(row)
                     payload = SaveSongRequest(
                         title=title,
                         artist=artist,
                         album=album or None,
                         duration=duration or None,  # type: ignore
                         category=category or None,
-                        favorite=self._parse_txt_boolean(favorite),
+                        favorite=self._parse_csv_boolean(favorite),
                     )
                     self._insert(
                         connection, SongEntity.from_mapping(payload.model_dump())
                     )
-                except (TypeError, ValueError, sqlite3.Error) as error:
-                    self._record_txt_error(result, line_number, str(error))
+                except (csv.Error, TypeError, ValueError, sqlite3.Error) as error:
+                    self._record_csv_error(result, line_number, str(error))
                 else:
                     result["saved"] += 1
 
         return result
 
     @classmethod
-    def _split_txt_line(cls, line: str) -> list[str]:
-        
-        parts = [part.strip() for part in line.split(cls._TXT_SEPARATOR)]
-        
-        if (
-            len(parts) == cls._TXT_MAX_FIELDS + 1
-            and parts[3].isdigit()
-            and parts[4].isdigit()
-        ):
-            parts[3:5] = [f"{parts[3]}.{parts[4]}"]
-        if len(parts) > cls._TXT_MAX_FIELDS:
+    def _split_csv_row(cls, row: list[str]) -> list[str]:
+        parts = [part.strip() for part in row]
+        if len(parts) > cls._CSV_MAX_FIELDS:
             raise ValueError(
-                f"The line has too many fields (expected {cls._TXT_MAX_FIELDS}, got {len(parts)})."
+                f"The row has too many fields (expected {cls._CSV_MAX_FIELDS}, got {len(parts)})."
             )
-        parts.extend([""] * (cls._TXT_MAX_FIELDS - len(parts)))
+        parts.extend([""] * (cls._CSV_MAX_FIELDS - len(parts)))
         return parts
 
     @classmethod
-    def _parse_txt_boolean(cls, value: str) -> bool:
+    def _parse_csv_boolean(cls, value: str) -> bool:
         if not value:
             return False
         normalized = value.casefold()
@@ -319,9 +320,7 @@ class SongsService:
         raise ValueError("favorite must be a boolean value (true/false, 1/0, yes/no).")
 
     @staticmethod
-    def _record_txt_error(
-        result: TxtImportResult, line_number: int, message: str
-    ) -> None:
+    def _record_csv_error(result: CsvImportResult, line_number: int, message: str) -> None:
         result["failed"] += 1
         result["errors"].append({"line": line_number, "error": message})
 

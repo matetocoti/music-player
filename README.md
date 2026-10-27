@@ -327,7 +327,7 @@ The backend enables CORS for the local Vite origin `http://localhost:5173`.
 | `GET` | `/songs/categories` | List available song categories / Listar categorias disponíveis |
 | `GET` | `/songs/{song_id}` | Get one song / Buscar uma música |
 | `POST` | `/songs` | Create song metadata (returns `202` without a body) / Criar metadados (retorna `202` sem corpo) |
-| `POST` | `/songs/txt` | Import song metadata from a plain TXT body / Importar metadados a partir do corpo TXT |
+| `POST` | `/songs/csv` | Import song metadata from a CSV body / Importar metadados a partir do corpo CSV |
 | `PUT` | `/songs/{song_id}` | Update song metadata / Atualizar metadados |
 | `DELETE` | `/songs/{song_id}` | Delete a song / Excluir uma música |
 | `GET` | `/ytmusic/resolve` | Resolve a title and artist to a video source / Resolver título e artista em uma fonte de vídeo |
@@ -348,16 +348,16 @@ Song creation and updates support the `category` string and `favorite` boolean f
 example, `POST /songs` can receive `{ "title": "Song", "artist": "Artist",
 "category": "Rock", "favorite": true }`.
 
-`POST /songs/txt` accepts the UTF-8 contents of a TXT file as a plain request body, so it
-does not require the multipart upload dependency. Use one song per line with fields
-separated by periods, in this order:
-`title.artist.album.duration.category.favorite`. The last four fields are optional;
-`duration` follows the same minutes-based input accepted by `POST /songs`, and `favorite`
-accepts `true`, `false`, `1`, `0`, `sim` or `nao`. For example:
+`POST /songs/csv` accepts the UTF-8 contents of a CSV file as a plain request body, so it
+does not require the multipart upload dependency. Use one song per row with fields in this
+order: `title,artist,album,duration,category,favorite`. The last four fields are optional;
+fields containing commas must be quoted according to CSV rules. `duration` follows the same
+minutes-based input accepted by `POST /songs`, and `favorite` accepts `true`, `false`, `1`,
+`0`, `sim` or `nao`. For example:
 
-```text
-Song One.Artist One.Album One.3.Rock.true
-Another Song.Another Artist.Album.2.Pop.false
+```csv
+Song One,Artist One,Album One,3,Rock,true
+Another Song,Another Artist,Album,2,Pop,false
 ```
 
 The endpoint returns an import summary containing `total`, `saved`, `failed` and an
