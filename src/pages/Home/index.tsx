@@ -41,7 +41,7 @@ const Home = () => {
     orderBy,
     orderDirection,
     category === "__favorites__" ? "" : category,
-    favoritesOnly || category === "__favorites__",
+    favoritesOnly || category === "__favorites__" ? true : undefined,
   );
   const operations = useSongOperations(reload);
   const totalPages = getTotalPages(total, pageSize);
