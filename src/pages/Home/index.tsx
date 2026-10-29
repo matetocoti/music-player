@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
 
+import { listCategories } from "../../api/songs";
 import type { Song, SongOrderBy, SongOrderDirection } from "../../api/types";
 import CreateSongModal from "../../components/Home/Modals/CreateSongModal";
 import DeleteSongModal from "../../components/Home/Modals/DeleteSongModal";
@@ -28,6 +29,10 @@ const Home = () => {
   const [keyboardControls, setKeyboardControls] = usePersistedState("music-player-keyboard-controls", false);
   const [orderBy, setOrderBy] = usePersistedState<SongOrderBy>("music-player-order-by", "id");
   const [orderDirection, setOrderDirection] = usePersistedState<SongOrderDirection>("music-player-order-direction", "asc");
+  const [category, setCategory] = usePersistedState("music-player-filter", "");
+  const [favoritesOnly, setFavoritesOnly] = usePersistedState("music-player-favorites", false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [isGridSettingsOpen, setIsGridSettingsOpen] = useState(false);
   const { songs, total, loading, error, reload } = useSongs(
     search,
@@ -35,6 +40,8 @@ const Home = () => {
     pageSize,
     orderBy,
     orderDirection,
+    category === "__favorites__" ? "" : category,
+    favoritesOnly || category === "__favorites__",
   );
   const operations = useSongOperations(reload);
   const totalPages = getTotalPages(total, pageSize);
@@ -44,6 +51,17 @@ const Home = () => {
     document.documentElement.classList.toggle("high-contrast", highContrast);
   }, [highContrast]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    listCategories(controller.signal)
+      .then(setCategories)
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setCategoriesError(err instanceof Error ? err.message : "Unknown error");
+      });
+    return () => controller.abort();
+  }, []);
+
   const openDeleteModal = (song: Pick<Song, "id" | "title">) => {
     operations.setSongToDelete(song);
   };
@@ -52,6 +70,8 @@ const Home = () => {
     setSearch("");
     setOrderBy("id");
     setOrderDirection("asc");
+    setCategory("");
+    setFavoritesOnly(false);
     setGridColumns(defaultGridColumns);
     setPageSize(defaultPageSize);
     setPage(1);
@@ -92,12 +112,26 @@ const Home = () => {
           setOrderDirection(newOrderDirection);
           setPage(1);
         }}
+        category={category === "__favorites__" ? "" : category}
+        favoritesOnly={favoritesOnly || category === "__favorites__"}
+        categories={categories}
+        onCategoryChange={(newCategory) => {
+          setCategory(newCategory);
+          setPage(1);
+        }}
+        onFavoritesChange={(newFavoritesOnly) => {
+          setFavoritesOnly(newFavoritesOnly);
+          if (category === "__favorites__") {
+            setCategory("");
+          }
+          setPage(1);
+        }}
       />
 
       <LibraryGrid
         songs={songs}
         loading={loading}
-        error={error}
+        error={error ?? categoriesError}
         deletingSongId={operations.deletingSongId}
         columns={Math.min(gridColumns, maxGridColumns)}
         keyboardControls={keyboardControls}

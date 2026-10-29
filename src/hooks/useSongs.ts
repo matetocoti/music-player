@@ -8,6 +8,8 @@ function useSongs(
   pageSize: number,
   orderBy: SongOrderBy,
   orderDirection: SongOrderDirection,
+  category: string,
+  favorite?: boolean,
 ) {
   const [songs, setSongs] = useState<Song[]>([]);
   const [total, setTotal] = useState(0);
@@ -20,7 +22,15 @@ function useSongs(
       try {
         setLoading(true);
 
-        const result = await listSongs(search, page, pageSize, orderBy, orderDirection);
+        const result = await listSongs(
+          search,
+          page,
+          pageSize,
+          orderBy,
+          orderDirection,
+          category,
+          favorite,
+        );
 
         setSongs(result.data);
         setTotal(result.total);
@@ -32,7 +42,7 @@ function useSongs(
     }
 
     fetchSongs();
-  }, [search, page, pageSize, orderBy, orderDirection, reloadKey]);
+  }, [search, page, pageSize, orderBy, orderDirection, category, favorite, reloadKey]);
 
   const reload = useCallback(() => {
     setReloadKey((currentKey) => currentKey + 1);

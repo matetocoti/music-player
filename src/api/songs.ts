@@ -22,6 +22,8 @@ export async function listSongs(
   perPage: number,
   orderBy: SongOrderBy = "id",
   orderDirection: SongOrderDirection = "asc",
+  category?: string,
+  favorite?: boolean,
   signal?: AbortSignal,
 ): Promise<PaginatedSongs> {
   const params = new URLSearchParams({
@@ -31,6 +33,12 @@ export async function listSongs(
     order_by: orderBy,
     order_direction: orderDirection,
   });
+  if (category) {
+    params.set("category", category);
+  }
+  if (favorite !== undefined) {
+    params.set("favorite", String(favorite));
+  }
   const response = await fetch(`${SONGS_API_URL}?${params.toString()}`, { signal });
   await ensureOk(response, "Failed to load songs");
 
@@ -43,6 +51,12 @@ export async function listSongs(
     page: payload.page,
     perPage: payload.per_page,
   };
+}
+
+export async function listCategories(signal?: AbortSignal): Promise<string[]> {
+  const response = await fetch(`${SONGS_API_URL}/categories`, { signal });
+  await ensureOk(response, "Failed to load song categories");
+  return response.json();
 }
 
 export async function getSong(id: string, signal?: AbortSignal): Promise<Song | null> {
@@ -90,4 +104,3 @@ export async function deleteSong(id: string, signal?: AbortSignal): Promise<void
   });
   await ensureOk(response, "Failed to delete song");
 }
-

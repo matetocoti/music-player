@@ -5,6 +5,8 @@ export type Song = {
   album?: string;
   duration?: number;
   url?: string;
+  category?: string;
+  favorite?: boolean;
 };
 
 export type SongOrderBy = "id" | "title" | "artist" | "album" | "duration";
