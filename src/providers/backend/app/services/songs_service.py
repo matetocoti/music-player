@@ -244,6 +244,11 @@ class SongsService:
 
         return SongEntity.from_mapping(payload)
 
+    def toggle_favorite(self, song_id: str) -> bool:
+        with self._connect() as connection:
+            updated = connection.execute(SongsQueries.TOGGLE_FAVORITE, (song_id,)).rowcount
+        return updated > 0
+
     def delete_song(self, song_id: str) -> bool:
         with self._connect() as connection:
             deleted = connection.execute(self._DELETE_BY_ID, (song_id,)).rowcount

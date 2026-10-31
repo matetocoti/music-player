@@ -59,3 +59,9 @@ class SongsQueries:
             favorite = :favorite
         WHERE id = ?
     """
+
+    TOGGLE_FAVORITE = """
+        UPDATE songs
+        SET favorite = CASE WHEN favorite = 1 THEN 0 ELSE 1 END
+        WHERE id = ?
+    """

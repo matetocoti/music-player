@@ -107,6 +107,17 @@ def update_song(song_id: str, payload: UpdateSongRequest) -> SongResponseDTO:
     return SongResponseDTO.from_entity(updated_song)
 
 
+@router.patch("/{song_id}/favorite", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_FOUND_RESPONSE,)
+def toggle_favorite(song_id: str) -> Response:
+    updated_song = songs_service.toggle_favorite(song_id)
+    if not updated_song:
+        raise create_http_exception(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=ErrorMessages.SONG_NOT_FOUND,
+        )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.delete("/{song_id}", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_FOUND_RESPONSE)
 def delete_song(song_id: str) -> None:
     deleted = songs_service.delete_song(song_id)
