@@ -68,9 +68,13 @@ const SongCardActions = ({ song, deletingSongId, favoritingSongId, onDeleteSong,
             title={song.favorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`}
             aria-label={song.favorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`}
             aria-pressed={song.favorite}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-200/80 bg-white/90 text-amber-500 transition hover:scale-105 hover:bg-amber-50 hover:text-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-wait dark:border-amber-900/70 dark:bg-zinc-900/90 dark:text-amber-400 dark:hover:bg-amber-950/50 dark:hover:text-amber-300"
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-white/90 shadow-sm transition-[background-color,border-color,color,transform,box-shadow] duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-wait dark:bg-zinc-900/90 ${
+              song.favorite
+                ? "border-amber-300/60 bg-amber-50/60 text-amber-700 shadow-[0_1px_4px_rgba(180,140,60,0.12)] hover:border-amber-400/70 hover:bg-amber-100/60 hover:text-amber-800 focus-visible:ring-amber-400 dark:border-amber-700/60 dark:bg-amber-950/20 dark:text-amber-400 dark:hover:border-amber-600/70 dark:hover:bg-amber-900/30 dark:hover:text-amber-300"
+                : "border-zinc-200/80 text-zinc-400 hover:border-zinc-300 hover:bg-zinc-100/80 hover:text-zinc-600 focus-visible:ring-zinc-400 dark:border-zinc-700 dark:text-zinc-500 dark:hover:border-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+            }`}
           >
-            {favoritingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Star className={`h-4 w-4 ${song.favorite ? "fill-current" : ""}`} aria-hidden="true" />}
+            {favoritingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Star className={`h-4 w-4 ${song.favorite ? "fill-amber-500/30" : ""}`} aria-hidden="true" />}
           </button>
           <button
             type="button"

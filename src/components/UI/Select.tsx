@@ -105,7 +105,7 @@ const Select = ({
         aria-haspopup="listbox"
         aria-controls={listboxId}
         aria-label={ariaLabel}
-        className={`flex items-center gap-1.5 rounded-lg text-xs font-bold text-emerald-700 outline-none transition-all duration-200 ease-out hover:bg-emerald-500/10 active:scale-95 focus-visible:ring-2 focus-visible:ring-emerald-500/25 sm:active:scale-100 sm:active:opacity-70 dark:text-emerald-300 dark:hover:bg-emerald-500/15 dark:focus-visible:ring-emerald-400/25 ${className}`}
+        className={`flex items-center gap-1.5 rounded-lg text-xs font-bold text-[#8e4f35] outline-none transition-all duration-200 ease-out hover:bg-[#c7835a]/10 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#c7835a]/25 sm:active:scale-100 sm:active:opacity-70 dark:text-[#e2a783] dark:hover:bg-[#d59672]/15 dark:focus-visible:ring-[#d59672]/25 ${className}`}
       >
         <span className="truncate">{selectedOption.label}</span>
         <ChevronDown
@@ -144,7 +144,7 @@ const Select = ({
               }}
               className={`flex w-full items-center rounded-lg px-2.5 py-2 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.98] sm:active:scale-100 ${
                 isSelected
-                  ? "bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300"
+                  ? "bg-[#c7835a]/12 text-[#8e4f35] dark:bg-[#d59672]/15 dark:text-[#e2a783]"
                   : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
               } ${isActive && !isSelected ? "bg-zinc-100 dark:bg-zinc-800" : ""}`}
             >
