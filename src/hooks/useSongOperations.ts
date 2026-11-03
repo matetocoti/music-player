@@ -30,10 +30,12 @@ const showInvalidDurationToast = () => {
 
 const useSongOperations = (reload: () => void) => {
   const { create, deleteSong, update, loading: actionLoading } = useSongActions();
+  const { toggleFavorite } = useSongActions();
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
   const [songToDelete, setSongToDelete] = useState<DeleteTarget | null>(null);
   const [songToEdit, setSongToEdit] = useState<Song | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [favoritingSongId, setFavoritingSongId] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (!songToDelete) return;
@@ -83,9 +85,20 @@ const useSongOperations = (reload: () => void) => {
     }
   };
 
+  const handleToggleFavorite = async (song: Song) => {
+    setFavoritingSongId(song.id);
+    const toggled = await toggleFavorite(song.id);
+    if (toggled) {
+      reload();
+      toast.success(song.favorite ? `"${song.title}" removed from favorites` : `"${song.title}" added to favorites`);
+    }
+    setFavoritingSongId(null);
+  };
+
   return {
     actionLoading,
     deletingSongId,
+    favoritingSongId,
     songToDelete,
     songToEdit,
     isCreateModalOpen,
@@ -95,6 +108,7 @@ const useSongOperations = (reload: () => void) => {
     handleDelete,
     handleUpdate,
     handleCreate,
+    handleToggleFavorite,
   };
 };
 

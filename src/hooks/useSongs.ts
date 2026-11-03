@@ -22,15 +22,15 @@ function useSongs(
       try {
         setLoading(true);
 
-        const result = await listSongs(
-          search,
+        const result = await listSongs({
+          query: search,
           page,
-          pageSize,
+          perPage: pageSize,
           orderBy,
           orderDirection,
           category,
           favorite,
-        );
+        });
 
         setSongs(result.data);
         setTotal(result.total);

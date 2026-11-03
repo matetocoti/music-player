@@ -133,10 +133,12 @@ const Home = () => {
         loading={loading}
         error={error ?? categoriesError}
         deletingSongId={operations.deletingSongId}
+        favoritingSongId={operations.favoritingSongId}
         columns={Math.min(gridColumns, maxGridColumns)}
         keyboardControls={keyboardControls}
         onDeleteSong={openDeleteModal}
         onEditSong={operations.setSongToEdit}
+        onToggleFavorite={operations.handleToggleFavorite}
       />
 
       <PaginationFooter

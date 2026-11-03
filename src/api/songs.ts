@@ -2,28 +2,49 @@ import type {
   PaginatedSongs,
   Song,
   CreateSongRequest,
+  ListSongsParams,
+  PaginatedSongsResponse,
+  RequestOptions,
   UpdateSongRequest,
-  SongOrderBy,
-  SongOrderDirection,
 } from "./types";
+import { ApiError } from "../errors/ApiError";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const configuredApiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const API_URL = configuredApiUrl.endsWith("/") ? configuredApiUrl.slice(0, -1) : configuredApiUrl;
 const SONGS_API_URL = `${API_URL}/songs`;
 
-async function ensureOk(response: Response, action: string): Promise<void> {
-  if (!response.ok) {
-    throw new Error(`${action} (${response.status})`);
+const songUrl = (id: string, suffix = "") => `${SONGS_API_URL}/${encodeURIComponent(id)}${suffix}`;
+
+
+async function request(
+  url: string,
+  { action, method = "GET", body, signal, allowNotFound = false }: RequestOptions,
+): Promise<Response> {
+  const response = await fetch(url, {
+    method,
+    signal,
+    ...(body !== undefined && {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  });
+
+  if (!response.ok && !(allowNotFound && response.status === 404)) {
+    throw new ApiError(action, response.status);
   }
+  return response;
 }
 
 export async function listSongs(
-  query: string,
-  page: number,
-  perPage: number,
-  orderBy: SongOrderBy = "id",
-  orderDirection: SongOrderDirection = "asc",
-  category?: string,
-  favorite?: boolean,
+  {
+    query = "",
+    page,
+    perPage,
+    orderBy = "id",
+    orderDirection = "asc",
+    category,
+    favorite,
+  }: ListSongsParams,
   signal?: AbortSignal,
 ): Promise<PaginatedSongs> {
   const params = new URLSearchParams({
@@ -33,17 +54,14 @@ export async function listSongs(
     order_by: orderBy,
     order_direction: orderDirection,
   });
-  if (category) {
-    params.set("category", category);
-  }
-  if (favorite !== undefined) {
-    params.set("favorite", String(favorite));
-  }
-  const response = await fetch(`${SONGS_API_URL}?${params.toString()}`, { signal });
-  await ensureOk(response, "Failed to load songs");
+  if (category) params.set("category", category);
+  if (favorite !== undefined) params.set("favorite", String(favorite));
 
-  const payload: { data: Song[]; total: number; page: number; per_page: number } =
-    await response.json();
+  const response = await request(`${SONGS_API_URL}?${params}`, {
+    action: "Failed to load songs",
+    signal,
+  });
+  const payload: PaginatedSongsResponse = await response.json();
 
   return {
     data: payload.data,
@@ -54,53 +72,57 @@ export async function listSongs(
 }
 
 export async function listCategories(signal?: AbortSignal): Promise<string[]> {
-  const response = await fetch(`${SONGS_API_URL}/categories`, { signal });
-  await ensureOk(response, "Failed to load song categories");
+  const response = await request(`${SONGS_API_URL}/categories`, {
+    action: "Failed to load song categories",
+    signal,
+  });
   return response.json();
 }
 
 export async function getSong(id: string, signal?: AbortSignal): Promise<Song | null> {
-  const response = await fetch(`${SONGS_API_URL}/${encodeURIComponent(id)}`, { signal });
-  if (response.status === 404) {
-    return null;
-  }
-  await ensureOk(response, "Failed to load song");
-  return response.json();
+  const response = await request(songUrl(id), {
+    action: "Failed to load song",
+    signal,
+    allowNotFound: true,
+  });
+  return response.status === 404 ? null : response.json();
 }
 
 export async function createSong(song: CreateSongRequest, signal?: AbortSignal): Promise<Song> {
-  const response = await fetch(SONGS_API_URL, {
+  const response = await request(SONGS_API_URL, {
+    action: "Failed to create song",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(song),
+    body: song,
     signal,
   });
-  await ensureOk(response, "Failed to create song");
   return response.json();
 }
 
-export async function updateSong(id: string, updates: UpdateSongRequest, signal?: AbortSignal): Promise<Song | null> {
-  const response = await fetch(`${SONGS_API_URL}/${encodeURIComponent(id)}`, {
+export async function updateSong(id: string, updates: UpdateSongRequest, signal?: AbortSignal,): Promise<Song | null> {
+  const response = await request(songUrl(id), {
+    action: "Failed to update song",
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updates),
+    body: updates,
     signal,
+    allowNotFound: true,
   });
-  if (response.status === 404) {
-    return null;
-  }
-  await ensureOk(response, "Failed to update song");
-  return response.json();
+  return response.status === 404 ? null : response.json();
+}
+
+export async function toggleFavorite(id: string, signal?: AbortSignal): Promise<boolean> {
+  const response = await request(songUrl(id, "/favorite"), {
+    action: "Failed to toggle favorite",
+    method: "PATCH",
+    signal,
+    allowNotFound: true,
+  });
+  return response.status !== 404;
 }
 
 export async function deleteSong(id: string, signal?: AbortSignal): Promise<void> {
-  const response = await fetch(`${SONGS_API_URL}/${encodeURIComponent(id)}`, {
+  await request(songUrl(id), {
+    action: "Failed to delete song",
     method: "DELETE",
     signal,
   });
-  await ensureOk(response, "Failed to delete song");
 }

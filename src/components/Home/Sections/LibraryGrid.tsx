@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { LoaderCircle, MoreVertical, Settings, Trash2 } from "lucide-react";
+import { LoaderCircle, MoreVertical, Settings, Star, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
@@ -13,27 +13,31 @@ interface LibraryGridProps {
   loading: boolean;
   error: string | null;
   deletingSongId: string | null;
+  favoritingSongId: string | null;
   columns: number;
   keyboardControls: boolean;
   onDeleteSong: (song: Pick<Song, "id" | "title">) => void;
   onEditSong: (song: Song) => void;
+  onToggleFavorite: (song: Song) => void;
 }
 
 interface SongCardActionsProps {
   song: Song;
   deletingSongId: string | null;
+  favoritingSongId: string | null;
   onDeleteSong: (song: Pick<Song, "id" | "title">) => void;
   onEditSong: (song: Song) => void;
+  onToggleFavorite: (song: Song) => void;
 }
 
-const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: SongCardActionsProps) => {
+const SongCardActions = ({ song, deletingSongId, favoritingSongId, onDeleteSong, onEditSong, onToggleFavorite }: SongCardActionsProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="absolute bottom-3 right-3 z-10 flex shrink-0 items-center gap-2 opacity-70 transition sm:opacity-0 sm:group-hover/song-card:opacity-100">
       <div
         className={`flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-zinc-200/80 bg-white/95 p-1 shadow-sm transition-[max-width,opacity,transform] duration-300 ease-out motion-reduce:transition-none dark:border-zinc-700 dark:bg-zinc-900/95 ${
-          isOpen ? "max-w-24 translate-x-0 scale-100 opacity-100" : "pointer-events-none max-w-0 translate-x-2 scale-95 border-transparent p-0 opacity-0"
+          isOpen ? "max-w-36 translate-x-0 scale-100 opacity-100" : "pointer-events-none max-w-0 translate-x-2 scale-95 border-transparent p-0 opacity-0"
         }`}
         aria-hidden={!isOpen}
       >
@@ -45,7 +49,7 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
               onEditSong(song);
               setIsOpen(false);
             }}
-            disabled={deletingSongId === song.id}
+            disabled={deletingSongId === song.id || favoritingSongId === song.id}
             title={`Edit ${song.title}`}
             aria-label={`Edit ${song.title}`}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-emerald-200/80 bg-white/90 text-emerald-600 transition hover:scale-105 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:cursor-wait dark:border-emerald-900/70 dark:bg-zinc-900/90 dark:text-emerald-400 dark:hover:bg-emerald-950/50 dark:hover:text-emerald-300"
@@ -57,10 +61,26 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
+              onToggleFavorite(song);
+              setIsOpen(false);
+            }}
+            disabled={deletingSongId === song.id || favoritingSongId === song.id}
+            title={song.favorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`}
+            aria-label={song.favorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`}
+            aria-pressed={song.favorite}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-200/80 bg-white/90 text-amber-500 transition hover:scale-105 hover:bg-amber-50 hover:text-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-wait dark:border-amber-900/70 dark:bg-zinc-900/90 dark:text-amber-400 dark:hover:bg-amber-950/50 dark:hover:text-amber-300"
+          >
+            {favoritingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Star className={`h-4 w-4 ${song.favorite ? "fill-current" : ""}`} aria-hidden="true" />}
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
               onDeleteSong(song);
               setIsOpen(false);
             }}
-            disabled={deletingSongId === song.id}
+            disabled={deletingSongId === song.id || favoritingSongId === song.id}
             title={`Delete ${song.title}`}
             aria-label={`Delete ${song.title}`}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-rose-200/80 bg-white/90 text-rose-500 transition hover:scale-105 hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait dark:border-rose-900/70 dark:bg-zinc-900/90 dark:text-rose-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-300"
@@ -86,7 +106,7 @@ const SongCardActions = ({ song, deletingSongId, onDeleteSong, onEditSong }: Son
   );
 };
 
-const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, keyboardControls, onDeleteSong, onEditSong }: LibraryGridProps) => {
+const LibraryGrid = ({ songs, loading, error, deletingSongId, favoritingSongId, columns, keyboardControls, onDeleteSong, onEditSong, onToggleFavorite }: LibraryGridProps) => {
   const songLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
 
   useEffect(() => {
@@ -160,8 +180,10 @@ const LibraryGrid = ({ songs, loading, error, deletingSongId, columns, keyboardC
             <SongCardActions
               song={song}
               deletingSongId={deletingSongId}
+              favoritingSongId={favoritingSongId}
               onDeleteSong={onDeleteSong}
               onEditSong={onEditSong}
+              onToggleFavorite={onToggleFavorite}
             />
           </div>
         ))}

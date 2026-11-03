@@ -41,3 +41,28 @@ export type ResolveResponse = {
   artist: string;
   duration?: number;
 };
+
+export type RequestOptions = {
+  action: string;
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  body?: unknown;
+  signal?: AbortSignal;
+  allowNotFound?: boolean;
+};
+
+export type ListSongsParams = {
+  query?: string;
+  page: number;
+  perPage: number;
+  orderBy?: SongOrderBy;
+  orderDirection?: SongOrderDirection;
+  category?: string;
+  favorite?: boolean;
+};
+
+export type PaginatedSongsResponse = {
+  data: Song[];
+  total: number;
+  page: number;
+  per_page: number;
+};

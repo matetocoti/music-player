@@ -1,5 +1,10 @@
 import { useState, useCallback } from "react";
-import { createSong, deleteSong as deleteSongApi, updateSong as updateSongApi } from "../api/songs";
+import {
+  createSong,
+  deleteSong as deleteSongApi,
+  toggleFavorite as toggleFavoriteApi,
+  updateSong as updateSongApi,
+} from "../api/songs";
 import type { CreateSongRequest, Song, UpdateSongRequest } from "../api/types";
 
 export function useSongActions() {
@@ -70,6 +75,28 @@ export function useSongActions() {
     }
   }, []);
 
+  const toggleFavorite = useCallback(async (id: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const toggled = await toggleFavoriteApi(id);
+      if (!toggled) {
+        setError("Song not found");
+        return false;
+      }
+      setSuccess(true);
+      return true;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -77,6 +104,7 @@ export function useSongActions() {
     data,
     create,
     update,
+    toggleFavorite,
     deleteSong: removeSong,
   };
 }
