@@ -1,4 +1,3 @@
-
 import { useEffect, type ReactNode } from "react";
 import { X } from "lucide-react";
 
@@ -38,31 +37,35 @@ const Modal = ({
       aria-modal="true"
       aria-label={title ? undefined : ariaLabel}
       aria-labelledby={title ? "modal-title" : undefined}
-      className="modal-backdrop-enter fixed inset-0 z-[100] m-1 flex h-full w-full max-w-none items-center justify-center border-0 bg-zinc-950/60 p-5 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] m-0 flex h-full w-full max-w-none items-center justify-center border-0 bg-[#241812]/65 p-4 dark:bg-[#160e0a]/80"
     >
-      <div className="modal-panel-enter w-full max-w-md rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900 sm:p-6">
-        <div className="mb-5 flex items-start justify-between gap-4">
+      <div className="notebook-cover relative w-full max-w-md rounded-md p-2">
+        <div className="modal-paper max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-sm border p-6 sm:p-7">
+        <div className="modal-paper-header modal-paper-content mb-5 flex items-start justify-between gap-4 border-b pb-4">
           {title ? (
-            <h2 id="modal-title" className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            <h2 id="modal-title" className="font-serif text-lg font-bold tracking-tight">
               {title}
             </h2>
           ) : (
             <span />
           )}
+          
           <button
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-[#947050] bg-[#e6d5bd] text-[#543724] transition hover:bg-[#d6bea0] hover:text-[#2f1e14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#795338] dark:border-[#89634b] dark:bg-[#3b2b24] dark:text-[#e4c9b0] dark:hover:bg-[#49342b] dark:hover:text-[#f1e5d8]"
           >
-            <X className="h-5 w-5" aria-hidden="true" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
-        {children}
+        <div className="modal-paper-content">
+          {children}
+        </div>
+        </div>
       </div>
     </dialog>
   );
 };
 
 export default Modal;
-  

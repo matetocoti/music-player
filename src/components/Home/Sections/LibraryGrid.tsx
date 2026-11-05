@@ -36,7 +36,7 @@ const SongCardActions = ({ song, deletingSongId, favoritingSongId, onDeleteSong,
   return (
     <div className="absolute bottom-3 right-3 z-10 flex shrink-0 items-center gap-2 opacity-70 transition sm:opacity-0 sm:group-hover/song-card:opacity-100">
       <div
-        className={`flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-zinc-200/80 bg-white/95 p-1 shadow-sm transition-[max-width,opacity,transform] duration-300 ease-out motion-reduce:transition-none dark:border-zinc-700 dark:bg-zinc-900/95 ${
+        className={`flex items-center gap-1 overflow-hidden whitespace-nowrap rounded-2xl border border-white/80 bg-white/90 p-1.5 shadow-[0_8px_24px_rgba(24,18,12,0.2)] backdrop-blur-md transition-[max-width,opacity,transform] duration-300 ease-out motion-reduce:transition-none dark:border-zinc-700/80 dark:bg-zinc-950/90 dark:shadow-[0_8px_24px_rgba(0,0,0,0.4)] ${
           isOpen ? "max-w-36 translate-x-0 scale-100 opacity-100" : "pointer-events-none max-w-0 translate-x-2 scale-95 border-transparent p-0 opacity-0"
         }`}
         aria-hidden={!isOpen}
@@ -61,6 +61,21 @@ const SongCardActions = ({ song, deletingSongId, favoritingSongId, onDeleteSong,
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
+              onDeleteSong(song);
+              setIsOpen(false);
+            }}
+            disabled={deletingSongId === song.id || favoritingSongId === song.id}
+            title={`Delete ${song.title}`}
+            aria-label={`Delete ${song.title}`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-rose-200/80 bg-white/90 text-rose-500 transition hover:scale-105 hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait dark:border-rose-900/70 dark:bg-zinc-900/90 dark:text-rose-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-300"
+          >
+            {deletingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
               onToggleFavorite(song);
               setIsOpen(false);
             }}
@@ -75,21 +90,6 @@ const SongCardActions = ({ song, deletingSongId, favoritingSongId, onDeleteSong,
             }`}
           >
             {favoritingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Star className={`h-4 w-4 ${song.favorite ? "fill-amber-500/30" : ""}`} aria-hidden="true" />}
-          </button>
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onDeleteSong(song);
-              setIsOpen(false);
-            }}
-            disabled={deletingSongId === song.id || favoritingSongId === song.id}
-            title={`Delete ${song.title}`}
-            aria-label={`Delete ${song.title}`}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-rose-200/80 bg-white/90 text-rose-500 transition hover:scale-105 hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:cursor-wait dark:border-rose-900/70 dark:bg-zinc-900/90 dark:text-rose-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-300"
-          >
-            {deletingSongId === song.id ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
           </button>
       </div>
       <button
