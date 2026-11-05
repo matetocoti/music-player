@@ -1,219 +1,39 @@
 /* =====================================================
    app.css
-   Component-specific styles, complex animations, 
-   and audio visualizer effects.
-===================================================== */
+   Estilos específicos de componentes, animações
+   complexas e efeitos do visualizador de áudio.
+   Identidade: madeira, papel, couro e terracota.
+
+   Nota de cascata: estas regras ficam FORA de @layer de propósito.
+   CSS sem camada vence as utilitárias do Tailwind, e vários componentes
+   dependem disso para sobrescrever bordas/fundos das classes utilitárias.
+   ===================================================== */
 
 /* #region Local Tokens — aliases para os tokens de marca do index.css */
-
 :root {
-  --accent-rgb: var(--brand-rgb, 99, 132, 184);
-  --accent-rgb-soft: var(--brand-rgb-light, 127, 157, 202);
+  --accent-rgb: var(--brand-rgb, 199, 131, 90);
+  --accent-rgb-soft: var(--brand-rgb-light, 213, 150, 114);
+  --brass-rgb: 232, 178, 124;
 }
 /* #endregion Local Tokens */
 
 
-/* #region Header Details */
-.header-rhythm {
-  position: absolute;
-  right: max(1.5rem, calc((100vw - 1600px) / 2));
-  bottom: 0.55rem;
-  display: flex;
-  align-items: end;
-  gap: 0.2rem;
-  height: 0.7rem;
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.header-rhythm span {
-  width: 2px;
-  height: 40%;
-  border-radius: 999px;
-  background: linear-gradient(to top, rgba(var(--accent-rgb), 0.65), rgba(199, 131, 90, 0.85));
-}
-
-.header-rhythm span:nth-child(2) { height: 72%; }
-.header-rhythm span:nth-child(3) { height: 100%; }
-.header-rhythm span:nth-child(4) { height: 62%; }
-.header-rhythm span:nth-child(5) { height: 82%; }
-
-.dark .header-rhythm {
-  opacity: 0.42;
-}
-
-.library-toolbar-stone {
-  border-color: rgba(126, 91, 71, 0.38);
-  background-color: #d7d0c8;
-  background-image:
-    radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.28), transparent 38%),
-    radial-gradient(ellipse at 88% 92%, rgba(111, 91, 76, 0.14), transparent 46%),
-    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(27deg, rgba(95, 78, 66, 0.035) 0 2px, transparent 2px 13px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    inset 0 -12px 24px rgba(90, 72, 58, 0.1),
-    0 6px 18px -12px rgba(70, 55, 45, 0.25);
-}
-
-.dark .library-toolbar-stone {
-  border-color: rgba(181, 151, 129, 0.3);
-  background-color: #282421;
-  background-image:
-    radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.07), transparent 38%),
-    radial-gradient(ellipse at 88% 92%, rgba(0, 0, 0, 0.24), transparent 46%),
-    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(27deg, rgba(0, 0, 0, 0.045) 0 2px, transparent 2px 13px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -12px 24px rgba(0, 0, 0, 0.2),
-    0 6px 18px -12px rgba(0, 0, 0, 0.3);
-}
-
-.add-song-button {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  border-color: rgba(139, 82, 54, 0.58) !important;
-  background-color: #c7835a !important;
-  background-image:
-    repeating-linear-gradient(135deg, rgba(255, 250, 242, 0.2) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(45deg, rgba(112, 62, 38, 0.1) 0 1px, transparent 1px 5px),
-    linear-gradient(180deg, rgba(255, 235, 213, 0.28), rgba(147, 78, 47, 0.1));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 236, 0.5),
-    inset 0 -3px 0 rgba(116, 56, 31, 0.16),
-    0 4px 9px rgba(70, 32, 18, 0.16);
-  color: #fffaf4 !important;
-  text-shadow: 0 1px 0 rgba(75, 35, 20, 0.2);
-}
-
-.add-song-button::after {
-  position: absolute;
-  inset: 1px;
-  z-index: -1;
-  border: 1px solid rgba(255, 248, 236, 0.22);
-  border-radius: inherit;
-  content: "";
-  pointer-events: none;
-}
-
-.add-song-button:hover {
-  background-color: #b87352 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 236, 0.56),
-    inset 0 -3px 0 rgba(89, 39, 22, 0.18),
-    0 6px 12px rgba(70, 32, 18, 0.22);
-}
-
-.dark .add-song-button {
-  border-color: rgba(213, 150, 114, 0.46) !important;
-  background-color: #a56345 !important;
-  background-image:
-    repeating-linear-gradient(135deg, rgba(255, 224, 198, 0.1) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(45deg, rgba(30, 12, 7, 0.2) 0 1px, transparent 1px 5px),
-    linear-gradient(180deg, rgba(213, 150, 114, 0.22), rgba(63, 25, 16, 0.24));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 235, 213, 0.2),
-    inset 0 -3px 0 rgba(31, 10, 5, 0.3),
-    0 4px 10px rgba(0, 0, 0, 0.28);
-}
-
-.dark .add-song-button:hover {
-  background-color: #b87352 !important;
-}
-
-@media (min-width: 640px) {
-  .library-toolbar-actions {
-    width: fit-content;
-    max-width: 100%;
-    align-self: flex-end;
-    margin-left: auto;
-    padding: 0.4rem;
-    border: 1px solid rgba(139, 82, 54, 0.38);
-    border-radius: 0.8rem;
-    background:
-      radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.3), transparent 45%),
-      radial-gradient(ellipse at 90% 100%, rgba(127, 79, 53, 0.12), transparent 58%),
-      repeating-linear-gradient(104deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 5px),
-      repeating-linear-gradient(12deg, rgba(112, 70, 46, 0.05) 0 2px, transparent 2px 7px),
-      #e6d8cc;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.48),
-      inset 0 -7px 14px rgba(112, 70, 46, 0.12),
-      0 5px 12px rgba(70, 55, 45, 0.12);
-  }
-
-  .dark .library-toolbar-actions {
-    border-color: rgba(213, 150, 114, 0.3);
-    background:
-      radial-gradient(ellipse at 18% 0%, rgba(166, 112, 78, 0.12), transparent 45%),
-      radial-gradient(ellipse at 90% 100%, rgba(0, 0, 0, 0.4), transparent 58%),
-      repeating-linear-gradient(104deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px),
-      repeating-linear-gradient(12deg, rgba(0, 0, 0, 0.09) 0 2px, transparent 2px 7px),
-      #1d1714;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      inset 0 -7px 14px rgba(0, 0, 0, 0.3),
-      0 5px 12px rgba(0, 0, 0, 0.24);
-  }
-}
-
-@media (max-width: 639px) {
-  .mobile-leather-compartment {
-    background-color: #e6d8cc;
-    background-image:
-      radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.28), transparent 42%),
-      radial-gradient(ellipse at 88% 100%, rgba(127, 79, 53, 0.1), transparent 52%),
-      repeating-linear-gradient(102deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 5px),
-      repeating-linear-gradient(12deg, rgba(112, 70, 46, 0.045) 0 2px, transparent 2px 7px);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.45),
-      inset 0 -12px 24px rgba(112, 70, 46, 0.1),
-      0 4px 12px rgba(70, 55, 45, 0.1);
-  }
-
-  .dark .mobile-leather-compartment {
-    background-color: #171412;
-    background-image:
-      radial-gradient(ellipse at 18% 0%, rgba(166, 112, 78, 0.1), transparent 42%),
-      radial-gradient(ellipse at 88% 100%, rgba(0, 0, 0, 0.3), transparent 52%),
-      repeating-linear-gradient(102deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 5px),
-      repeating-linear-gradient(12deg, rgba(0, 0, 0, 0.035) 0 2px, transparent 2px 7px);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
-      inset 0 -12px 24px rgba(0, 0, 0, 0.22),
-      0 4px 12px rgba(0, 0, 0, 0.12);
-  }
-}
-
-@media (max-width: 639px) {
-  .header-rhythm {
-    right: 1rem;
-    bottom: 0.45rem;
-    transform: scale(0.85);
-    transform-origin: right center;
-  }
-}
-/* #endregion Header Details */
-
+/* #region App Shell — cortinas e superfície de conteúdo */
 @media (min-width: 1600px) {
   .app-shell {
     position: relative;
     isolation: isolate;
   }
 
-  .app-shell > * {
-    position: relative;
-    z-index: 1;
-  }
-
+  /* As cortinas ficam ATRÁS de todo o conteúdo (z-index negativo dentro do contexto isolado).
+     A versão anterior forçava `position: relative; z-index: 1` em todos os filhos diretos,
+     o que anulava o `sticky top-0 z-50` do Header em telas largas. */
   .app-shell::before,
   .app-shell::after {
     position: absolute;
     top: 0;
     bottom: 0;
-    z-index: 0;
+    z-index: -1;
     width: max(0px, calc((100vw - 1600px) / 2));
     background:
       repeating-linear-gradient(90deg, rgba(35, 5, 10, 0.32) 0 5px, rgba(115, 19, 29, 0.2) 5px 11px, rgba(45, 5, 12, 0.36) 11px 18px),
@@ -238,9 +58,10 @@
       linear-gradient(180deg, #8b4242 0%, #693235 46%, #3f2529 100%);
   }
 
+  /* Claro: papel quente que clareia no fim (antes escurecia para um oliva barrento). */
   .app-content-surface {
-    background: linear-gradient(180deg, rgba(244, 224, 151, 0.14) 0%, rgba(177, 145, 62, 0.12) 42%, rgba(76, 63, 30, 0.2) 100%);
-    box-shadow: 0 0 44px rgba(70, 55, 45, 0.08);
+    background: linear-gradient(180deg, rgba(255, 251, 242, 0.5) 0%, rgba(247, 238, 222, 0.34) 48%, rgba(222, 203, 174, 0.3) 100%);
+    box-shadow: 0 0 44px rgba(70, 55, 45, 0.1), inset 1px 0 0 rgba(255, 255, 255, 0.45), inset -1px 0 0 rgba(255, 255, 255, 0.45);
   }
 
   .dark .app-content-surface {
@@ -251,13 +72,205 @@
 
 @media (max-width: 639px) {
   .app-shell {
-    background: #e3e1dc;
+    background: #e8e2d7;
   }
 
   .app-shell.dark {
     background: #121313;
   }
 }
+/* #endregion App Shell */
+
+
+/* #region Header Details */
+.header-rhythm {
+  position: absolute;
+  right: max(1.5rem, calc((100vw - 1600px) / 2));
+  bottom: 0.55rem;
+  display: flex;
+  align-items: end;
+  gap: 0.2rem;
+  height: 0.7rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Barras de latão sobre a madeira do header */
+.header-rhythm span {
+  width: 2px;
+  height: 40%;
+  border-radius: 999px;
+  background: linear-gradient(to top, rgba(var(--accent-rgb-soft), 0.7), rgba(var(--brass-rgb), 0.95));
+}
+
+.header-rhythm span:nth-child(2) { height: 72%; }
+.header-rhythm span:nth-child(3) { height: 100%; }
+.header-rhythm span:nth-child(4) { height: 62%; }
+.header-rhythm span:nth-child(5) { height: 82%; }
+
+.dark .header-rhythm {
+  opacity: 0.55;
+}
+
+@media (max-width: 639px) {
+  .header-rhythm {
+    right: 1rem;
+    bottom: 0.45rem;
+    transform: scale(0.85);
+    transform-origin: right center;
+  }
+}
+/* #endregion Header Details */
+
+
+/* #region Library Toolbar — pedra, couro e botão de adicionar */
+.library-toolbar-stone {
+  border-color: rgba(126, 91, 71, 0.38);
+  background-color: #e0d7c9;
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.3), transparent 38%),
+    radial-gradient(ellipse at 88% 92%, rgba(111, 91, 76, 0.14), transparent 46%),
+    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(27deg, rgba(95, 78, 66, 0.035) 0 2px, transparent 2px 13px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -12px 24px rgba(90, 72, 58, 0.1),
+    0 6px 18px -12px rgba(70, 55, 45, 0.25);
+}
+
+.dark .library-toolbar-stone {
+  border-color: rgba(181, 151, 129, 0.3);
+  background-color: #282421;
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.07), transparent 38%),
+    radial-gradient(ellipse at 88% 92%, rgba(0, 0, 0, 0.24), transparent 46%),
+    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(27deg, rgba(0, 0, 0, 0.045) 0 2px, transparent 2px 13px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -12px 24px rgba(0, 0, 0, 0.2),
+    0 6px 18px -12px rgba(0, 0, 0, 0.3);
+}
+
+/* Botão de adicionar. Claro: terracota escura (texto branco 4,7:1; antes #c7835a dava ~3:1). */
+.add-song-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: rgba(111, 61, 41, 0.6);
+  background-color: var(--brand-600);
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255, 250, 242, 0.16) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(45deg, rgba(60, 25, 12, 0.1) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, rgba(255, 235, 213, 0.26), rgba(90, 40, 20, 0.12));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 236, 0.45),
+    inset 0 -3px 0 rgba(80, 36, 18, 0.2),
+    0 4px 9px rgba(70, 32, 18, 0.2);
+  color: #fffaf4;
+  text-shadow: 0 1px 0 rgba(60, 25, 12, 0.35);
+}
+
+.add-song-button::after {
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border: 1px solid rgba(255, 248, 236, 0.22);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.add-song-button:hover {
+  background-color: var(--brand-700);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 236, 0.5),
+    inset 0 -3px 0 rgba(60, 25, 12, 0.22),
+    0 6px 12px rgba(70, 32, 18, 0.26);
+}
+
+.dark .add-song-button {
+  border-color: rgba(var(--accent-rgb-soft), 0.46);
+  background-color: var(--brand-600);
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255, 224, 198, 0.1) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(45deg, rgba(30, 12, 7, 0.2) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, rgba(213, 150, 114, 0.22), rgba(63, 25, 16, 0.24));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 235, 213, 0.2),
+    inset 0 -3px 0 rgba(31, 10, 5, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
+.dark .add-song-button:hover {
+  background-color: #b06a4b;
+}
+
+@media (min-width: 640px) {
+  .library-toolbar-actions {
+    width: fit-content;
+    max-width: 100%;
+    align-self: flex-end;
+    margin-left: auto;
+    padding: 0.4rem;
+    border: 1px solid rgba(139, 82, 54, 0.38);
+    border-radius: 0.8rem;
+    background:
+      radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.3), transparent 45%),
+      radial-gradient(ellipse at 90% 100%, rgba(127, 79, 53, 0.12), transparent 58%),
+      repeating-linear-gradient(104deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(12deg, rgba(112, 70, 46, 0.05) 0 2px, transparent 2px 7px),
+      #ebdfd3;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -7px 14px rgba(112, 70, 46, 0.12),
+      0 5px 12px rgba(70, 55, 45, 0.12);
+  }
+
+  .dark .library-toolbar-actions {
+    border-color: rgba(var(--accent-rgb-soft), 0.3);
+    background:
+      radial-gradient(ellipse at 18% 0%, rgba(166, 112, 78, 0.12), transparent 45%),
+      radial-gradient(ellipse at 90% 100%, rgba(0, 0, 0, 0.4), transparent 58%),
+      repeating-linear-gradient(104deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(12deg, rgba(0, 0, 0, 0.09) 0 2px, transparent 2px 7px),
+      #1d1714;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 -7px 14px rgba(0, 0, 0, 0.3),
+      0 5px 12px rgba(0, 0, 0, 0.24);
+  }
+}
+
+@media (max-width: 639px) {
+  .mobile-leather-compartment {
+    background-color: #ebdfd3;
+    background-image:
+      radial-gradient(ellipse at 18% 0%, rgba(255, 255, 255, 0.28), transparent 42%),
+      radial-gradient(ellipse at 88% 100%, rgba(127, 79, 53, 0.1), transparent 52%),
+      repeating-linear-gradient(102deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(12deg, rgba(112, 70, 46, 0.045) 0 2px, transparent 2px 7px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -12px 24px rgba(112, 70, 46, 0.1),
+      0 4px 12px rgba(70, 55, 45, 0.1);
+  }
+
+  .dark .mobile-leather-compartment {
+    background-color: #171412;
+    background-image:
+      radial-gradient(ellipse at 18% 0%, rgba(166, 112, 78, 0.1), transparent 42%),
+      radial-gradient(ellipse at 88% 100%, rgba(0, 0, 0, 0.3), transparent 52%),
+      repeating-linear-gradient(102deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(12deg, rgba(0, 0, 0, 0.035) 0 2px, transparent 2px 7px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 -12px 24px rgba(0, 0, 0, 0.22),
+      0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+/* #endregion Library Toolbar */
+
 
 /* #region Library Grid */
 .library-grid {
@@ -267,9 +280,9 @@
   gap: 1rem;
 
   border-right: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-top: 1px solid rgba(199, 131, 90, 0.24);
+  border-top: 1px solid rgba(var(--accent-rgb), 0.24);
   border-radius: 0;
-  background-image: linear-gradient(to bottom, rgba(199, 131, 90, 0.035) 1px, transparent 1px);
+  background-image: linear-gradient(to bottom, rgba(var(--accent-rgb), 0.035) 1px, transparent 1px);
   background-size: 100% 4.5rem;
 }
 
@@ -278,7 +291,7 @@
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 100% 0%, rgba(199, 131, 90, 0.09), transparent 26%),
+    radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb), 0.09), transparent 26%),
     radial-gradient(circle at 0% 100%, rgba(var(--accent-rgb), 0.055), transparent 30%);
   content: "";
   pointer-events: none;
@@ -286,13 +299,13 @@
 
 .dark .library-grid {
   border-right-color: rgba(var(--accent-rgb-soft), 0.24);
-  border-top-color: rgba(213, 150, 114, 0.22);
-  background-image: linear-gradient(to bottom, rgba(213, 150, 114, 0.035) 1px, transparent 1px);
+  border-top-color: rgba(var(--accent-rgb-soft), 0.22);
+  background-image: linear-gradient(to bottom, rgba(var(--accent-rgb-soft), 0.035) 1px, transparent 1px);
 }
 
 .dark .library-grid::before {
   background:
-    radial-gradient(circle at 100% 0%, rgba(213, 150, 114, 0.07), transparent 26%),
+    radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb-soft), 0.07), transparent 26%),
     radial-gradient(circle at 0% 100%, rgba(var(--accent-rgb-soft), 0.05), transparent 30%);
 }
 
@@ -308,6 +321,7 @@
     display: none;
   }
 }
+
 .library-search::after {
   position: absolute;
   bottom: -1px;
@@ -315,13 +329,16 @@
   width: 3.5rem;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.1), rgba(199, 131, 90, 0.55), transparent);
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.1), rgba(var(--accent-rgb), 0.55), transparent);
   content: "";
   pointer-events: none;
 }
+/* #endregion Library Grid */
 
+
+/* #region Pagination */
 .pagination-bar__status {
-  border: 1px solid rgba(199, 131, 90, 0.28);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
   background: rgba(250, 248, 245, 0.68);
   box-shadow: 0 4px 14px rgba(70, 55, 45, 0.07);
 }
@@ -332,11 +349,11 @@
 }
 
 .pagination-bar__button:hover:not(:disabled) {
-  background: rgba(199, 131, 90, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
 }
 
 .dark .pagination-bar__status {
-  border-color: rgba(213, 150, 114, 0.25);
+  border-color: rgba(var(--accent-rgb-soft), 0.25);
   background: rgba(38, 34, 31, 0.68);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
@@ -344,8 +361,8 @@
 @media (min-width: 640px) {
   .pagination-footer-panel {
     min-height: 5rem;
-    border-color: rgba(199, 131, 90, 0.28);
-    background: linear-gradient(105deg, rgba(247, 244, 239, 0.96), rgba(228, 224, 218, 0.94));
+    border-color: rgba(var(--accent-rgb), 0.28);
+    background: linear-gradient(105deg, rgba(247, 244, 239, 0.96), rgba(232, 226, 217, 0.94));
     box-shadow: 0 14px 30px rgba(70, 55, 45, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 
@@ -361,25 +378,25 @@
     min-height: 3rem;
     justify-content: center;
     gap: 0.65rem;
-    border: 1px solid rgba(120, 103, 91, 0.2);
-    background: rgba(255, 255, 255, 0.34);
-    color: rgba(73, 62, 54, 0.78);
+    border: 1px solid rgba(120, 103, 91, 0.24);
+    background: rgba(255, 255, 255, 0.4);
+    color: rgba(61, 50, 43, 0.88);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .pagination-bar__button:hover:not(:disabled) {
-    border-color: rgba(157, 91, 61, 0.5);
-    background: rgba(199, 131, 90, 0.14);
-    color: #8e4f35;
+    border-color: rgba(var(--accent-rgb), 0.55);
+    background: rgba(var(--accent-rgb), 0.14);
+    color: var(--brand-700);
   }
 
   .pagination-bar__status {
     min-width: 8.5rem;
     min-height: 3rem;
-    border-color: rgba(213, 150, 114, 0.42);
-    background: rgba(250, 248, 245, 0.72);
-    color: rgba(73, 62, 54, 0.65);
+    border-color: rgba(var(--accent-rgb), 0.42);
+    background: rgba(250, 248, 245, 0.78);
+    color: rgba(61, 50, 43, 0.85);
     box-shadow: inset 0 1px 12px rgba(70, 55, 45, 0.08);
   }
 
@@ -391,14 +408,19 @@
     font-weight: 600;
   }
 
+  /* Claro: terracota escura (o #d59672 antigo dava ~2,3:1 sobre o papel). */
   .pagination-page-label {
-    color: #d59672;
+    color: var(--brand-700);
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
+  .dark .pagination-page-label {
+    color: var(--brand-400);
+  }
+
   .dark .pagination-footer-panel {
-    border-color: rgba(213, 150, 114, 0.3);
+    border-color: rgba(var(--accent-rgb-soft), 0.3);
     background: linear-gradient(105deg, rgba(24, 23, 22, 0.96), rgba(35, 32, 29, 0.94));
     box-shadow: 0 18px 42px rgba(18, 16, 14, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
@@ -410,8 +432,8 @@
   }
 
   .dark .pagination-bar__button:hover:not(:disabled) {
-    border-color: rgba(213, 150, 114, 0.55);
-    color: #f1c2a5;
+    border-color: rgba(var(--accent-rgb-soft), 0.55);
+    color: var(--brand-300);
   }
 
   .dark .pagination-bar__status {
@@ -420,8 +442,7 @@
     box-shadow: inset 0 1px 12px rgba(0, 0, 0, 0.18);
   }
 }
-
-/* #endregion Library Grid */
+/* #endregion Pagination */
 
 
 /* #region Song Box Modifiers */
@@ -436,7 +457,7 @@
   background:
     radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.3), transparent 38%),
     radial-gradient(ellipse at 100% 100%, rgba(111, 77, 54, 0.12), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(199, 131, 90, 0.1), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb), 0.1), transparent 34%),
     repeating-linear-gradient(2deg, rgba(103, 76, 57, 0.035) 0 1px, transparent 1px 6px);
   content: "";
   pointer-events: none;
@@ -475,7 +496,7 @@
   width: 2px;
   height: 45%;
   border-radius: 999px;
-  background: linear-gradient(to top, rgba(var(--accent-rgb), 0.7), rgba(199, 131, 90, 0.9));
+  background: linear-gradient(to top, rgba(var(--accent-rgb), 0.7), rgba(var(--accent-rgb-soft), 0.95));
 }
 
 .song-box-waveform span:nth-child(2) { height: 75%; }
@@ -492,7 +513,7 @@
   background:
     radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.07), transparent 38%),
     radial-gradient(ellipse at 100% 100%, rgba(0, 0, 0, 0.2), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(213, 150, 114, 0.09), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb-soft), 0.09), transparent 34%),
     repeating-linear-gradient(2deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 6px);
 }
 
@@ -571,7 +592,6 @@
   50% { transform: translateX(5%) scaleX(1.05); opacity: 0.5; }
 }
 
-
 @keyframes controller-idle-breathe {
   0%, 100% { opacity: 0.04; transform: scale(0.96); }
   50% { opacity: 0.1; transform: scale(1.02); }
@@ -589,7 +609,6 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 500ms ease;
-
 }
 
 .controller-waveform {
@@ -714,12 +733,10 @@
 
 
 /* #region Decorative Utilities (opt-in) */
-
 .controller-surface-idle-pulse::before {
   opacity: 1;
   animation: controller-idle-breathe 6s ease-in-out infinite;
 }
-
 
 .library-grid-ambient {
   position: relative;
@@ -738,6 +755,46 @@
   background: radial-gradient(circle, rgba(var(--accent-rgb-soft), 0.1) 0%, transparent 65%);
 }
 /* #endregion Decorative Utilities */
+
+
+/* #region High Contrast — texturas e decoração */
+/* Padrões, madeira e cortinas reduzem a legibilidade: no alto contraste viram superfícies lisas. */
+html.high-contrast :is(
+  .library-toolbar-stone, .library-toolbar-actions, .mobile-leather-compartment,
+  .pagination-footer-panel, .pagination-bar__status, .pagination-bar__button,
+  .add-song-button, .app-content-surface
+) {
+  background-image: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html.high-contrast:not(.dark):not(:has(.dark)) :is(
+  .library-toolbar-stone, .library-toolbar-actions, .mobile-leather-compartment,
+  .pagination-footer-panel, .pagination-bar__status, .pagination-bar__button
+) {
+  background-color: #ffffff !important;
+  border-color: #2b1a10 !important;
+  color: #1a0f08 !important;
+}
+
+html.high-contrast:is(.dark, :has(.dark)) :is(
+  .library-toolbar-stone, .library-toolbar-actions, .mobile-leather-compartment,
+  .pagination-footer-panel, .pagination-bar__status, .pagination-bar__button
+) {
+  background-color: #14100d !important;
+  border-color: #e5ded6 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast :is(.song-box, .app-shell)::before,
+html.high-contrast :is(.song-box, .app-shell)::after,
+html.high-contrast .header-rhythm,
+html.high-contrast .song-box > [aria-hidden="true"],
+html.high-contrast header > [aria-hidden="true"] {
+  display: none !important;
+}
+/* #endregion High Contrast */
 
 
 /* #region Reduced Motion Fallbacks */

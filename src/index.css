@@ -7,6 +7,7 @@
 
 
 /* #region Theme Remap — Brand tokens → slot "emerald" do Tailwind */
+/* Todas as classes `*-emerald-*` do projeto renderizam na cor de marca (--brand-*). */
 @theme inline {
   --font-sans: var(--font-reading);
   --font-mono: var(--font-code);
@@ -29,36 +30,46 @@
 /* =====================================================
    index.css
    Estilos globais e fundação visual da aplicação
+   Identidade: madeira, papel e terracota
    ===================================================== */
 
 /* #region Design Tokens */
 :root {
-  /* Marca */
-  --brand-50: #eff5ff;
-  --brand-100: #dce8f8;
-  --brand-200: #bfd1eb;
-  --brand-300: #9eb7d9;
-  --brand-400: #7f9dca;
-  --brand-500: #6384b8;
-  --brand-600: #5577ad;
-  --brand-700: #466793;
-  --brand-800: #385373;
-  --brand-900: #2d425c;
-  --brand-950: #202f43;
-  --brand-rgb: 99, 132, 184;
-  --brand-rgb-light: 127, 157, 202;
-  --brand-glow: rgba(var(--brand-rgb), 0.16);
+  /* Marca — terracota (a mesma cor usada nos componentes: #a56345, #c7835a, #d59672) */
+  --brand-50: #fcf5f0;
+  --brand-100: #f7e5d9;
+  --brand-200: #efd0bb;
+  --brand-300: #e7ad8b;
+  --brand-400: #d59672;
+  --brand-500: #c7835a;
+  --brand-600: #a56345;
+  --brand-700: #8e4f35;
+  --brand-800: #6f3d29;
+  --brand-900: #54301f;
+  --brand-950: #33190f;
+  --brand-rgb: 199, 131, 90;
+  --brand-rgb-light: 213, 150, 114;
+  --brand-glow: rgba(var(--brand-rgb), 0.18);
+
+  /* Paleta anterior (azul), caso queira voltar:
+     --brand-500: #6384b8; --brand-600: #5577ad; --brand-700: #466793; --brand-rgb: 99, 132, 184; */
 
   /* Elevação com tinta de marca — opt-in via .shadow-brand-* (ver utilitários) */
-  --shadow-brand-sm: 0 2px 8px -2px rgba(var(--brand-rgb), 0.25);
-  --shadow-brand-md: 0 8px 24px -4px rgba(var(--brand-rgb), 0.25), 0 2px 8px -2px rgba(var(--brand-rgb), 0.15);
-  --shadow-brand-lg: 0 20px 48px -12px rgba(var(--brand-rgb), 0.35), 0 8px 24px -8px rgba(var(--brand-rgb), 0.2);
+  --shadow-brand-sm: 0 2px 8px -2px rgba(var(--brand-rgb), 0.3);
+  --shadow-brand-md: 0 8px 24px -4px rgba(var(--brand-rgb), 0.3), 0 2px 8px -2px rgba(var(--brand-rgb), 0.18);
+  --shadow-brand-lg: 0 20px 48px -12px rgba(var(--brand-rgb), 0.4), 0 8px 24px -8px rgba(var(--brand-rgb), 0.22);
 
-  /* Superfície */
-  --background: #fafafa;
-  --text: #18181b;
-  --muted: #71717a;
-  --primary: var(--brand-600);
+  /* Superfície — claro: papel quente + tinta marrom (contrastes: texto 14,8:1, muted 7,4:1 sobre o creme) */
+  --background: #f6f1e8;
+  --text: #2b1a10;
+  --muted: #5e4a3d;
+  --primary: var(--brand-700);
+
+  /* Materiais do tema (para uso futuro nos componentes) */
+  --paper: #f6f3ee;
+  --wood: #3a2314;
+  --wood-dark: #1c1009;
+  --brass: #e8b27c;
 
   /* Tipografia */
   --font-reading: "STIX Two Text", Georgia, serif;
@@ -70,8 +81,8 @@
   --font: var(--font-reading);
 
   /* Diversos */
-  --toast-background: #111827;
-  --toast-text: #f4f4f5;
+  --toast-background: #2b1a10;
+  --toast-text: #f6ede3;
   --gutter: 1rem;
   --header-height: 60px;
   --footer-height: 60px;
@@ -80,48 +91,47 @@
 
 .dark {
   --background: #121212;
-  --text: #ffffff;
-  --muted: #b3b3b3;
+  --text: #f5ece2;
+  --muted: #b9aa9c;
+  --primary: var(--brand-400);
 
   --shadow-brand-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.5);
-  --shadow-brand-md: 0 10px 28px -6px rgba(0, 0, 0, 0.55), 0 2px 10px -2px rgba(var(--brand-rgb-light), 0.12);
-  --shadow-brand-lg: 0 24px 56px -14px rgba(0, 0, 0, 0.65), 0 10px 28px -10px rgba(var(--brand-rgb-light), 0.18);
+  --shadow-brand-md: 0 10px 28px -6px rgba(0, 0, 0, 0.55), 0 2px 10px -2px rgba(var(--brand-rgb-light), 0.14);
+  --shadow-brand-lg: 0 24px 56px -14px rgba(0, 0, 0, 0.65), 0 10px 28px -10px rgba(var(--brand-rgb-light), 0.2);
 }
 /* #endregion Design Tokens */
 
 
 /* #region Reset & Base Layout */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* Estilos de elemento ficam em @layer base: assim as classes utilitárias do Tailwind
+   (ex.: `text-*`, `rounded-*`, `shadow-*`, `font-*`) SEMPRE vencem. Fora de uma camada,
+   `a { color }` e `a:hover { border-radius }` passavam por cima delas. */
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-body {
-  font-family: var(--font);
-  background: var(--background);
-  color: var(--text);
-  min-height: 100vh;
-  transition: background-color 300ms ease, color 300ms ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  -webkit-tap-highlight-color: transparent;
+  body {
+    font-family: var(--font);
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background-color 300ms ease, color 300ms ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 /* #endregion Reset & Base Layout */
 
 
 /* #region Native UI Theming */
-
 :root {
   color-scheme: light;
 }
@@ -129,7 +139,6 @@ body {
 .dark {
   color-scheme: dark;
 }
-
 
 html {
   accent-color: var(--primary);
@@ -142,92 +151,110 @@ html {
 ::-moz-selection {
   background: rgba(var(--brand-rgb), 0.35);
 }
+
+.dark ::selection {
+  background: rgba(var(--brand-rgb-light), 0.4);
+}
+
+.dark ::-moz-selection {
+  background: rgba(var(--brand-rgb-light), 0.4);
+}
 /* #endregion Native UI Theming */
 
 
 /* #region Typography */
-h1, h2, h3, h4, h5, h6 {
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  strong, b {
+    font-weight: 700;
+  }
+
+  em, i {
+    font-style: italic;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
+  }
+
+  /* Halo de marca no hover. Respeita o raio de cada link (o anterior forçava 16px em todos). */
+  a:hover {
+    text-decoration: none;
+    box-shadow: 0 0 0 6px var(--brand-glow);
+  }
+
+  /* Só links "soltos" (sem classes) ganham cantos arredondados no halo. */
+  a:not([class]):hover {
+    border-radius: 8px;
+  }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 0.25rem 0 0.25rem 1rem;
+    border-left: 3px solid rgba(var(--brand-rgb), 0.55);
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    margin: 2rem 0;
+    background: linear-gradient(to right, transparent, rgba(var(--brand-rgb), 0.4), transparent);
+  }
+
+  li::marker {
+    color: var(--primary);
+  }
+
+  code {
+    font-family: var(--font-code);
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+    background: rgba(var(--brand-rgb), 0.12);
+  }
+
+  pre {
+    font-family: var(--font-code);
+    padding: 1rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    background: rgba(var(--brand-rgb), 0.1);
+  }
+
+  pre code {
+    padding: 0;
+    background: none;
+  }
+
+  /* Anel de foco padrão: só aparece onde o componente não definiu o próprio. */
+  :focus-visible {
+    outline: 2px solid var(--brand-500);
+    outline-offset: 2px;
+  }
+}
+
+/* Famílias de fonte do projeto. `font-display` já é gerado pelo @theme acima. */
+@utility font-heading {
   font-family: var(--font-heading);
 }
 
-.font-display {
-  font-family: var(--font-display-face);
-}
-
-.font-heading {
-  font-family: var(--font-heading);
-}
-
-.font-label {
+@utility font-label {
   font-family: var(--font-label);
 }
 
-.font-hand {
+@utility font-hand {
   font-family: var(--font-hand);
 }
 
-.font-reading {
+@utility font-reading {
   font-family: var(--font-reading);
-}
-
-strong, b {
-  font-weight: 700;
-}
-
-em, i {
-  font-style: italic;
-}
-
-a {
-  color: var(--primary);
-  text-decoration: none;
-  transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
-}
-
-a:hover {
-  text-decoration: none;
-  box-shadow: 0 0 0 6px var(--brand-glow);
-  border-radius: 16px;
-}
-
-blockquote {
-  margin: 1.5rem 0;
-  padding: 0.25rem 0 0.25rem 1rem;
-  border-left: 3px solid rgba(var(--brand-rgb), 0.5);
-  font-style: italic;
-  color: var(--muted);
-}
-
-hr {
-  border: none;
-  height: 1px;
-  margin: 2rem 0;
-  background: linear-gradient(to right, transparent, rgba(var(--brand-rgb), 0.35), transparent);
-}
-
-li::marker {
-  color: var(--primary);
-}
-
-code {
-  font-family: var(--font-code);
-  font-size: 0.9em;
-  padding: 0.15em 0.4em;
-  border-radius: 6px;
-  background: rgba(var(--brand-rgb), 0.1);
-}
-
-pre {
-  font-family: var(--font-code);
-  padding: 1rem;
-  border-radius: 12px;
-  overflow-x: auto;
-  background: rgba(var(--brand-rgb), 0.08);
-}
-
-pre code {
-  padding: 0;
-  background: none;
 }
 /* #endregion Typography */
 
@@ -244,39 +271,39 @@ pre code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(var(--brand-rgb), 0.25);
+  background: rgba(var(--brand-rgb), 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--brand-rgb), 0.45);
+  background: rgba(var(--brand-rgb), 0.6);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--brand-rgb-light), 0.25);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--brand-rgb-light), 0.45);
 }
 
-
+/* Firefox */
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--brand-rgb), 0.35) transparent;
+  scrollbar-color: rgba(var(--brand-rgb), 0.45) transparent;
 }
 
 .dark {
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(var(--brand-rgb-light), 0.35) transparent;
 }
 /* #endregion Scrollbar */
 
 
 /* #region Decorative Utilities (opt-in) */
 
-
+/* Texto em degradê de marca */
 .text-gradient-brand {
-  background: linear-gradient(135deg, var(--brand-400), var(--brand-700));
+  background: linear-gradient(135deg, var(--brand-500), var(--brand-800));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -288,11 +315,12 @@ html {
   background-clip: text;
 }
 
+/* Elevação com tinta de marca */
 .shadow-brand-sm { box-shadow: var(--shadow-brand-sm); }
 .shadow-brand-md { box-shadow: var(--shadow-brand-md); }
 .shadow-brand-lg { box-shadow: var(--shadow-brand-lg); }
 
-
+/* Granulação sutil (ruído SVG) */
 .bg-grain {
   position: relative;
   isolation: isolate;
@@ -331,7 +359,7 @@ html {
 
 
 /* #region High Contrast Mode */
-
+/* Ativado por html.high-contrast. Cobre zinc, slate E stone (a paleta atual da interface). */
 
 /* #region HC — Focus & Disabled */
 html.high-contrast :focus-visible {
@@ -346,11 +374,10 @@ html.high-contrast :disabled {
 /* #endregion HC — Focus & Disabled */
 
 /* #region HC — Borders */
-
-html.high-contrast [class*="border-zinc-"],
-html.high-contrast [class*="border-slate-"],
-html.high-contrast [class*="border-emerald-"],
-html.high-contrast [class*="border-rose-"] {
+html.high-contrast :is(
+  [class*="border-zinc-"], [class*="border-slate-"], [class*="border-stone-"],
+  [class*="border-emerald-"], [class*="border-rose-"], [class*="border-[#"]
+) {
   border-color: currentColor !important;
   border-width: 1px !important;
 }
@@ -359,41 +386,51 @@ html.high-contrast [class*="border-rose-"] {
 /* #region HC — Light Mode */
 html.high-contrast:not(.dark):not(:has(.dark)) {
   --background: #ffffff;
-  --text: #111827;
-  --muted: #374151;
-  --primary: #005fcc;
-  --brand-500: #005fcc;
-  --brand-600: #004a99;
-  --brand-700: #003b7a;
-  --brand-rgb: 0, 95, 204;
+  --text: #1a0f08;
+  --muted: #3d2c20;
+  --primary: #7a3512;
+  --brand-500: #9a4a22;
+  --brand-600: #7a3512;
+  --brand-700: #5c2709;
+  --brand-rgb: 122, 53, 18;
 }
 
 html.high-contrast:not(.dark):not(:has(.dark)) body,
 html.high-contrast:not(.dark):not(:has(.dark)) #root {
   background: #ffffff !important;
-  color: #111827 !important;
+  color: #1a0f08 !important;
 }
-
 
 html.high-contrast:not(.dark):not(:has(.dark))
   :is([class~="text-zinc-400"], [class~="text-zinc-500"],
-      [class~="text-slate-400"], [class~="text-slate-500"]) {
-  color: #374151 !important;
+      [class~="text-slate-400"], [class~="text-slate-500"],
+      [class~="text-stone-400"], [class~="text-stone-500"]) {
+  color: #3d2c20 !important;
 }
 
 html.high-contrast:not(.dark):not(:has(.dark))
-  :is([class~="text-zinc-600"], [class~="text-slate-600"]) {
-  color: #1f2937 !important;
+  :is([class~="text-zinc-600"], [class~="text-slate-600"], [class~="text-stone-600"]) {
+  color: #2b1a10 !important;
 }
 
 html.high-contrast:not(.dark):not(:has(.dark))
   :is([class*="bg-white/"], [class*="bg-zinc-50/"], [class*="bg-zinc-100/"],
-      [class*="bg-zinc-200/"], [class*="bg-slate-50/"], [class*="bg-slate-100/"]) {
+      [class*="bg-zinc-200/"], [class*="bg-slate-50/"], [class*="bg-slate-100/"],
+      [class*="bg-stone-50"], [class*="bg-stone-100/"], [class*="bg-stone-200/"],
+      [class*="bg-[#f6f3ee]"]) {
   background-color: #ffffff !important;
 }
 /* #endregion HC — Light Mode */
 
 /* #region HC — Dark Mode */
+html.high-contrast:is(.dark, :has(.dark)) {
+  --primary: #ffb98c;
+  --brand-300: #ffd0b0;
+  --brand-400: #ffb98c;
+  --brand-500: #f4a273;
+  --brand-rgb-light: 255, 185, 140;
+}
+
 html.high-contrast:is(.dark, :has(.dark)) :focus-visible {
   outline-color: var(--auto-constrast-yellow) !important;
   box-shadow: 0 0 0 2px #111827 !important;
@@ -407,18 +444,19 @@ html.high-contrast:is(.dark, :has(.dark)) #root {
 
 html.high-contrast:is(.dark, :has(.dark))
   :is([class~="dark:text-zinc-400"], [class~="dark:text-zinc-500"], [class~="dark:text-zinc-600"],
-      [class~="dark:text-slate-400"], [class~="dark:text-slate-500"], [class~="dark:text-slate-600"]) {
-  color: #d1d5db !important;
+      [class~="dark:text-slate-400"], [class~="dark:text-slate-500"], [class~="dark:text-slate-600"],
+      [class~="dark:text-stone-400"], [class~="dark:text-stone-500"], [class~="dark:text-stone-600"]) {
+  color: #e5ded6 !important;
 }
 
 html.high-contrast:is(.dark, :has(.dark))
-  :is([class*="bg-zinc-900/"], [class*="bg-zinc-950/"], [class*="bg-slate-900/"]) {
-  background-color: #111827 !important;
+  :is([class*="bg-zinc-900/"], [class*="bg-zinc-950/"], [class*="bg-slate-900/"],
+      [class*="bg-stone-900/"], [class*="bg-stone-950/"]) {
+  background-color: #14100d !important;
 }
 /* #endregion HC — Dark Mode */
 
 /* #region HC — Shadows & Forms */
-
 html.high-contrast [class*="shadow-"]:not(:focus-visible) {
   box-shadow: 0 0 0 1px currentColor !important;
 }
