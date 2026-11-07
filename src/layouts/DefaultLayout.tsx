@@ -6,6 +6,7 @@ import ThemeToggle from "../components/UI/ThemeToggle";
 import { RESET_DEFAULTS_EVENT } from "../utils/storage";
 
 const THEME_KEY = "music-player-theme";
+
 const readIsLightMode = () => {
   try {
     return localStorage.getItem(THEME_KEY) === "light";
@@ -18,9 +19,10 @@ const saveIsLightMode = (isLightMode: boolean) => {
   try {
     localStorage.setItem(THEME_KEY, isLightMode ? "light" : "dark");
   } catch {
-    throw new Error("Error saving theme preference to localStorage"); 
+    throw new Error("Not able to save theme preference to localStorage.");
   }
 };
+
 const DefaultLayout: FC = () => {
   const [isLightMode, setIsLightMode] = useState(readIsLightMode);
 

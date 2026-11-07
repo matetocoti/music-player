@@ -17,6 +17,18 @@
 }
 /* #endregion Local Tokens */
 
+.player-surface {
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(255, 242, 220, 0.95) 0%, rgba(244, 224, 198, 0.72) 34%, transparent 68%),
+    linear-gradient(145deg, #fffaf2 0%, #f0dcc3 52%, #d2aa84 100%);
+}
+
+.dark .player-surface {
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(92, 48, 48, 0.7) 0%, rgba(54, 32, 34, 0.48) 38%, transparent 70%),
+    linear-gradient(145deg, #352326 0%, #24191b 52%, #111214 100%);
+}
+
 
 /* #region App Shell — cortinas e superfície de conteúdo */
 @media (min-width: 1600px) {
