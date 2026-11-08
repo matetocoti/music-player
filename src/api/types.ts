@@ -17,6 +17,7 @@ export type CreateSongRequest = {
   artist: string;
   album?: string;
   duration?: number;
+  category?: string;
 };
 
 export type UpdateSongRequest = {
@@ -24,6 +25,7 @@ export type UpdateSongRequest = {
   artist?: string;
   album?: string;
   duration?: number;
+  category?: string;
 };
 
 

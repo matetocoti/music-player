@@ -88,14 +88,13 @@ export async function getSong(id: string, signal?: AbortSignal): Promise<Song | 
   return response.status === 404 ? null : response.json();
 }
 
-export async function createSong(song: CreateSongRequest, signal?: AbortSignal): Promise<Song> {
-  const response = await request(SONGS_API_URL, {
+export async function createSong(song: CreateSongRequest, signal?: AbortSignal): Promise<void> {
+  await request(SONGS_API_URL, {
     action: "Failed to create song",
     method: "POST",
     body: song,
     signal,
   });
-  return response.json();
 }
 
 export async function updateSong(id: string, updates: UpdateSongRequest, signal?: AbortSignal,): Promise<Song | null> {

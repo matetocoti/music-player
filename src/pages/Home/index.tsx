@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { listCategories } from "../../api/songs";
 import type { Song, SongOrderBy, SongOrderDirection } from "../../api/types";
@@ -43,7 +43,39 @@ const Home = () => {
     category === "__favorites__" ? "" : category,
     favoritesOnly || category === "__favorites__" ? true : undefined,
   );
-  const operations = useSongOperations(reload);
+  const refreshCategories = useCallback((categoryToEnsure?: string, signal?: AbortSignal): Promise<string[] | null> => {
+    if (categoryToEnsure) {
+      setCategories((currentCategories) =>
+        currentCategories.includes(categoryToEnsure) ? currentCategories : [...currentCategories, categoryToEnsure],
+      );
+    }
+
+    return listCategories(signal)
+      .then((loadedCategories) => {
+        const uniqueCategories = Array.from(new Set(loadedCategories));
+        setCategories(uniqueCategories);
+        return uniqueCategories;
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return null;
+        setCategoriesError(err instanceof Error ? err.message : "Unknown error");
+        return null;
+      });
+  }, []);
+  const operations = useSongOperations(reload, (categoryToEnsure) => {
+    return refreshCategories(categoryToEnsure);
+  }, (previousCategory, nextCategory, availableCategories) => {
+    if (
+      previousCategory &&
+      previousCategory !== nextCategory &&
+      availableCategories &&
+      !availableCategories.includes(previousCategory) &&
+      category === previousCategory
+    ) {
+      setCategory("");
+      setPage(1);
+    }
+  });
   const totalPages = getTotalPages(total, pageSize);
   const containerStyle = "flex h-full w-full flex-1 flex-col overflow-visible gap-6 sm:gap-8 lg:gap-10 pb-48";
 

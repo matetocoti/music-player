@@ -13,17 +13,16 @@ export function useSongActions() {
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState<Song | null>(null);
 
-  const create = useCallback(async (song: CreateSongRequest): Promise<Song | null> => {
+  const create = useCallback(async (song: CreateSongRequest): Promise<CreateSongRequest | null> => {
     setLoading(true);
     setError(null);
     setSuccess(false);
     setData(null);
 
     try {
-      const createdSong = await createSong(song);
+      await createSong(song);
       setSuccess(true);
-      setData(createdSong);
-      return createdSong;
+      return song;
     } catch (err) {
       const message = err instanceof Error ? err.message : "An unknown error occurred";
       setError(message);

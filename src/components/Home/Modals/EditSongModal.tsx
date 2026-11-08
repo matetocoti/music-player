@@ -26,6 +26,7 @@ const EditSongModal = ({ isOpen, onClose, song, onSubmit, loading }: EditSongMod
           artist: song.artist,
           album: song.album === "Unknown Album" ? "" : song.album,
           duration: formatDurationForForm(song.duration),
+          category: song.category,
         }}
       />
     )}

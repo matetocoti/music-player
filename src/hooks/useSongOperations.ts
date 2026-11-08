@@ -16,6 +16,7 @@ const getSongFormData = (formData: FormData) => {
     artist: getFormString(formData, "artist"),
     album: getFormString(formData, "album").trim() || undefined,
     duration,
+    category: getFormString(formData, "category").trim(),
   };
 };
 
@@ -28,7 +29,11 @@ const showInvalidDurationToast = () => {
   });
 };
 
-const useSongOperations = (reload: () => void) => {
+const useSongOperations = (
+  reload: () => void,
+  refreshCategories: (category?: string) => Promise<string[] | null>,
+  onCategoryChanged: (previousCategory: string, nextCategory: string, categories: string[] | null) => void,
+) => {
   const { create, deleteSong, update, loading: actionLoading } = useSongActions();
   const { toggleFavorite } = useSongActions();
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
@@ -62,9 +67,16 @@ const useSongOperations = (reload: () => void) => {
 
     const updatedSong = await update(songToEdit.id, songData);
     if (updatedSong) {
+      const previousCategory = songToEdit.category?.trim() ?? "";
       setSongToEdit(null);
+      const categories = await refreshCategories(updatedSong.category);
+      onCategoryChanged(previousCategory, updatedSong.category?.trim() ?? "", categories);
       reload();
       toast.success(`"${updatedSong.title}" updated successfully`);
+    } else {
+      toast.error("Failed to update song", {
+        description: "The song could not be updated. Please try again.",
+      });
     }
   };
 
@@ -81,7 +93,12 @@ const useSongOperations = (reload: () => void) => {
     if (createdSong) {
       setIsCreateModalOpen(false);
       reload();
+      void refreshCategories(createdSong.category);
       toast.success(`"${createdSong.title}" added successfully`);
+    } else {
+      toast.error("Failed to add song", {
+        description: "The song could not be saved. Please try again.",
+      });
     }
   };
 

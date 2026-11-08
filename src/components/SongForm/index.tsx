@@ -1,12 +1,14 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import { Button } from "../UI/Button";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Plus, Save } from "lucide-react";
+import { listCategories } from "../../api/songs";
 
 interface SongFormValues {
   title?: string;
   artist?: string;
   album?: string;
   duration?: string | number;
+  category?: string;
 }
 
 interface SongFormProps {
@@ -17,7 +19,41 @@ interface SongFormProps {
 }
 
 
-const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loading = false, initialValues, submitLabel = "Save Song" }, ref) => {
+const SongForm = forwardRef<HTMLFormElement, SongFormProps>(({ onSubmit, loading = false, initialValues, submitLabel = "Save Song" }, ref) => {
+    const [categories, setCategories] = useState<string[]>([]);
+    const [category, setCategory] = useState(initialValues?.category ?? "");
+    const [isCustomCategory, setIsCustomCategory] = useState(false);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
+    const [categoriesError, setCategoriesError] = useState<string | null>(null);
+
+    useEffect(() => {
+      const controller = new AbortController();
+
+      listCategories(controller.signal)
+        .then(setCategories)
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          setCategoriesError("Unable to load existing categories.");
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setCategoriesLoading(false);
+        });
+
+      return () => controller.abort();
+    }, []);
+
+    const categoryOptions = useMemo(() => {
+      const availableCategories = new Set(categories);
+      if (category && !availableCategories.has(category)) {
+        return [category, ...categories];
+      }
+      return categories;
+    }, [categories, category]);
+
+    const toggleCategoryMode = () => {
+      setIsCustomCategory((custom) => !custom);
+    };
+
     return (
       <form ref={ref} onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
@@ -100,6 +136,57 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
           <p id="duration-hint" className="text-xs text-zinc-400 dark:text-zinc-500">Maximum 1440 minutes (24 hours)</p>
         </div>
 
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <label htmlFor="category" className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+              <span>Category</span>
+              <span className="ml-2 tracking-normal text-zinc-400 dark:text-zinc-500">Optional</span>
+            </label>
+            <button
+              type="button"
+              onClick={toggleCategoryMode}
+              disabled={loading}
+              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-600 transition hover:text-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400"
+            >
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              {isCustomCategory ? "Use existing" : "New category"}
+            </button>
+          </div>
+
+          {isCustomCategory ? (
+            <input
+              type="search"
+              id="category"
+              name="category"
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              disabled={loading}
+              maxLength={100}
+              aria-label="New song category"
+              placeholder="e.g. Rock"
+              className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
+            />
+          ) : (
+            <select
+              id="category"
+              name="category"
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              disabled={loading || categoriesLoading}
+              aria-label="Song category"
+              className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 text-sm text-zinc-900 transition-all duration-200 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-white dark:focus:border-emerald-500/50 dark:focus:bg-zinc-900 dark:focus:ring-emerald-500/10"
+            >
+              <option value="">{categoriesLoading ? "Loading categories..." : "No category"}</option>
+              {categoryOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          )}
+          {categoriesError && (
+            <p className="text-xs text-red-500" role="alert">{categoriesError} You can still add a new category.</p>
+          )}
+        </div>
+
         <Button
           type="submit"
           disabled={loading}
@@ -119,7 +206,7 @@ const SongForm = forwardRef<HTMLFormElement, SongFormProps> (({ onSubmit, loadin
         </Button>
       </form>
     );
-  }
+  },
 );
 
 SongForm.displayName = "SongForm";
