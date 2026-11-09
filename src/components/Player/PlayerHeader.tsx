@@ -1,19 +1,20 @@
+import { Star } from "lucide-react";
 import { memo, type ReactNode } from "react";
 
 interface PlayerHeaderProps {
   title: string;
   artist: string;
+  category?: string;
+  favorite?: boolean;
   playing?: boolean;
   leading?: ReactNode;
 }
 
-const EQ_BARS = [0, 1, 2, 3, 4];
-
-const PlayerHeader = ({ title, artist, playing = false, leading }: PlayerHeaderProps) => {
+const PlayerHeader = ({ title, artist, category, favorite = false, playing = false, leading }: PlayerHeaderProps) => {
   return (
     <>
      
-      <div className="relative w-full min-h-0 shrink-0 overflow-hidden border-b border-zinc-200/60 bg-gradient-to-r from-white/35 via-sky-50/35 to-zinc-100/35 px-4 py-3 font-sans dark:border-zinc-700/60 dark:from-zinc-900/35 dark:via-slate-900/35 dark:to-zinc-950/35 sm:py-4 lg:hidden">
+      <div className="player-mobile-plate relative w-full min-h-0 shrink-0 overflow-hidden border-b px-4 py-3 font-sans sm:py-4 lg:hidden">
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 h-14 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-400/10 blur-2xl dark:bg-blue-400/8"
           aria-hidden="true"
@@ -22,12 +23,23 @@ const PlayerHeader = ({ title, artist, playing = false, leading }: PlayerHeaderP
           className="pointer-events-none absolute -right-8 -top-10 h-20 w-20 rounded-full bg-cyan-300/10 blur-2xl dark:bg-cyan-400/8"
           aria-hidden="true"
         />
-        <h1 className="font-heading relative truncate text-lg leading-tight tracking-tight text-slate-950 dark:text-white sm:text-xl lg:text-2xl">
+        <p className="player-mobile-label font-label relative text-[0.55rem] tracking-[0.28em]">NOW PLAYING</p>
+        <h1 className="font-heading relative truncate text-lg leading-tight tracking-tight sm:text-xl lg:text-2xl">
           {title}
         </h1>
-        <p className="font-reading relative mt-0.5 truncate text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400 sm:text-sm">
+        <p className="font-reading relative mt-0.5 truncate text-xs font-medium tracking-wide sm:text-sm">
           {artist}
         </p>
+        {(category || favorite) && (
+          <div className="player-mobile-meta absolute bottom-3 right-4 flex max-w-[42%] items-center gap-2 sm:bottom-4 sm:right-5">
+            {category && (
+              <span className="font-label max-w-28 truncate text-[0.55rem] uppercase tracking-[0.16em]">
+                {category}
+              </span>
+            )}
+            {favorite && <Star className="h-3.5 w-3.5 shrink-0 fill-current" aria-label="Favorite song" />}
+          </div>
+        )}
       </div>
 
       
@@ -39,10 +51,18 @@ const PlayerHeader = ({ title, artist, playing = false, leading }: PlayerHeaderP
           <h1 className="font-heading truncate text-2xl leading-tight text-[#5b3424] dark:text-[#fbeedb] xl:text-3xl">{title}</h1>
           <p className="font-reading truncate text-base font-medium text-[#80513a] dark:text-[#dcbf9f]">{artist}</p>
         </div>
-        <div className="player-eq" data-playing={playing} aria-hidden="true">
-          {EQ_BARS.map((bar) => (
-            <span key={bar} />
-          ))}
+        <div className="player-meta flex shrink-0 items-center gap-3 self-stretch">
+          {category && (
+            <span className="font-label max-w-36 truncate text-[0.6rem] uppercase tracking-[0.18em] text-[#e8b27c] dark:text-[#e8b27c]">
+              {category}
+            </span>
+          )}
+          {favorite && (
+            <Star
+              className="h-4 w-4 shrink-0 fill-[#e8b27c] text-[#e8b27c]"
+              aria-label="Favorite song"
+            />
+          )}
         </div>
       </div>
     </>

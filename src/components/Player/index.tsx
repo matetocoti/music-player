@@ -76,6 +76,8 @@ const Player = ({ song, loading, error }: PlayerProps) => {
         <PlayerHeader
           title={song.title}
           artist={song.artist}
+          category={song.category}
+          favorite={song.favorite}
           playing={player.playing}
           leading={<BackButton fallbackTo="/" ariaLabel="Back to Home" className={BACK_BUTTON_DESKTOP} />}
         />
