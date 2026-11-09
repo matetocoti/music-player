@@ -6,6 +6,9 @@ interface FooterProps {
   className?: string;
 }
 
+const STUD =
+  "h-1.5 w-1.5 shrink-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,#ffe6b0,#b8793f)] shadow-[0_1px_1px_rgba(0,0,0,0.6)]";
+
 const Footer = ({ textContent, children, className = "" }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const defaultText = `© ${currentYear} Music Player`;
@@ -13,20 +16,17 @@ const Footer = ({ textContent, children, className = "" }: FooterProps) => {
 
   if (!content) return null;
 
+ 
   return (
-    <footer
-      className={`border-t border-stone-300/80 bg-stone-200/90 px-4 py-4 sm:px-6 lg:px-8 dark:border-zinc-800 dark:bg-zinc-950/90 ${className}`.trim()}
-    >
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center justify-between gap-2 text-center text-sm text-zinc-600 sm:flex-row sm:gap-6 sm:text-left dark:text-zinc-300">
-        <div className="flex items-center justify-center gap-2 sm:justify-start">
-          <span className="font-reading font-medium tracking-tight">{content}</span>
-        </div>
+    <footer className={`footer-wood px-4 py-4 sm:px-6 lg:px-8 ${className}`.trim()}>
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col items-center justify-between gap-2 text-center text-sm text-[#f3e2c8] sm:flex-row sm:gap-6 sm:text-left">
+        <span className="font-reading font-medium tracking-tight [text-shadow:0_1px_0_rgba(0,0,0,0.55)]">{content}</span>
 
-        <div className="font-label flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400 sm:justify-end sm:font-medium sm:tracking-[0.28em]">
+        <div className="font-label flex items-center justify-center gap-2.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#e8b27c] [text-shadow:0_1px_0_rgba(0,0,0,0.6)] sm:justify-end sm:tracking-[0.28em]">
           <span>Music</span>
-          <span className="h-1 w-1 rounded-full bg-zinc-400" />
+          <span className={STUD} aria-hidden="true" />
           <span>Curated</span>
-          <span className="h-1 w-1 rounded-full bg-zinc-400" />
+          <span className={STUD} aria-hidden="true" />
           <span>Flow</span>
         </div>
       </div>

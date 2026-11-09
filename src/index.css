@@ -51,10 +51,7 @@
   --brand-rgb-light: 213, 150, 114;
   --brand-glow: rgba(var(--brand-rgb), 0.18);
 
-  /* Paleta anterior (azul), caso queira voltar:
-     --brand-500: #6384b8; --brand-600: #5577ad; --brand-700: #466793; --brand-rgb: 99, 132, 184; */
-
-  /* Elevação com tinta de marca — opt-in via .shadow-brand-* (ver utilitários) */
+  /* Sombras de marca */
   --shadow-brand-sm: 0 2px 8px -2px rgba(var(--brand-rgb), 0.3);
   --shadow-brand-md: 0 8px 24px -4px rgba(var(--brand-rgb), 0.3), 0 2px 8px -2px rgba(var(--brand-rgb), 0.18);
   --shadow-brand-lg: 0 20px 48px -12px rgba(var(--brand-rgb), 0.4), 0 8px 24px -8px rgba(var(--brand-rgb), 0.22);
@@ -182,13 +179,13 @@ html {
     transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
   }
 
-  /* Halo de marca no hover. Respeita o raio de cada link (o anterior forçava 16px em todos). */
+
   a:hover {
     text-decoration: none;
     box-shadow: 0 0 0 6px var(--brand-glow);
   }
 
-  /* Só links "soltos" (sem classes) ganham cantos arredondados no halo. */
+  
   a:not([class]):hover {
     border-radius: 8px;
   }
