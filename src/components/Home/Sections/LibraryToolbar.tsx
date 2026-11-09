@@ -146,25 +146,39 @@ const LibraryToolbar = ({
       </div>
 
       <div className="lg:shrink-0">
-        <p className="font-label flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8e4f35] dark:text-[#d59672]">
-          <span className="h-px w-5 bg-[#c7835a]/60" aria-hidden="true" />
+        <p className="font-label flex items-center gap-2 text-base font-bold uppercase tracking-[0.24em] text-[#8e4f35] drop-shadow-[0_1px_0_rgba(255,255,255,0.28)] dark:text-[#d59672] dark:drop-shadow-[0_1px_0_rgba(0,0,0,0.3)] sm:text-lg">
+          <span className="h-0.5 w-8 bg-[#c7835a]/80 sm:w-10" aria-hidden="true" />
           {'Discover'}
         </p>
-        <h2 className="font-reading mt-0.5 text-lg font-semibold leading-snug text-zinc-900 sm:text-xl dark:text-zinc-100">
+        <h2 className="font-reading mt-1 text-xl font-semibold leading-snug text-zinc-900 sm:text-2xl dark:text-zinc-100">
           Find your next{" "}
           <span className="bg-gradient-to-r from-[#8e4f35] to-[#b87352] bg-clip-text text-transparent dark:from-[#d59672] dark:to-[#e2a783]">
             favorite song
           </span>
         </h2>
-        <p
-          className="font-reading mt-2 inline-flex items-center gap-2 rounded-sm border border-[#c7835a]/20 bg-[#c7835a]/8 px-2.5 py-1 text-xs font-medium text-stone-600 dark:border-[#d59672]/20 dark:text-stone-300"
-          aria-live="polite"
-        >
-          <span>
-            <span className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">{totalSongs}</span>{" "}
-            {totalSongs === 1 ? "item" : "items"} in your library
-          </span>
-        </p>
+        <div className="flex items-center gap-2">
+          <p
+            className="font-reading mt-2 inline-flex items-center gap-2 rounded-sm border border-[#c7835a]/20 bg-[#c7835a]/8 px-2.5 py-1 text-sm font-medium text-stone-600 dark:border-[#d59672]/20 dark:text-stone-300"
+            aria-live="polite"
+          >
+            <span>
+              <span className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">{totalSongs}</span>{" "}
+              {totalSongs === 1 ? "item" : "items"} in your library
+            </span>
+          </p>
+
+          {activeFilters > 0 && (
+            <div
+              className="flex items-center gap-1 text-[#a56345]/65 dark:text-[#d59672]/65"
+              aria-label="Active filters"
+            >
+              {hasCategory && <Filter className="h-3 w-3" aria-hidden="true" />}
+              {!isDefaultOrder && <ArrowDownAZ className="h-3 w-3" aria-hidden="true" />}
+              {favoritesOnly && <Star className="h-3 w-3" aria-hidden="true" />}
+              <span className="sr-only">{activeFilters} active filters</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <span className="pointer-events-none absolute inset-0 -z-10 hidden rounded-[inherit] ring-1 ring-inset ring-[#c7835a]/15 sm:block" aria-hidden="true" />
