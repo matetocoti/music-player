@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { ArrowDown, ArrowDownAZ, ChevronDown, Filter, Plus, Settings2, SlidersHorizontal, Star } from "lucide-react";
+import { ArrowDown, ArrowDownAZ, ChevronDown, Filter, Plus, RotateCcw, Settings2, SlidersHorizontal, Star } from "lucide-react";
 
 import type { SongOrderBy, SongOrderDirection } from "../../../api/types";
 import { getOrderDirectionLabel } from "../../../utils/library";
@@ -91,6 +91,7 @@ const FilterField = ({ icon, active = false, children }: FilterFieldProps) => (
 interface LibraryToolbarProps {
   search: string;
   onSearchChange: (search: string) => void;
+  onClearFilters: () => void;
   onAddSong: () => void;
   onOpenSettings: () => void;
   totalSongs: number;
@@ -108,6 +109,7 @@ interface LibraryToolbarProps {
 const LibraryToolbar = ({
   search,
   onSearchChange,
+  onClearFilters,
   onAddSong,
   onOpenSettings,
   totalSongs,
@@ -126,8 +128,10 @@ const LibraryToolbar = ({
 
   const isDefaultOrder = orderBy === "id";
   const hasCategory = category !== "";
+  const hasSearch = search.trim() !== "";
   const orderDirectionLabel = getOrderDirectionLabel(orderBy, orderDirection);
   const activeFilters = Number(hasCategory) + Number(favoritesOnly) + Number(!isDefaultOrder);
+  const hasActiveFilters = hasSearch || activeFilters > 0;
 
   const categoryOptions = useMemo(
     () => [ALL_CATEGORIES, ...categories.map((name) => ({ value: name, label: name }))],
@@ -157,6 +161,15 @@ const LibraryToolbar = ({
           </span>
         </h2>
         <div className="flex items-center gap-2">
+          <ToolbarButton
+            label="Reset library filters"
+            onClick={onClearFilters}
+            disabled={!hasActiveFilters}
+            className="!h-7 !w-7 !rounded-full !border-stone-400/35 !bg-transparent !p-0 dark:!border-stone-600/35 sm:!hidden"
+          >
+            <RotateCcw className={`h-3.5 w-3.5 opacity-100 ${ICON_SPRING} group-hover:rotate-[-35deg] group-hover:scale-105 motion-reduce:transition-none`} aria-hidden="true" />
+          </ToolbarButton>
+
           <p
             className="font-reading mt-2 inline-flex items-center gap-2 rounded-sm border border-[#c7835a]/20 bg-[#c7835a]/8 px-2.5 py-1 text-sm font-medium text-stone-600 dark:border-[#d59672]/20 dark:text-stone-300"
             aria-live="polite"
@@ -209,17 +222,27 @@ const LibraryToolbar = ({
           />
         </button>
 
-        <div
-          id={controlsId}
-          className={`mobile-leather-compartment grid w-full rounded-xl transition-[grid-template-rows,visibility] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none max-sm:border max-sm:border-stone-700/80 max-sm:p-2 max-sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.03),inset_0_-8px_20px_rgba(0,0,0,0.12)] sm:block ${
-            areControlsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr] max-sm:invisible max-sm:overflow-hidden"
-          }`}
-        >
+        <div className="flex w-full items-start justify-end gap-2 sm:gap-3">
+          <ToolbarButton
+            label="Reset library filters"
+            onClick={onClearFilters}
+            disabled={!hasActiveFilters}
+            className="!hidden !h-7 !w-7 !rounded-full !border-stone-400/35 !bg-transparent !p-0 dark:!border-stone-600/35 sm:!inline-flex"
+          >
+            <RotateCcw className={`h-4 w-4 opacity-100 ${ICON_SPRING} group-hover:rotate-[-35deg] group-hover:scale-105 motion-reduce:transition-none`} aria-hidden="true" />
+          </ToolbarButton>
+
           <div
-          className={`library-toolbar-actions flex min-h-0 flex-wrap items-center gap-2 sm:justify-start sm:gap-3 lg:justify-end ${
-              areControlsOpen ? "" : "max-sm:overflow-hidden"
+            id={controlsId}
+            className={`mobile-leather-compartment grid w-auto max-w-full rounded-xl transition-[grid-template-rows,visibility] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none max-sm:w-full max-sm:border max-sm:border-stone-700/80 max-sm:p-2 max-sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.03),inset_0_-8px_20px_rgba(0,0,0,0.12)] sm:block ${
+              areControlsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr] max-sm:invisible max-sm:overflow-hidden"
             }`}
           >
+            <div
+              className={`library-toolbar-actions flex min-h-0 flex-wrap items-center gap-2 sm:justify-start sm:gap-3 lg:justify-end ${
+                areControlsOpen ? "" : "max-sm:overflow-hidden"
+              }`}
+            >
             <div className="flex w-full gap-2 sm:contents">
               <FilterField icon={<Filter className="h-4 w-4" />} active={hasCategory}>
                 <Select
@@ -299,6 +322,7 @@ const LibraryToolbar = ({
                 />
                 <span className="hidden text-xs font-bold lg:inline">Add song</span>
               </ToolbarButton>
+              </div>
             </div>
           </div>
         </div>

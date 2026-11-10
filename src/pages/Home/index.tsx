@@ -128,6 +128,14 @@ const Home = () => {
           setSearch(newSearch);
           setPage(1);
         }}
+        onClearFilters={() => {
+          setSearch("");
+          setOrderBy("id");
+          setOrderDirection("asc");
+          setCategory("");
+          setFavoritesOnly(false);
+          setPage(1);
+        }}
         onAddSong={() => operations.setIsCreateModalOpen(true)}
         onOpenSettings={() => setIsGridSettingsOpen(true)}
         totalSongs={total}
