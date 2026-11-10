@@ -68,3 +68,15 @@ export type PaginatedSongsResponse = {
   page: number;
   per_page: number;
 };
+
+export type CsvImportError = {
+  line: number;
+  error: string;
+};
+
+export type CsvImportResponse = {
+  total: number;
+  saved: number;
+  failed: number;
+  errors: CsvImportError[];
+};

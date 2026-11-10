@@ -2,16 +2,18 @@ import { useState, useCallback } from "react";
 import {
   createSong,
   deleteSong as deleteSongApi,
+  saveSongsCsv,
   toggleFavorite as toggleFavoriteApi,
   updateSong as updateSongApi,
 } from "../api/songs";
-import type { CreateSongRequest, Song, UpdateSongRequest } from "../api/types";
+import type { CreateSongRequest, CsvImportResponse, Song, UpdateSongRequest } from "../api/types";
 
 export function useSongActions() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState<Song | null>(null);
+  const [csvResult, setCsvResult] = useState<CsvImportResponse | null>(null);
 
   const create = useCallback(async (song: CreateSongRequest): Promise<CreateSongRequest | null> => {
     setLoading(true);
@@ -23,6 +25,29 @@ export function useSongActions() {
       await createSong(song);
       setSuccess(true);
       return song;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const importCsv = useCallback(async (csv: string): Promise<CsvImportResponse | null> => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+    setCsvResult(null);
+
+    try {
+      const result = await saveSongsCsv(csv);
+      setCsvResult(result);
+      setSuccess(result.failed === 0);
+      if (result.failed > 0) {
+        setError(`${result.failed} row(s) could not be imported.`);
+      }
+      return result;
     } catch (err) {
       const message = err instanceof Error ? err.message : "An unknown error occurred";
       setError(message);
@@ -101,7 +126,9 @@ export function useSongActions() {
     error,
     success,
     data,
+    csvResult,
     create,
+    importCsv,
     update,
     toggleFavorite,
     deleteSong: removeSong,

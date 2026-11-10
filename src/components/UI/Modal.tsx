@@ -6,13 +6,14 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  headerAction?: ReactNode;
   ariaLabel?: string;
 }
 
 const CLOSE_BUTTON =
   "flex h-7 w-7 shrink-0 items-center justify-center rounded border border-[#947050] bg-[#e6d5bd] text-[#543724] transition hover:bg-[#d6bea0] hover:text-[#2f1e14] active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#795338] dark:border-[#89634b] dark:bg-[#3b2b24] dark:text-[#e4c9b0] dark:hover:bg-[#49342b] dark:hover:text-[#f1e5d8] dark:focus-visible:ring-[#d59672]";
 
-const Modal = ({ children, isOpen, onClose, title, ariaLabel = "Dialog" }: ModalProps) => {
+const Modal = ({ children, isOpen, onClose, title, headerAction, ariaLabel = "Dialog" }: ModalProps) => {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -65,9 +66,12 @@ const Modal = ({ children, isOpen, onClose, title, ariaLabel = "Dialog" }: Modal
             ) : (
               <span />
             )}
-            <button type="button" onClick={onClose} aria-label="Close dialog" className={CLOSE_BUTTON}>
-              <X className="h-4 w-4" aria-hidden="true" />
-            </button>
+            <div className="flex items-center gap-2">
+              {headerAction}
+              <button type="button" onClick={onClose} aria-label="Close dialog" className={CLOSE_BUTTON}>
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
           <div className="modal-paper-content">{children}</div>
         </div>

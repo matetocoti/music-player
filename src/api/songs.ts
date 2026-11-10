@@ -5,6 +5,7 @@ import type {
   ListSongsParams,
   PaginatedSongsResponse,
   RequestOptions,
+  CsvImportResponse,
   UpdateSongRequest,
 } from "./types";
 import { ApiError } from "../errors/ApiError";
@@ -24,8 +25,8 @@ async function request(
     method,
     signal,
     ...(body !== undefined && {
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      headers: { "Content-Type": typeof body === "string" ? "text/csv" : "application/json" },
+      body: typeof body === "string" ? body : JSON.stringify(body),
     }),
   });
 
@@ -95,6 +96,16 @@ export async function createSong(song: CreateSongRequest, signal?: AbortSignal):
     body: song,
     signal,
   });
+}
+
+export async function saveSongsCsv(csv: string, signal?: AbortSignal): Promise<CsvImportResponse> {
+  const response = await request(`${SONGS_API_URL}/csv`, {
+    action: "Failed to save songs CSV",
+    method: "POST",
+    body: csv,
+    signal,
+  });
+  return response.json();
 }
 
 export async function updateSong(id: string, updates: UpdateSongRequest, signal?: AbortSignal,): Promise<Song | null> {

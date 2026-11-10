@@ -34,7 +34,7 @@ const useSongOperations = (
   refreshCategories: (category?: string) => Promise<string[] | null>,
   onCategoryChanged: (previousCategory: string, nextCategory: string, categories: string[] | null) => void,
 ) => {
-  const { create, deleteSong, update, loading: actionLoading } = useSongActions();
+  const { create, importCsv, deleteSong, update, loading: actionLoading } = useSongActions();
   const { toggleFavorite } = useSongActions();
   const [deletingSongId, setDeletingSongId] = useState<string | null>(null);
   const [songToDelete, setSongToDelete] = useState<DeleteTarget | null>(null);
@@ -83,7 +83,34 @@ const useSongOperations = (
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const songData = getSongFormData(new FormData(event.currentTarget));
+    const formData = new FormData(event.currentTarget);
+    const csvFile = formData.get("csvFile");
+    if (csvFile instanceof File) {
+      try {
+        const result = await importCsv(await csvFile.text());
+        if (result && result.failed === 0) {
+          setIsCreateModalOpen(false);
+          reload();
+          void refreshCategories();
+          toast.success(`${result.saved} song(s) imported successfully`);
+        } else if (result) {
+          toast.error("Some songs could not be imported", {
+            description: result.errors.map(({ line, error }) => `Line ${line}: ${error}`).join(" "),
+          });
+        } else {
+          toast.error("Failed to import songs", {
+            description: "The CSV file could not be imported. Please try again.",
+          });
+        }
+      } catch {
+        toast.error("Failed to read file", {
+          description: "The selected file could not be read.",
+        });
+      }
+      return;
+    }
+
+    const songData = getSongFormData(formData);
     if (isInvalidDuration(songData.duration)) {
       showInvalidDurationToast();
       return;
